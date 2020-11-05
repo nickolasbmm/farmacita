@@ -1,0 +1,2 @@
+cd farmacita
+python manage.py runserver
