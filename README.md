@@ -4,7 +4,7 @@
 
 Primeiramente instale o [python](https://www.python.org/) em uma versão >= 3.8 e o pip.
 
-RECOMENDADO: configurar seu [virtualenv](##Virtualenv)
+RECOMENDADO: configurar seu [virtualenv](#Virtualenv)
 
 É necessário instalar todos os módulos do arquivo requirements.txt. Para isso, basta usar o comando:
 
@@ -15,7 +15,7 @@ py -m pip install -r requirements.txt #windows
 
 <sub> Nota: o "python" e o "py" devem se referir ao python de versão >= 3.8. Se você tiver mais de um python instalado vale a pena descobrir qual é o atalho correto para a versão desejada. Podendo ser python3, python3.8, python3m...</sub>
 
-Após instalar os requisitos, rode o script python [test_imports.py](testes/test_imports.py). Ele ira testar se todos os requisitos previstos em requirements.txt estão instalados em sua versão correta.
+Após instalar os requisitos, rode o script python [test_imports.py](testes/test_imports.py). Ele irá testar se todos os requisitos previstos em requirements.txt estão instalados em sua versão correta.
 
 ## Executar o programa
 
