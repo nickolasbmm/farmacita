@@ -1,7 +1,4 @@
 # montanha
-my_venv_django
-activatevenv
-deactivatevenv
 .vscode
 # Byte-compiled / optimized / DLL files
 __pycache__/
