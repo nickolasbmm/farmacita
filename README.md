@@ -25,6 +25,14 @@ Para iniciar servidor local:
 ./runapp  
 ```
 
+caso o runapp não esteja executável, rodar:
+
+```shell
+chmod +x runapp
+```
+
+e tentar o ./runapp novamente.
+
 ## Virtualenv
 
 ### Linux
