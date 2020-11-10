@@ -1,2 +1,2 @@
 #!/bin/bash
-source my_venv_django/bin/activate
+source venv/bin/activate

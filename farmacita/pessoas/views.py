@@ -27,4 +27,4 @@ def sucessful_login(request):
     return redirect('principal')
 
 def failed_login(request):
-    return render(request,'authentication.html')
+    return render(request,'login_page.html')
