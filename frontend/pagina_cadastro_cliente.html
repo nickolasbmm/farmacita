@@ -38,6 +38,7 @@
 
             if(!valido){
                 $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
             }
             else{
                 $("#cpf").css("border", "1px solid #ced4da")
@@ -54,27 +55,18 @@
     </div>
     <div class="row">
         <div class="col-sm-12 text-center">
-            <h1 class="h1">Cadastro de usuário</h1>
+            <h1 class="h1">Cadastro de cliente</h1>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
             <div>
-                <!-- 
-                id_funcionario = User.pk
-                nome_funcionario = models.CharField(max_length=300)
-                cpf = models.CharField(max_length=11) 
-                telefone = models.CharField(max_length=12)
-                cargo = models.CharField(max_length=100)
-                privilegio = models.CharField(max_length=100)
-                data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
-                data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
+                <!--     
+                    nome_cliente = models.CharField(max_length=100)
+                    cpf = models.CharField(max_length=11)
+                    telefone = models.CharField(max_length=12)
                 -->
                 <form>
-                    <div class="form-group">
-                        <label>Usuário</label>
-                        <input type="text" class="form-control background-none custom-input" id="login_usuario">
-                    </div>
                     <div class="form-group">
                         <label>Nome completo</label>
                         <input type="text" class="form-control background-none custom-input" id="nome_usuario">
@@ -91,33 +83,27 @@
                             >
                     </div>
                     <div class="form-group">
-                        <label>Telefone</label>
-                        <input type="tel" class="form-control background-none custom-input" id="nome_usuario">
-                    </div>
+                        <label class="label d-block">Cargo</label>
 
-                    <label class="label d-block">Cargo</label>
-                    <div class="form-check-inline">
-        
-                        <label class="btn btn-outline-primary form-check-label ">
+                        <label class="btn btn-outline-primary ">
                             <input type="radio" name="options" id="option1" > cargo 1
                         </label>
-                        <label class="btn btn-outline-primary form-check-label">
+                        <label class="btn btn-outline-primary">
                             <input type="radio" name="options" id="option2"> cargo 2
                         </label>
-                        <label class="btn btn-outline-primary form-check-label">
+                        <label class="btn btn-outline-primary">
                             <input type="radio" name="options" id="option3"> cargo 3
                         </label>
                     </div>
-
-                    <label class="d-block">Privilégio</label>
-                    <div class="form-check-inline">
-                        <label class="btn btn-outline-primary form-check-label">
+                    <div class="form-group">
+                        <label class="d-block">Privilégio</label>
+                        <label class="btn btn-outline-primary ">
                             <input type="radio" name="options" id="option1" > privilegio 1
                         </label>
-                        <label class="btn btn-outline-primary form-check-label">
+                        <label class="btn btn-outline-primary">
                             <input type="radio" name="options" id="option2"> privilegio 2
                         </label>
-                        <label class="btn btn-outline-primary form-check-label">
+                        <label class="btn btn-outline-primary">
                             <input type="radio" name="options" id="option3"> privilegio 3
                         </label>
                     </div>
