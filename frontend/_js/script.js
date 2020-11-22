@@ -76,3 +76,7 @@ adiciona_sugestao_generic = function(sugestoes, datalist_id){
                 )
     });
 }
+
+remove_parent = function (item){ 
+    item.parentNode.parentNode.removeChild(item.parentNode)
+}

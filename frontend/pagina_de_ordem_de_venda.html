@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ordem de venda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="bootstrap-4.5.3-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="_css/style.css" rel="stylesheet">
+    <script src="./jquery-3.5.1.min.js"></script>
+
+    <script>
+        lista_de_medicamentos_e_precos = {
+            'ABC': 20.00,
+            'BANANA' : 30.00,
+            'GOIABA' : 10.00,
+            'PARACETAMOL': 50.00,
+            'MOPA': 100.00
+        }
+        lista_fornecedores_validos = [
+            'fornecedor 1',
+            'fornecedor 2',
+            'candy shop',
+            'maromba',
+            'droguita'
+        ]
+        total_compra = 0.00
+
+        industrias_farmaceuticas_validas = [
+            '123_vamofazerremedio',
+            'gerador de maconha',
+            'breaking bad farmacos',
+            'guerra do ópio distribuidoras LTDA'
+        ]
+        atualiza_total_da_compra = function(){
+            total_compra = 0
+            if($("#carrinho").children().length > 0){
+                $("#carrinho li span:nth-child(4)").each(function(index){
+                    total_compra += Number($( this ).text().split(" ")[1])
+                })
+ 
+            }
+            $("#total_carrinho").empty()
+            $("#total_carrinho").append("R$ " + total_compra.toFixed(2))
+        }
+        adiciona_item_ao_carrinho = function(){
+            produto = $("#medicamento_input").val()
+            if (Object.keys(lista_de_medicamentos_e_precos).includes(produto)){
+                quantidade = $("#quantidade_medicamento_input").val()
+                preco_unitario = lista_de_medicamentos_e_precos[produto]
+                sub_total = quantidade * preco_unitario
+                $("#carrinho").append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">'+
+                            '<span class="col-3">{nome_medicamento}</span>'.formatUnicorn({nome_medicamento : produto}) +
+                            '<span class="col-2">{quantidade_medicamento}</span>'.formatUnicorn({quantidade_medicamento : quantidade}) + 
+                            '<span class="col-3">R$ {preco_u}</span>'.formatUnicorn({preco_u : preco_unitario.toFixed(2)}) +
+                            '<span class="col-2">R$ {sub_t}</span>'.formatUnicorn({sub_t : sub_total.toFixed(2)}) +
+                            '<button ' +
+                                'type="button"' + 
+                                'class="btn btn-outline-danger"' +
+                                'onclick="remove_parent(this);atualiza_total_da_compra()"' +
+                                '>x</button>' +
+                        '</li>'
+                )
+            }
+            else{
+                alert('Medicamento não cadastrado')
+            }
+            atualiza_total_da_compra()
+
+        }
+        add_sugestoes = function () {
+            adiciona_sugestao_generic(Object.keys(lista_de_medicamentos_e_precos), "suggestions_medicine")
+        }
+        $(document).ready(function () {
+            add_sugestoes()
+        });
+        
+    </script>
+    <style>
+        label{
+            font-weight: bold;
+        }
+        ul, li{
+            padding: 0px;
+        }
+        .center-text{
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p class="logo">Farmac<span class="logo-span">ITA</span></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1 class="h1">Carrinho</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <form autocomplete="off">
+                    <div class="form-group">
+                        <label>Medicamento</label>
+                        <div class="input-group">
+                            <input 
+                                id="medicamento_input"
+                                type="text" 
+                                class="form-control background-none custom-input"
+                                list="suggestions_medicine"
+                                placeholder="Nome do medicamento">
+                            <div class="input-group-append">
+                                <input
+                                id="quantidade_medicamento_input"
+                                type="number"
+                                min="1"
+                                class="form-control background-none custom-input"
+                                placeholder="Quantidade"
+                                >
+                                <button 
+                                    type="button"
+                                    class="btn btn-outline-info btn-block"
+                                    onclick="adiciona_item_ao_carrinho()">
+                                    Adicionar ao carrinho</button>
+                            </div>
+                        </div>
+                        <datalist
+                            id="suggestions_medicine"></datalist>
+                    </div>
+                    <hr>
+                    <div class="row justify-content-between font-weight-bolder">
+                        <span class="col-3" style="text-align: center;">Produto</span>
+                        <span class="col-2" style="text-align: center;">Quantidade</span>
+                        <span class="col-3" style="text-align: center;">Preço unitário</span>
+                        <span class="col-3" style="text-align: center;">Sub total</span>
+                        <span class="col-1"></span>
+
+                    </div>
+                    <hr>
+                    <ul class="list-group-flush" id="carrinho">
+                    </ul>
+                    <hr>
+                    <div class="row justify-content-between font-weight-bolder">
+                        <span class="col-3" style="text-align: center;"></span>
+                        <span class="col-2" style="text-align: center;"></span>
+                        <span class="col-3" style="text-align: center;">Total</span>
+                        <span class="col-3" id="total_carrinho" style="text-align: center;">R$ 00.00</span>
+                        <span class="col-1"></span>
+
+                    </div>
+                    <hr>
+        
+
+                    <button 
+                        type="submit" 
+                        class="btn  btn-block btn-outline-info custom-btn">
+                        Confirmar compra</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</body>
+</html>
