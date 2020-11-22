@@ -53,10 +53,10 @@
         ]
 
 
-        add_item_to_active_substances_list = function () {
+        adiciona_principio_ativo_a_lista = function () {
             if (valid_active_substances.includes($("#active_substance_input").val())){
                 $("#active_substances").append(
-                    '<li>{active}<button type="button" class="close fake-btn" onclick="delete_active_substance_from_list(this)">x</button></li>'.formatUnicorn({
+                    '<li>{active}<button type="button" class="close fake-btn" onclick="deleta_principio_ativo_da_lista(this)">x</button></li>'.formatUnicorn({
                         active: $("#active_substance_input").val()
                         }
                     )
@@ -75,7 +75,7 @@
                 }
             });
         }
-        cadastrar_novo_principio_ativo = function(){
+        cadastra_novo_principio_ativo = function(){
             alert($("#active_substance_input").val())
             $.ajax({
                 url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
@@ -87,33 +87,33 @@
                 }
             });
         }
-        delete_active_substance_from_list = function (item){ 
+        deleta_principio_ativo_da_lista = function (item){ 
             item.parentNode.parentNode.removeChild(item.parentNode)
         }
-        add_suggestions_to_classification_input = function(){
+        adiciona_sugestoes_de_classificacoes = function(){
             $("#suggestions_classification").empty()
             valid_classifications.forEach(classification_type => {
                 $("#suggestions_classification").append('<option value="{valor}"">'.formatUnicorn({valor : classification_type}))
             });
         }
-        add_suggestions_to_active_substance_input = function(){
+        adiciona_sugestoes_de_principios_ativos = function(){
             $("#suggestions_active_substance").empty()
             valid_active_substances.forEach(active_substance => {
                 $("#suggestions_active_substance").append('<option value="{valor}"">'.formatUnicorn({valor : active_substance}))
             });
         }
-        add_suggestions_to_brand_input = function(){
+        adiciona_sugestao_de_marca = function(){
             valid_brands.forEach(brand => {
                 $("#suggestions_brands").append('<option value="{valor}"">'.formatUnicorn({valor : brand}))
             });
         }
-        add_suggestions_to_inputs = function(){
-            add_suggestions_to_classification_input()
-            add_suggestions_to_active_substance_input()
-            add_suggestions_to_brand_input()
+        add_sugestoes = function(){
+            adiciona_sugestoes_de_classificacoes()
+            adiciona_sugestoes_de_principios_ativos()
+            adiciona_sugestao_de_marca()
         }
 
-        can_register_this_active_substance = function(){
+        principio_ativo_ja_esta_registrado_check = function(){
             if(valid_active_substances.includes($("#active_substance_input").val())){
                 $("#active_substance_register_button").prop("disabled", true)
             }
@@ -122,7 +122,7 @@
                 $("#active_substance_register_button").prop("disabled", false)
             }
         }
-        can_register_this_brand = function(){
+        marca_ja_registrada_check = function(){
             if(valid_brands.includes($("#brand_input").val())){
                 console.log('disabled')
                 $("#register_brand_button").prop("disabled", true)
@@ -132,9 +132,11 @@
                 $("#register_brand_button").prop("disabled", false)
             }
         }
-
+        cadastrar_medicamento = function(){
+            alert('Medicamento cadastrado')
+        }
         $(document).ready(function () {
-            add_suggestions_to_inputs()
+            add_sugestoes()
         });
     </script>
     <style>
@@ -195,21 +197,21 @@
                         <div>
                             <input 
                                 type="text" 
-                                onkeyup="can_register_this_active_substance()"
-                                onselect="can_register_this_active_substance()"
-                                onchange="can_register_this_active_substance()"
-                                onblur="can_register_this_active_substance()"
+                                onkeyup="principio_ativo_ja_esta_registrado_check()"
+                                onselect="principio_ativo_ja_esta_registrado_check()"
+                                onchange="principio_ativo_ja_esta_registrado_check()"
+                                onblur="principio_ativo_ja_esta_registrado_check()"
                                     
                                 list="suggestions_active_substance" 
                                 class="form-control background-none custom-input float-left" 
                                 id="active_substance_input">
                             <div class="btn-group btn-block">
-                                <button type='button' class="btn btn-outline-info custom-btn" onclick="add_item_to_active_substances_list()">Adicionar princípio ativo</button>
+                                <button type='button' class="btn btn-outline-info custom-btn" onclick="adiciona_principio_ativo_a_lista()">Adicionar princípio ativo</button>
                                 <button 
                                     id="active_substance_register_button"
                                     type='button' 
                                     class="btn btn-outline-info custom-btn" 
-                                    onclick="cadastrar_novo_principio_ativo()">
+                                    onclick="cadastra_novo_principio_ativo()">
                                     Cadastrar princípio ativo</button>
                             </div>
                         </div>
@@ -232,11 +234,11 @@
                                 class="form-control background-none custom-input" 
                                 id="brand_input"
                                 list="suggestions_brands"
-                                onfocus="can_register_this_brand()"
-                                onblur="can_register_this_brand()"
-                                onselect="can_register_this_brand()"
-                                onchange="can_register_this_brand()"
-                                onkeyup="can_register_this_brand()"
+                                onfocus="marca_ja_registrada_check()"
+                                onblur="marca_ja_registrada_check()"
+                                onselect="marca_ja_registrada_check()"
+                                onchange="marca_ja_registrada_check()"
+                                onkeyup="marca_ja_registrada_check()"
                                 >
                             <button 
                                 id="register_brand_button"
@@ -251,7 +253,13 @@
 
         
 
-                    <button type="submit" id="cadastrar_button" class="btn  btn-block btn-outline-info custom-btn">Cadastrar</button>
+                    <button
+                        type="button" 
+                        id="cadastrar_button" 
+                        class="btn  btn-block btn-outline-info custom-btn"
+                        onclick="cadastrar_medicamento()"
+                        >
+                        Cadastrar</button>
                 </form>
             </div>
         </div>

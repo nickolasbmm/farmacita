@@ -68,3 +68,11 @@ function () {
 
     return str;
 };
+adiciona_sugestao_generic = function(sugestoes, datalist_id){
+    $("#" + datalist_id).empty()
+    sugestoes.forEach(sugestao=> {
+        $("#" + datalist_id).append(
+            '<option value="{valor}"">'.formatUnicorn({valor : sugestao})
+                )
+    });
+}
