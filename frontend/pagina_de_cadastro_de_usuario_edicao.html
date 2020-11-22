@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login FarmacITA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="bootstrap-4.5.3-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="_css/style.css" rel="stylesheet">
+    <script>
+        function testa_cpf(campo_cpf){
+            valor_do_campo = campo_cpf.value
+            cpf = valor_do_campo.replace(/[.-]/g,'')
+            
+            soma1 = 0
+            for(i = 0; i < 9; i++){
+                soma1 += cpf[i] * (10-i)
+            }
+            resto1 = ((soma1 * 10) % 11)%10
+
+            soma2 = 0
+            for(i = 0; i < 10; i++){
+                soma2 += cpf[i] * (11-i)
+            }
+            resto2 = ((soma2 * 10) % 11)%10
+
+            valido = true
+
+            if(resto1 == cpf[9] & resto2 == cpf[10]){
+                valido = true
+            }
+            else{
+                valido = false
+            }
+            if(/^(.)\1*$/.test(cpf)){
+                valido = false
+            }
+
+            if(!valido){
+                $("#cpf").css("border", "1px solid red")
+            }
+            else{
+                $("#cpf").css("border", "1px solid #ced4da")
+            }
+
+        };
+    </script>
+</head>
+<body class="container">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p class="logo">Farmac<span class="logo-span">ITA</span></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1 class="h1">Cadastro de usuário</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <!-- 
+                id_funcionario = User.pk
+                nome_funcionario = models.CharField(max_length=300)
+                cpf = models.CharField(max_length=11) 
+                telefone = models.CharField(max_length=12)
+                cargo = models.CharField(max_length=100)
+                privilegio = models.CharField(max_length=100)
+                data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
+                data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
+                -->
+                <form>
+                    <div class="form-group">
+                        <label>Usuário</label>
+                        <input type="text" class="form-control background-none custom-input" id="login_usuario">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome completo</label>
+                        <input type="text" class="form-control background-none custom-input" id="nome_usuario">
+                    </div>
+                    <div class="form-group">
+                        <label>CPF</label>
+                        <input 
+                            oninput="mascara_cpf(this)"
+                            type="text" 
+                            class="form-control background-none custom-input" 
+                            id="cpf" 
+                            pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
+                            onblur="testa_cpf(this)"
+                            >
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" class="form-control background-none custom-input" id="nome_usuario">
+                    </div>
+
+                    <label class="label d-block">Cargo</label>
+                    <div class="form-check-inline">
+        
+                        <label class="btn btn-outline-primary form-check-label ">
+                            <input type="radio" name="options" id="option1" > cargo 1
+                        </label>
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" name="options" id="option2"> cargo 2
+                        </label>
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" name="options" id="option3"> cargo 3
+                        </label>
+                    </div>
+
+                    <label class="d-block">Privilégio</label>
+                    <div class="form-check-inline">
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" name="options" id="option1" > privilegio 1
+                        </label>
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" name="options" id="option2"> privilegio 2
+                        </label>
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" name="options" id="option3"> privilegio 3
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de admissão</label>
+                        <input type="date" class="form-control background-none custom-input" id="data_de_admissao">
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" class="form-control background-none custom-input" id="senha">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirme sua senha</label>
+                        <input type="password" class="form-control background-none custom-input" id="confirmacao_senha">
+                    </div>
+
+                    <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Editar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</body>
+</html>
