@@ -3,6 +3,8 @@ from .models import medicamento
 
 # Create your views here.
 def cadmedicamentos(request):
+    droga = medicamento.objects.values_list('principio_ativo')
+
     if request.method == "POST":
         if request.POST.get("save"):
             p = request.POST
@@ -10,4 +12,4 @@ def cadmedicamentos(request):
             item.save()
             print(item.nome_medicamento)
 
-    return render(request,'pagina_cadastro_medicamento.html',{})
+    return render(request,'pagina_cadastro_medicamento.html',{"droga": droga})
