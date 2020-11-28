@@ -5,8 +5,24 @@
 --light-cyan: rgb(240, 254, 255);
 --burnt-sienna: #6BA368;
 --gunmetal: #515B3A;
-}
 
+--header-height:100px;
+--menu-width:200px;
+--footer-height:100px;
+}
+.fake-btn{
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+label{
+    font-weight: bold;
+}
+#cadastrar_button{
+    margin-top: 40px;
+}
 .logo{
     font-size: 50px;
     font-family: monospace;
@@ -14,4 +30,123 @@
 }
 .logo-span{
     color: var(--primary);
+}
+
+/*coisas da logi_page*/
+/*
+.form-group{
+    background-color: var(--gray);
+    font-size: larger;
+    font-weight: 900;
+    border-radius: 15px;
+}
+.form-group::placeholder{
+    color: var(--info);
+}
+.background-none {
+    background: none !important;
+}
+
+label{
+    padding-left: 10px;
+}
+.row {
+    margin-top: 30px;
+}
+.h1{
+    font-weight: bold;
+}
+.logo{
+    font-size: 50px;
+    font-family: monospace;
+    color: var(--secondary)
+}
+.logo-span{
+    color: var(--primary);
+}
+.custom-btn{
+    height: 100px;
+    font-size: 50px;
+    border-radius: 50px;
+}
+.custom-input{
+    outline: none;
+    border: 0px;
+    border-bottom: 2px solid ;
+    border-radius: 15px;
+    font-size: 35px;
+    font-weight: 600;
+}*/
+/* fim coisas_loginpage*/
+
+/* coisas cad cliente */
+#cpf::-webkit-input-placeholder {
+    color: red;
+    }
+    
+    #cpf:-moz-placeholder { /* Firefox 18- */
+    color: red;  
+    }
+    
+    #cpf::-moz-placeholder {  /* Firefox 19+ */
+    color: red;  
+    }
+    
+    #cpf:-ms-input-placeholder {  
+    color: red;  
+    }
+    
+    .logo{
+        font-size: 50px;
+        font-family: monospace;
+        color: var(--secondary)
+    }
+    .logo-span{
+        color: var(--primary);
+    }
+
+/* fim cad cliente*/
+
+.formulario{
+    margin: auto 0;
+    width: 500px;
+}
+
+
+
+body{   
+    display: grid;
+    grid-template-columns: var(--menu-width) 1fr;
+    grid-template-rows: 
+        var(--header-height)
+        1fr
+        var(--footer-height);
+    grid-template-areas:
+    "cabeca cabeca"
+    "menu2 conteudo"
+    "menu2 rodape";
+}
+
+div#header{
+    grid-area: cabeca;
+    /*background-color: aqua;*/
+
+}
+div#menu{
+    grid-area: menu2;
+    /*background-color: blueviolet;*/
+
+}
+div#content{
+    grid-area: conteudo;
+
+}
+div#footer{
+    grid-area: rodape;
+    /*background-color: brown;*/
+
+}
+
+div#teste{
+    padding: 50px;
 }
