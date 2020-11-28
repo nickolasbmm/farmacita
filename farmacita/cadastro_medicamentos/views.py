@@ -12,4 +12,4 @@ def cadmedicamentos(request):
             item.save()
             print(item.nome_medicamento)
 
-    return render(request,'pagina_cadastro_medicamento.html',{"droga": droga})
+    return render(request,'pagina_cadastro_medicamento.html',{"droga":droga})

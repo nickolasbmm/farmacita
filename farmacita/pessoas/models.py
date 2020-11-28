@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
 # Create your models here.
 
 # Para a lista de propriedades e métodos de User veja https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#user-model
@@ -20,7 +22,7 @@ class cliente(models.Model):
     nome_cliente = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11)
     telefone = models.CharField(max_length=12)
-    nome_cliente = models.CharField(max_length=400)
+    
 
 class fornecedor(models.Model):
     id_fornecedor = models.IntegerField(primary_key=True)
