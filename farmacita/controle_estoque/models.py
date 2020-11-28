@@ -3,7 +3,7 @@ from cadastro_medicamentos.models import medicamento
 # Create your models here.
 
 class lote_medicamento(models.Model):
-    id_lote_medicamento = models.IntegerField(primary_key=True)
+    id_lote_medicamento = models.AutoField(primary_key=True)
     id_medicamento = models.ForeignKey(medicamento,on_delete=models.PROTECT)
     preco = models.DecimalField(max_digits=40,decimal_places=2)
     preco_com_desconto = models.DecimalField(max_digits=40,decimal_places=2)

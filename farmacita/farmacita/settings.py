@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'cadastro_medicamentos',
     'controle_estoque',
     'financeiro',
-    'pessoas'
+    'pessoas',
+    'testes'
 ]
 
 MIDDLEWARE = [
