@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from pessoas.models import cliente
-from .string_generate import string_generate
+from .functions import string_generate, testar_igualdade
 import string
 
 class Command(BaseCommand):
@@ -8,23 +8,26 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for i in range(10):
-            clt = cliente(
+            insere = cliente(
                 nome_cliente= string_generate(size = 100),
                 cpf = string_generate(size = 11, chars= string.digits),
                 telefone = string_generate(size = 12, chars= string.digits)
             )
 
             try:
-                clt.save()
-                user = cliente.objects.filter(nome_cliente=clt.nome_cliente,cpf=clt.cpf,telefone=clt.telefone)
+                insere.save()
+                user = cliente.objects.filter(nome_cliente=insere.nome_cliente,cpf=insere.cpf,telefone=insere.telefone)
                 clt = user.first().__dict__
                 print('Usuário ',str(i+1),' inserido com sucesso')
             except:
                 raise Exception('Erro ao inserir usuário ', str(i+1))
+
             print('Id = ',clt["id_cliente"])
-            print("Nome = ", clt["nome_cliente"])
-            print('CPF = ',clt["cpf"])
-            print('Telefone = ',clt["telefone"])
+            print('Verificando informações inseridas')
+            print("Igualdade em nome_cliente:",testar_igualdade(clt["nome_cliente"],insere.nome_cliente))
+            print('Igualdade em cpf:',testar_igualdade(clt["cpf"],insere.cpf))
+            print('Igualdade em telefone:',testar_igualdade(clt["telefone"],insere.telefone))
+
             try:
                 user.delete()
                 print('Usuário ',str(i+1),' deletado com sucesso')
