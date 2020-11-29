@@ -5,13 +5,13 @@ Cadastro Medicamento
 {% endblock %}
 
 {% block content %}
-<div class="formulario">
-    <div id="teste">        
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                <h1 class="h1">Cadastro de medicamento</h1>
-            </div>
+<div>          
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="h1">Cadastro de medicamento</h1>
         </div>
+    </div>
+    <div class="formulario">  
         <div class="row">
             <div class="col-sm-12">
                 <div>
@@ -54,8 +54,7 @@ Cadastro Medicamento
                             
                             </div>
                             
-                            <script src="/twitter-bootstrap/twitter-bootstrap-v2/docs/assets/js/jquery.js"></script>
-                            <script src="/twitter-bootstrap/twitter-bootstrap-v2/docs/assets/js/bootstrap-typeahead.js"></script>
+                            
                             <script>
                                 var subjects = {droga}
                                 $('#active_substance_input').typeahead({source: subjects})
