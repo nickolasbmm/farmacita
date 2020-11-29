@@ -83,7 +83,10 @@ Cadastro Medicamento
                         required>
                     </div>
 
-        
+                    <div class="form-group">
+                        <label>Data de nascimento</label>
+                        <input type="date" class="form-control background-none custom-input" id="data_nasc" placeholder="" name="data_nasc" onchange="checarIdade(value)">
+                    </div>
 
                     <button type="submit" name="save" value="save" class="btn  btn-block btn-outline-info custom-btn">Cadastrar</button>
                 </form>
@@ -133,6 +136,27 @@ Cadastro Medicamento
             }
 
         };
+
+        function idade(nascimento) {
+            console.log(nascimento)
+            var hoje = new Date
+            var nascimento2 = new Date(nascimento)
+            var diferencaAnos = hoje.getFullYear() - nascimento2.getFullYear();
+            if ( new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()) < 
+                new Date(hoje.getFullYear(), nascimento2.getMonth(), nascimento2.getDate()) )
+                diferencaAnos--;
+            return diferencaAnos;
+        }
+
+        function checarIdade(nascimento){
+            var anos = idade(nascimento)
+            console.log(anos)
+            if (anos<18){
+                $("#data_nasc").val("")
+                alert("Menor de Idade!")
+            }
+        }
+
 
     </script>
     <script src="./jquery-3.5.1.min.js"></script>

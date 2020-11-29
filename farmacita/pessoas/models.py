@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 
@@ -22,6 +23,7 @@ class cliente(models.Model):
     nome_cliente = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11)
     telefone = models.CharField(max_length=12)
+    data_nascimento = models.DateField(default=datetime.now)
     
 
 class fornecedor(models.Model):

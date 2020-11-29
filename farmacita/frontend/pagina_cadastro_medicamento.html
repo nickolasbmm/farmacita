@@ -5,6 +5,7 @@ Cadastro Medicamento
 {% endblock %}
 
 {% block content %}
+
 <div class="formulario">
     <div id="teste">        
         <div class="row">
@@ -20,7 +21,7 @@ Cadastro Medicamento
                         cpf = models.CharField(max_length=11)
                         telefone = models.CharField(max_length=12)
                     -->
-                    <form method="post">
+                    <form method="post" autocomplete="off">
                         {% csrf_token %}
                         <div class="form-group">
                             <label>Nome do medicamento</label>
@@ -44,27 +45,17 @@ Cadastro Medicamento
                             <label>Princípio ativo</label>
                             <div>
                                 <input 
-                                    type="text" 
-                                    class="form-control background-none custom-input float-left" 
-                                    id="active_substance_input"
-                                    name="principio_ativo"
-                                    data-provide="typeahead" data-items="4"
-                                    required>
+                                type="text" 
+                                
                                     
-                            
-                            </div>
-                            
-                            <script src="/twitter-bootstrap/twitter-bootstrap-v2/docs/assets/js/jquery.js"></script>
-                            <script src="/twitter-bootstrap/twitter-bootstrap-v2/docs/assets/js/bootstrap-typeahead.js"></script>
-                            <script>
-                                var subjects = {droga}
-                                $('#active_substance_input').typeahead({source: subjects})
-                            </script>
+                                
+                                class="form-control background-none custom-input float-left" 
+                                id="principio_ativo"
+                                name="principio_ativo" required>
                             
                         </div>
                         
-            
-
+                        
                         <button
                             type="submit"
                             value="save" 

@@ -32,13 +32,13 @@ def failed_login(request):
 
 
 def cadCliente(request):
-    valido = True
+    
     
     if request.method == "POST":
         if request.POST.get("save"):
             p = request.POST
             
-            item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
+            item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"), data_nascimento=p.get("data_nasc"))
             item.save()
             
     return render(request,'pagina_cadastro_cliente.html',{})
