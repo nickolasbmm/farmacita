@@ -9,6 +9,8 @@
 --header-height:100px;
 --menu-width:200px;
 --footer-height:100px;
+
+--form-width:400px;
 }
 .fake-btn{
     cursor: pointer;
@@ -26,7 +28,7 @@ label{
 .logo{
     font-size: 50px;
     font-family: monospace;
-    color: var(--secondary)
+    color: rgb(241, 235, 235);
 }
 .logo-span{
     color: var(--primary);
@@ -96,22 +98,14 @@ label{
     color: red;  
     }
     
-    .logo{
-        font-size: 50px;
-        font-family: monospace;
-        color: var(--secondary)
-    }
-    .logo-span{
-        color: var(--primary);
-    }
 
 /* fim cad cliente*/
 
-.formulario{
-    margin: auto 0;
-    width: 500px;
+.formulario{    
+    width: var(--form-width);
+    margin: 0 auto ;
+    padding: 20px;
 }
-
 
 
 body{   
@@ -122,19 +116,31 @@ body{
         1fr
         var(--footer-height);
     grid-template-areas:
-    "cabeca cabeca"
-    "menu2 conteudo"
-    "menu2 rodape";
+    " cabeca cabeca"
+    " links conteudo"
+    " links rodape" ;
+    height: 100vh;
 }
 
-div#header{
+.usuario{
+    padding: 45px 30px;
+    color: white;
+}
+
+.titulo{
+    padding: 25px 30px ;
+}
+
+div#header{ 
+    display:grid;   
+    grid-template-columns: 1fr 1fr;
     grid-area: cabeca;
-    /*background-color: aqua;*/
+    background-color: #428bae
+    
 
 }
-div#menu{
-    grid-area: menu2;
-    /*background-color: blueviolet;*/
+nav#menu{
+    grid-area: links ;
 
 }
 div#content{
@@ -142,11 +148,13 @@ div#content{
 
 }
 div#footer{
+    padding: 50px 30px ;
     grid-area: rodape;
     /*background-color: brown;*/
-
 }
 
-div#teste{
-    padding: 50px;
+.rodape-texto{
+    width: 100px;
+    margin-right: 10px;
+    background-color: rgba(42, 42, 42, 0.568);
 }
