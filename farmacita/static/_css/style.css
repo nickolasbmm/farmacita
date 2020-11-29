@@ -148,13 +148,20 @@ div#content{
 
 }
 div#footer{
-    padding: 50px 30px ;
     grid-area: rodape;
+    text-align: center;
+    padding-top: 45px;
     /*background-color: brown;*/
 }
 
 .rodape-texto{
-    width: 100px;
-    margin-right: 10px;
-    background-color: rgba(42, 42, 42, 0.568);
+    float:right;
+    width: auto;
+    margin-right: 30px;
+    padding: 5px 10px ;    
+    background-color:  #428cae73
+}
+
+.titulo_pagina{
+    padding: 10px 30px;
 }
