@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    'cadastro_medicamentos',
-    'controle_estoque',
-    'financeiro',
-    'pessoas',
-    'testes'
+    #'six '
+
+    'django.contrib.sites',
+    # 'django.contrib.admindocs',
+    'medicamentos',
+    'estoque',
+    #'financeiro',
+    'pessoas'
 ]
 
 MIDDLEWARE = [
@@ -131,3 +133,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+PASSWORD_HASHERS = (
+'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+)
+
+LOGIN_URL = '/pessoas/login_page/'
