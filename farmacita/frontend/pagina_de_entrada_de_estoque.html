@@ -63,13 +63,16 @@
     <div class="row">
         <div class="col-sm-12">
             <div>
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label>Medicamento</label>
                         <input 
                             type="text" 
                             class="form-control background-none custom-input"
-                            list="suggestions_medicine">
+                            list="suggestions_medicine"
+                            name="nome_medicamento"
+                        >
                         <datalist
                             id="suggestions_medicine"></datalist>
                     </div>
@@ -78,22 +81,26 @@
                         <input 
                             type="number"
                             min="0" 
-                            class="form-control background-none custom-input">
+                            class="form-control background-none custom-input"
+                            name="quantidade_de_caixas"
+                        >
                     </div>
 
                     <div class="form-group">
                         <label>Data de validade</label>
                         <input 
                             type="date" 
-                            class="form-control background-none custom-input">
+                            class="form-control background-none custom-input"
+                            name="data_de_validade"
+                        >
                     </div>
 
                     <div class="form-group">
                         <label>Dosagem</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button" name="dosagem">
                             <div class="input-group-append">
-                                <select class="form-control">
+                                <select class="form-control" name="unidade_dosagem">
                                     <option value="ml">ml</option>
                                     <option value="ul">&micro;l</option>
                                     <option value="mg">mg</option>
@@ -105,9 +112,9 @@
                     <div class="form-group">
                         <label>Quantidade por caixa</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button" name="quantidade_por_caixa">
                             <div class="input-group-append">
-                                <select class="form-control">
+                                <select class="form-control" name="unidade_quantidade_por_caixa">
                                     <option value="ml">ml</option>
                                     <option value="mg">mg</option>
                                     <option value="unidades">unidades</option>
@@ -128,7 +135,9 @@
                                 type="number" 
                                 step="0.01"
                                 min="0"
-                                class="form-control background-none custom-input">
+                                class="form-control background-none custom-input"
+                                name="preco"
+                            >
                         </div>
                     </div>
                     <div class="form-group">
@@ -136,7 +145,9 @@
                         <input 
                             type="text" 
                             list="suggestions_providers"
-                            class="form-control background-none custom-input">
+                            class="form-control background-none custom-input"
+                            name="nome_fornecedor"
+                        >
                     </div>
                     <datalist id="suggestions_providers"></datalist>
 
@@ -145,7 +156,9 @@
                         <input 
                             type="text" 
                             class="form-control background-none custom-input"
-                            list="suggestions_industries">
+                            list="suggestions_industries"
+                            name="industria_farmaceutica"
+                        >
                     </div>
                     <datalist id="suggestions_industries"></datalist>
 
