@@ -1,0 +1,172 @@
+
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Cadastro Medicamento
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <script>
+        function fMasc(objeto,mascara) {
+            obj=objeto
+            masc=mascara
+            setTimeout("fMascEx()",1)
+            }
+
+            function fMascEx() {
+            obj.value=masc(obj.value)
+            }
+
+            function mCPF(cpf){
+                cpf=cpf.replace(/\D/g,"")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+                return cpf    
+            }
+        
+            function mTel(tel){
+                tel=tel.replace(/\D/g,"")
+                tel=tel.replace(/(\d{1})/,"($1")
+                tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
+                tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
+                return tel
+            }
+        
+    </script>
+    
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1 class="h1">Cadastro de cliente</h1>
+        </div>
+    </div>
+    <div class="row formulario" >
+        <div class="col-sm-12">
+            <div>
+                <!--     
+                    nome_cliente = models.CharField(max_length=100)
+                    cpf = models.CharField(max_length=11)
+                    telefone = models.CharField(max_length=12)
+                -->
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Nome completo</label>
+                        <input type="text" class="form-control background-none custom-input" id="nome_usuario" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CPF</label>
+                        <input 
+                            onkeydown="javascript: fMasc( this, mCPF )"
+                            type="text" 
+                            class="form-control background-none custom-input" 
+                            id="cpf" 
+                            pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
+                            onblur="testa_cpf(this)"
+                            name="cpf"
+                            placeholder=""
+                            maxlength=14
+                            required>
+                        
+                        
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="tel" 
+                        name="tel" 
+                        class="form-control background-none custom-input" 
+                        id="nome_usuario" 
+                        onkeydown="javascript: fMasc( this, mTel )" 
+                        maxlength=15
+                        required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data de nascimento</label>
+                        <input type="date" class="form-control background-none custom-input" id="data_nasc" placeholder="" name="data_nasc" onchange="checarIdade(value)" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function testa_cpf(campo_cpf){
+            valor_do_campo = campo_cpf.value
+            cpf = valor_do_campo.replace(/[.-]/g,'')
+            
+            soma1 = 0
+            for(i = 0; i < 9; i++){
+                soma1 += cpf[i] * (10-i)
+            }
+            resto1 = ((soma1 * 10) % 11)%10
+
+            soma2 = 0
+            for(i = 0; i < 10; i++){
+                soma2 += cpf[i] * (11-i)
+            }
+            resto2 = ((soma2 * 10) % 11)%10
+
+            valido = true
+
+            if(resto1 == cpf[9] & resto2 == cpf[10]){
+                valido = true
+            }
+            else{
+                valido = false
+            }
+            if(/^(.)\1*$/.test(cpf)){
+                valido = false
+            }
+
+            if(!valido){
+                selectCPF = $("#cpf")[0]
+                $("#cpf").val("")
+                selectCPF.placeholder="CPF inválido"
+                $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
+            }
+            else{
+                
+                $("#cpf").css("border", "1px solid #ced4da")
+                
+            }
+
+        };
+
+        function idade(nascimento) {
+            console.log(nascimento)
+            var hoje = new Date
+            var nascimento2 = new Date(nascimento)
+            var diferencaAnos = hoje.getFullYear() - nascimento2.getFullYear();
+            if ( new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()) < 
+                new Date(hoje.getFullYear(), nascimento2.getMonth(), nascimento2.getDate()) )
+                diferencaAnos--;
+            return diferencaAnos;
+        }
+
+        function checarIdade(nascimento){
+            var anos = idade(nascimento)
+            console.log(anos)
+            if (anos<18){
+                $("#data_nasc").css("border", "1px solid red")
+                alert("O cliente deve ser maior de idade!")
+                $("#data_nasc").val("")
+                
+            }
+            else{
+                $("data_nasc").css("border", "1px solid #ced4da")
+            }
+        }
+
+
+    </script>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'template/padrao.html' %}
+{%block titulo %}
+Cadastro Medicamento
+{% endblock %}
+{% load static %}
+{% block extrahead %}
+    <script src="{% static 'jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static '_js/script.js' %}"></script>
+    <script>
+        valid_classifications = [
+            'Sem tarja', 
+            'Tarja vermelha sem retenção de receita', 
+            'Tarja vermelha com retenção da receita',
+            'Tarja preta',
+            'Tarja amarela'
+        ]
+        valid_active_substances = [
+            'Acebrofilina',
+            'Aceclofenaco',
+            'Acetato de abiraterona',
+            'Acetato de atosibana',
+            'Acetato de betametasona + fosfato dissodico de betametasona',
+            'Acetato de caspofungina',
+            'Acetato de ciproterona',
+            'Acetato de ciproterona + etinilestradiol',
+            'Acetato de clormadinona+ etinilestradiol',
+            'Acetato de clostebol + sulfato de neomicina',
+            'Acetato de desmopressina',
+            'Acetato de dexametasona'
+        ]
+        valid_brands = [
+            'ABBOTT LABORATORIOS DO BRASIL LTDA',
+            'ACCORD FARMACEUTICA LTDA',
+            'ACHE LABORATORIOS FARMACEUTICOS S.A.',
+            'ACTAVIS FARMACEUTICA LTDA.',
+            'AGILA ESPECIALIDADES FARMACEUTICAS LTDA',
+            'AIRELA INDUSTRIA FARMACEUTICA LTDA.',
+            'ALLERGAN PRODUTOS FARMACEUTICOS LTDA',
+            'ALTHAIA S.A INDUSTRIA FARMACEUTICA',
+            'ANTIBIOTICOS DO BRASIL LTDA',
+            'APSEN FARMACEUTICA S/A',
+            'ARESE PHARMA LTDA',
+            'ARISTON INDUSTRIAS QUIMICAS E FARMACEUTICAS LTDA',
+            'ASPEN PHARMA INDUSTRIA FARMACEUTICA LTDA',
+            'ASTELLAS FARMA BRASIL IMPORTAÇAO E DISTRIBUIÇAO DE MEDICAMENTOS LTDA.',
+            'ASTRAZENECA DO BRASIL LTDA',
+            'ATIVUS FARMACEUTICA LTDA',
+            'AUROBINDO PHARMA INDUSTRIA FARMACEUTICA LIMITADA',
+            'AVERT LABORATORIOS LTDA'
+        ]
+    
+    
+        adiciona_principio_ativo_a_lista = function () {
+            if (valid_active_substances.includes($("#active_substance_input").val())){
+                $("#active_substances").append(
+                    '<li>{active}<button type="button" class="close fake-btn" onclick="remove_parent(this)">x</button></li>'.formatUnicorn({
+                        active: $("#active_substance_input").val()
+                        }
+                    )
+                )
+            }
+        }
+        cadastrar_nova_marca = function(){
+            $("#brand_input").val()
+            $.ajax({
+                url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
+                data: {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+        }
+        cadastra_novo_principio_ativo = function(){
+            alert($("#active_substance_input").val())
+            $.ajax({
+                url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
+                data: {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+        }
+        remove_parent = function (item){ 
+            item.parentNode.parentNode.removeChild(item.parentNode)
+        }
+        adiciona_sugestoes_de_classificacoes = function(){
+            $("#suggestions_classification").empty()
+            valid_classifications.forEach(classification_type => {
+                $("#suggestions_classification").append('<option value="{valor}"">'.formatUnicorn({valor : classification_type}))
+            });
+        }
+        adiciona_sugestoes_de_principios_ativos = function(){
+            $("#suggestions_active_substance").empty()
+            valid_active_substances.forEach(active_substance => {
+                $("#suggestions_active_substance").append('<option value="{valor}"">'.formatUnicorn({valor : active_substance}))
+            });
+        }
+        adiciona_sugestao_de_marca = function(){
+            valid_brands.forEach(brand => {
+                $("#suggestions_brands").append('<option value="{valor}"">'.formatUnicorn({valor : brand}))
+            });
+        }
+        add_sugestoes = function(){
+            adiciona_sugestoes_de_classificacoes()
+            adiciona_sugestoes_de_principios_ativos()
+            adiciona_sugestao_de_marca()
+        }
+    
+        principio_ativo_ja_esta_registrado_check = function(){
+            if(valid_active_substances.includes($("#active_substance_input").val())){
+                $("#active_substance_register_button").prop("disabled", true)
+            }
+            else{
+                console.log('enable')
+                $("#active_substance_register_button").prop("disabled", false)
+            }
+        }
+        marca_ja_registrada_check = function(){
+            if(valid_brands.includes($("#brand_input").val())){
+                console.log('disabled')
+                $("#register_brand_button").prop("disabled", true)
+            }
+            else{
+                console.log('enable')
+                $("#register_brand_button").prop("disabled", false)
+            }
+        }
+        cadastrar_medicamento = function(){
+            alert('Medicamento cadastrado')
+        }
+        $(document).ready(function () {
+            add_sugestoes()
+        });
+    </script>
+    <style>
+        .fake-btn{
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+        label{
+            font-weight: bold;
+        }
+        #cadastrar_button{
+            margin-top: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div>          
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p class="logo">Farmac<span class="logo-span">ITA</span></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1 class="h1">Cadastro de medicamento</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <!--     
+                    nome_cliente = models.CharField(max_length=100)
+                    cpf = models.CharField(max_length=11)
+                    telefone = models.CharField(max_length=12)
+                -->
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Nome do medicamento</label>
+                        <input type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Classificação</label>
+                        <input
+                            id="classification_input" 
+                            type="text" 
+                            list="suggestions_classification" 
+                            class="form-control background-none custom-input" 
+                            id="classification_input"
+                            name="classificacao"
+                        >
+                        <datalist id="suggestions_classification">
+                        </datalist>
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <label>Princípio ativo</label>
+                        <div>
+                            <input 
+                                type="text" 
+                                onkeyup="principio_ativo_ja_esta_registrado_check()"
+                                onselect="principio_ativo_ja_esta_registrado_check()"
+                                onchange="principio_ativo_ja_esta_registrado_check()"
+                                onblur="principio_ativo_ja_esta_registrado_check()"
+                                    
+                                list="suggestions_active_substance" 
+                                class="form-control background-none custom-input float-left" 
+                                id="active_substance_input"
+                                name="principio_ativo"
+                            >
+                            <div class="btn-group btn-block">
+                                <button type='button' class="btn btn-outline-info custom-btn" onclick="adiciona_principio_ativo_a_lista()">Adicionar princípio ativo</button>
+                                <button 
+                                    id="active_substance_register_button"
+                                    type='button' 
+                                    class="btn btn-outline-info custom-btn" 
+                                    onclick="cadastra_novo_principio_ativo()">
+                                    Cadastrar princípio ativo</button>
+                            </div>
+                        </div>
+                        <datalist id="suggestions_active_substance">
+                        </datalist>
+                        
+                    </div>
+                    <ul class="list-unstyled" id="active_substances">
+
+                    </ul> 
+
+
+                    <!-- <div class="form-group">
+                        <label>Marca do medicamento</label>
+                        <div>
+                            <input 
+                                type="text" 
+                                class="form-control background-none custom-input" 
+                                id="brand_input"
+                                list="suggestions_brands"
+                                onfocus="marca_ja_registrada_check()"
+                                onblur="marca_ja_registrada_check()"
+                                onselect="marca_ja_registrada_check()"
+                                onchange="marca_ja_registrada_check()"
+                                onkeyup="marca_ja_registrada_check()"
+                                >
+                            <button 
+                                id="register_brand_button"
+                                type="button" 
+                                class="btn btn-outline-info custom-btn col-6 float-right" 
+                                onclick="cadastrar_nova_marca()"
+                                >Cadastrar nova marca</button> 
+                        </div>
+                        <datalist id="suggestions_brands">
+                        </datalist>
+                    </div> -->
+
+        
+
+                    <button
+                        type="submit" 
+                        id="cadastrar_button" 
+                        class="btn  btn-block btn-outline-info custom-btn"
+                        onclick="cadastrar_medicamento()"
+                        >
+                        Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

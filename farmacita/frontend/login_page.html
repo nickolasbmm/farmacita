@@ -1,0 +1,37 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Cadastro Medicamento
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h1 class="h1">Log in to FarmacITA</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <form method="POST">{% csrf_token %}
+                        <div class="form-group">
+                            <label>Usuário</label>
+                            <input type="text" class="form-control background-none custom-input" id="user_login" name="usuario">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Senha</label>
+                            <input type="password" class="form-control background-none custom-input" id="password_login" name="senha">
+                        </div>
+                        <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Login</button>
+                        <button type="button" class="btn btn-block btn-link text-center">Não possui login?</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="./jquery-3.5.1.min.js"></script>
+        <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+        <script src="_js/script.js"></script>
+    </div>
+{% endblock %}
