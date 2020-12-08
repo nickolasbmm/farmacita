@@ -11,17 +11,19 @@
     <link rel="shortcut icon" href="#" />
     
     <link href="{% static 'bootstrap-4.5.3-dist/css/bootstrap.css' %}" rel="stylesheet">
-    
     <link href="{% static '_css/style.css' %}" rel="stylesheet">
-    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
     <script src="{% static 'bootstrap-4.5.3-dist/js/bootstrap.bundle.js' %}" type="text/javascript"></script>
+    
+    {% block extrahead %}
+
+    {% endblock %} 
     
     
     
 </head>
 
-<body >
+<body>
     <div id="header">
         <div class="row">
                     <div class="text-left titulo">

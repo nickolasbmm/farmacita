@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 
 class Medicamento(models.Model):
-
     id_medicamento = models.IntegerField(primary_key=True)
     nome_medicamento = models.CharField(max_length=100)
     classificacao = models.CharField(max_length=100, default='Sem tarja')

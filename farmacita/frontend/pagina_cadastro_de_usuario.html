@@ -79,7 +79,7 @@ Cadastro Medicamento
                 data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
                 data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
                 -->
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Usuário</label>
@@ -123,7 +123,7 @@ Cadastro Medicamento
                         </label>
                     </div>
 
-                    <label class="d-block">Privilégio</label>
+                    <!-- <label class="d-block">Privilégio</label>
                     <div class="form-check-inline">
                         <label class="btn btn-outline-primary form-check-label">
                             <input type="radio", id="option1", name = 'privilegio', value = 'privilegio 1' > privilegio 1
@@ -133,7 +133,7 @@ Cadastro Medicamento
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
                             <input type="radio", id="option3", name = 'privilegio', value = 'privilegio 3'> privilegio 3
-                        </label>
+                        </label> -->
                     </div>
                     <div class="form-group">
                         <label>Data de admissão</label>
@@ -144,7 +144,6 @@ Cadastro Medicamento
                         <input type="password" class="form-control background-none custom-input" id="senha", name = 'senha'>
                     </div>
 
-                    <!-- #TODO criar função de confirmar senha -->
                     <div class="form-group">
                         <label>Confirme sua senha</label>
                         <input type="password" class="form-control background-none custom-input" id="confirmacao_senha", onblur="confirmar_senha(this)">
