@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import funcionario, cliente, fornecedor
 from django.contrib.auth.models import User
+import json
 
 # Create your views here.
+
+def deslogar(request):
+    logout(request)
+    return redirect('/')
 
 def principal(request):
     return render(request,'sucessful_login.html')
@@ -30,7 +35,6 @@ def sucessful_login(request):
 
 def failed_login(request):
     return render(request,'login_page.html')
-
 
 def cadastro_cliente(request):   
     if request.method == "POST":
@@ -64,3 +68,39 @@ def cadastro_usuario(request):
 
     return render(request,'pagina_cadastro_de_usuario.html')
 
+
+def editar_usuario(request):
+    if request.method == "POST":
+        p = request.POST
+        user = request.user
+        editarfuncionario = funcionario.objects.filter(user=user)
+        senha_nova = p.get('senha',None)
+        senha_antiga = p.get('senha_antiga')
+        print(senha_nova)
+        print(senha_antiga)
+        print(user.password)
+        if senha_nova != None:
+            if user.check_password(senha_antiga):
+                user.set_password(senha_nova)
+                user.save()
+
+        editarfuncionario.update(
+            nome_funcionario = p.get('nome_funcionario'),
+            cpf = p.get('cpf'),
+            telefone = p.get('telefone'),
+            cargo = p.get('cargo'),
+            data_de_admissao = p.get('data_de_admissao'),
+        )
+        return redirect('/')
+
+    user = funcionario.objects.get(user=request.user)
+    dados= {
+        "nome_funcionario" : user.nome_funcionario,
+        "cpf" : user.cpf,
+        "telefone" : user.telefone,
+        "cargo" : user.cargo,
+        "data_de_admissao" : user.data_de_admissao.isoformat()
+    }
+    dados = json.dumps(dados)
+    
+    return render(request,'pagina_edicao_de_usuario.html',{'dados':dados})
