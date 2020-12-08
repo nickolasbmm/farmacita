@@ -36,13 +36,30 @@ Cadastro Medicamento
             }
 
             if(!valido){
+                selectCPF = $("#cpf")[0]
+                $("#cpf").val("")
+                selectCPF.placeholder="CPF inválido"
                 $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
             }
             else{
                 $("#cpf").css("border", "1px solid #ced4da")
             }
 
         };
+
+        function confirmar_senha(campo_senha){
+            campo = campo_senha.value
+            if($("#senha").val()==campo){
+                $("#confirmacao_senha").css("border", "1px solid #ced4da")
+                $("#texto_confirmacao_senha").css('visibility','hidden');
+            }
+            else{
+                $("#confirmacao_senha").val("")
+                $("#texto_confirmacao_senha").css('visibility','visible');
+                $("#confirmacao_senha").css("border", "1px solid red")
+            }
+        }
     </script>    
     <div class="row">
         <div class="col-sm-12 text-center">
@@ -62,14 +79,15 @@ Cadastro Medicamento
                 data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
                 data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
                 -->
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label>Usuário</label>
-                        <input type="text" class="form-control background-none custom-input" id="login_usuario">
+                        <input type="text" class="form-control background-none custom-input" id="login_usuario", name = 'usuario'>
                     </div>
                     <div class="form-group">
                         <label>Nome completo</label>
-                        <input type="text" class="form-control background-none custom-input" id="nome_usuario">
+                        <input type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
                     </div>
                     <div class="form-group">
                         <label>CPF</label>
@@ -80,54 +98,61 @@ Cadastro Medicamento
                             id="cpf" 
                             pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
                             onblur="testa_cpf(this)"
+                            name = 'cpf'
                             >
                     </div>
                     <div class="form-group">
                         <label>Telefone</label>
-                        <input type="tel" class="form-control background-none custom-input" id="nome_usuario">
+                        <input type="tel" class="form-control background-none custom-input" id="nome_usuario", name = 'telefone'>
                     </div>
 
                     <label class="label d-block">Cargo</label>
                     <div class="form-check-inline">
         
-                        <label class="btn btn-outline-primary form-check-label ">
-                            <input type="radio" name="options" id="option1" > cargo 1
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio" id="option1", name = 'cargo', value="Balconista" > Balconista
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" name="options" id="option2"> cargo 2
+                            <input type="radio"  id="option2", name = 'cargo', value="Farmacêutico"> Farmacêutico
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" name="options" id="option3"> cargo 3
+                            <input type="radio"  id="option3", name = 'cargo', value="Caixa"> Caixa
+                        </label>
+                        <label class="btn btn-outline-primary form-check-label">
+                            <input type="radio"  id="option4", name = 'cargo', value="Gerente Financeiro"> Gerente Financeiro
                         </label>
                     </div>
 
                     <label class="d-block">Privilégio</label>
                     <div class="form-check-inline">
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" name="options" id="option1" > privilegio 1
+                            <input type="radio", id="option1", name = 'privilegio', value = 'privilegio 1' > privilegio 1
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" name="options" id="option2"> privilegio 2
+                            <input type="radio" name = 'privilegio', value = 'privilegio 2'> privilegio 2
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" name="options" id="option3"> privilegio 3
+                            <input type="radio", id="option3", name = 'privilegio', value = 'privilegio 3'> privilegio 3
                         </label>
                     </div>
                     <div class="form-group">
                         <label>Data de admissão</label>
-                        <input type="date" class="form-control background-none custom-input" id="data_de_admissao">
+                        <input type="date" class="form-control background-none custom-input" id="data_de_admissao", name = 'data_de_admissao'>
                     </div>
                     <div class="form-group">
                         <label>Senha</label>
-                        <input type="password" class="form-control background-none custom-input" id="senha">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirme sua senha</label>
-                        <input type="password" class="form-control background-none custom-input" id="confirmacao_senha">
+                        <input type="password" class="form-control background-none custom-input" id="senha", name = 'senha'>
                     </div>
 
-                    <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Cadastrar</button>
-                    <button type="button" class="btn btn-block btn-link text-center">Já possui login?</button>
+                    <!-- #TODO criar função de confirmar senha -->
+                    <div class="form-group">
+                        <label>Confirme sua senha</label>
+                        <input type="password" class="form-control background-none custom-input" id="confirmacao_senha", onblur="confirmar_senha(this)">
+                        <p id="texto_confirmacao_senha" style="visibility: hidden;color: red;">Senhas não coincidem</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>
+                    <!-- <button type="button" class="btn btn-block btn-link text-center">Já possui login?</button> -->
                 </form>
             </div>
         </div>
