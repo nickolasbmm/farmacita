@@ -104,3 +104,18 @@ def editar_usuario(request):
     dados = json.dumps(dados)
     
     return render(request,'pagina_edicao_de_usuario.html',{'dados':dados})
+
+
+def demitir_usuario(request):
+    if request.method == "POST":
+        p = request.POST
+        usuario = User.objects.get(username=p.get('usuario'))
+        excluirfuncionario = funcionario.objects.get(user=usuario,nome_funcionario=p.get('nome_funcionario'))
+        excluirfuncionario.data_de_demissao=p.get('data_de_demissao')
+        usuario.is_active = False
+        usuario.save()
+        excluirfuncionario.save()
+
+    return render(request,'pagina_demissao_de_usuario.html')
+    
+
