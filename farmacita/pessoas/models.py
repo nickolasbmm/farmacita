@@ -16,12 +16,23 @@ class funcionario(User):
     privilegio = models.CharField(max_length=100)
     data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
     data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
+    class Meta:
+        db_table = 'funcionarios'
+    
+    def __str__(self):
+        return self.nome_funcionario
 
 class cliente(models.Model):
     id_cliente = models.IntegerField(primary_key=True)
     nome_cliente = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11)
     telefone = models.CharField(max_length=12)
+
+    class Meta:
+        db_table = 'clientes'
+    
+    def __str__(self):
+        return self.nome_cliente
     
 
 class fornecedor(models.Model):

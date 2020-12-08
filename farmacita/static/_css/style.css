@@ -11,6 +11,7 @@
 --footer-height:100px;
 
 --form-width:400px;
+--table-width: 800px;
 }
 .fake-btn{
     cursor: pointer;
@@ -107,6 +108,11 @@ label{
     padding: 20px;
 }
 
+.tabela{
+    width: var(--table-width);
+    padding: 20px;
+    margin: 0 auto;
+}
 
 body{   
     display: grid;

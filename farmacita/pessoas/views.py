@@ -30,7 +30,6 @@ def sucessful_login(request):
 def failed_login(request):
     return render(request,'login_page.html')
 
-
 def cadCliente(request):
     valido = True
     
@@ -41,8 +40,48 @@ def cadCliente(request):
             item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
             item.save()
             
-    return render(request,'pagina_cadastro_cliente.html',{})
+    return render(request,'cliente/pagina_cadastro_cliente.html',{})
+
+def editCliente(request):
+    lista = cliente.objects.all()
+    
+    busca = request.GET.get('buscacliente')
+    if busca:
+        lista = cliente.objects.filter(nome_cliente__icontains = busca)
+    
+    
+    if request.method == "POST":
+        if request.POST.get("save"):
+            p = request.POST
+            
+            item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
+            item.save()
+            
+    return render(request,'cliente/editar.html',{'lista':lista})
+
 
 def cadUsuario(request):
-    return render(request,'pagina_cadastro_de_usuario.html',{})
+    return render(request,'funcionario/pagina_cadastro_de_usuario.html',{})
+
+def editFuncionario(request):
+    lista = funcionario.objects.all()
+    
+    busca = request.GET.get('buscafunc')
+    if busca:
+        lista = funcionario.objects.filter(nome_funcionario__icontains = busca)
+    
+    
+    if request.method == "POST":
+        if request.POST.get("save"):
+            p = request.POST
+            
+            item = cliente(nome_funcionario = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
+            item.save()
+            
+    return render(request,'funcionario/editar.html',{'lista':lista})
+
+
+##### fazer busca de usuario
+
+
 

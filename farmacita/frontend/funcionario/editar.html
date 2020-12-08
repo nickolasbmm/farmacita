@@ -1,0 +1,74 @@
+
+{% extends 'template/padrao.html' %}
+
+{%block head %}
+Editar Funcionario
+{% endblock %}
+
+{%block titulo-conteudo %}
+Editar Cadastro de Funcionario
+{% endblock %}
+
+{% block content %}
+
+<div>    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>
+                <!--     
+                    nome_cliente = models.CharField(max_length=100)
+                    cpf = models.CharField(max_length=11)
+                    telefone = models.CharField(max_length=12)
+                -->
+                <form method="GET">
+
+                    <div class="input-group-prepend">
+                    
+                        <input type="text" class="form-control" placeholder="Nome" name="buscafunc" id="buscafunc">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                
+                    </div>              
+                
+                    </form>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome do Funcionário</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Cargo</th>
+                    <th scope="col">Privilégio</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            {% for i in lista %}
+            <tbody>
+                <tr>
+                    <th scope="row">{{i.id_funcionario}}</th>
+                    <td>{{i}}</td>
+                    <td>{{i.cpf}}</td>
+                    <td>{{i.telefone}}</td>
+                    <td>{{i.cargo}}</td>
+                    <td>{{i.privilegio}}</td>
+                    <td><button class="btn btn-warning">Edit</button></td>
+                    <td><button class="btn btn-danger">X</button></td>
+                </tr>
+            </tbody>
+                
+                
+            {% endfor %}
+            
+        </table> 
+    </div>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+{% endblock %}
