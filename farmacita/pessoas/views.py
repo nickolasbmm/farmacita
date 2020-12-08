@@ -44,7 +44,9 @@ def authentication(request):
         if user is not None:
             login(request,user)
             ##add fernanda
-            return direcionar_usuario(request, user.cargo)
+            func = funcionario.objects.get(user=user)
+            cargo = func.cargo
+            return direcionar_usuario(request, cargo)
             ##
             return sucessful_login(request)
         else:
