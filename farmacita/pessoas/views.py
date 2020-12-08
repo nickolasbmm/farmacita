@@ -14,6 +14,25 @@ def deslogar(request):
 def principal(request):
     return render(request,'sucessful_login.html')
 
+
+##add fernanda
+def direcionar_usuario(request,cargo):
+        if cargo == "Balconista":
+            print("você é balconista")
+            return sucessful_login(request)
+        elif cargo == "Caixa":
+            print("você é caixa")
+            return sucessful_login(request)
+        elif cargo == "Farmacêutico":
+            print("você é farmaceutico")
+            return sucessful_login(request)
+        elif cargo == "Gerente Financeiro":
+            print("você é gerente financeiro")
+            return sucessful_login(request)
+        else:
+            return failed_login(request)
+##
+
 def authentication(request):
     if request.user.is_authenticated:
         return sucessful_login(request)
@@ -24,6 +43,9 @@ def authentication(request):
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request,user)
+            ##add fernanda
+            return direcionar_usuario(request, user.cargo)
+            ##
             return sucessful_login(request)
         else:
             return failed_login(request)
