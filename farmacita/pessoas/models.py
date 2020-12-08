@@ -19,7 +19,7 @@ class funcionario(models.Model):
     data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False,null=True)
 
 class cliente(models.Model):
-    id_cliente = models.IntegerField(primary_key=True)
+    id_cliente = models.AutoField(primary_key=True)
     nome_cliente = models.CharField(max_length=100)
     cpf = models.CharField(max_length=14)
     telefone = models.CharField(max_length=15)
@@ -27,7 +27,7 @@ class cliente(models.Model):
     
 
 class fornecedor(models.Model):
-    id_fornecedor = models.IntegerField(primary_key=True)
+    id_fornecedor = models.AutoField(primary_key=True)
     nome_fornecedor = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=18)
     telefone = models.CharField(max_length=15)

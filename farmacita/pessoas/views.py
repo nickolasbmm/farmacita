@@ -117,5 +117,20 @@ def demitir_usuario(request):
         excluirfuncionario.save()
 
     return render(request,'pagina_demissao_de_usuario.html')
+
+def cadastro_fornecedor(request):
+    if request.method == "POST":
+        p = request.POST
+          
+        novofornecedor = fornecedor(
+            nome_fornecedor = p.get("nome_fornecedor"), 
+            cnpj = p.get("cnpj"), 
+            telefone = p.get("telefone"), 
+            )
+        novofornecedor.save()
+            
+    return render(request,'pagina_cadastro_fornecedor.html')
+
+
     
 

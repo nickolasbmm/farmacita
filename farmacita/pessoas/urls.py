@@ -6,6 +6,7 @@ urlpatterns = [
     path('authentication',views.authentication, name = 'authentication'),
     path('principal',views.principal, name = 'principal'),
     path('cadastro_cliente',views.cadastro_cliente, name = 'cadastro_cliente'),
+    path('cadastro_fornecedor',views.cadastro_fornecedor, name = 'cadastro_fornecedor'),
     path('cadastro_usuario',views.cadastro_usuario, name = 'cadastro_usuario'),
     path('editar_usuario',views.editar_usuario, name = 'editar_usuario'),
     path('demitir_usuario',views.demitir_usuario, name = 'demitir_usuario'),
