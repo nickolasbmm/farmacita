@@ -32,32 +32,37 @@ def failed_login(request):
 
 def cadCliente(request):
     valido = True
-    
-    if request.method == "POST":
-        if request.POST.get("save"):
-            p = request.POST
-            
-            item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
-            item.save()
-            
-    return render(request,'cliente/pagina_cadastro_cliente.html',{})
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            if request.POST.get("save"):
+                p = request.POST
+                
+                item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
+                item.save()
+                
+        return render(request,'cliente/pagina_cadastro_cliente.html',{})
+    else:
+        return failed_login(request)
 
 def editCliente(request):
-    lista = cliente.objects.all()
-    
-    busca = request.GET.get('buscacliente')
-    if busca:
-        lista = cliente.objects.filter(nome_cliente__icontains = busca)
-    
-    
-    if request.method == "POST":
-        if request.POST.get("save"):
-            p = request.POST
-            
-            item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
-            item.save()
-            
-    return render(request,'cliente/editar.html',{'lista':lista})
+    if request.user.is_authenticated:
+        lista = cliente.objects.all()
+        
+        busca = request.GET.get('buscacliente')
+        if busca:
+            lista = cliente.objects.filter(nome_cliente__icontains = busca)
+        
+        
+        if request.method == "POST":
+            if request.POST.get("save"):
+                p = request.POST
+                
+                item = cliente(nome_cliente = p.get("name"), cpf = p.get("cpf"), telefone =p.get("tel"))
+                item.save()
+                
+        return render(request,'cliente/editar.html',{'lista':lista})
+    else:
+        return failed_login(request)
 
 
 def cadUsuario(request):
