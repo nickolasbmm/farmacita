@@ -56,6 +56,7 @@ def criar_ordem_de_venda(request):
             id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
             id_cliente = cliente.objects.get(cpf = CPF), 
             quantidade = qtd,
+            percentual_desconto = p.get("perc_desc")
             #desconto = autorizar_desconto(p.get("senha"))
             )
         novaordemvenda.save()
