@@ -148,3 +148,6 @@ function checarIdade(nascimento){
         $("data_nasc").css("border", "1px solid #ced4da")
     }
 }
+
+// //////////// MEDICAMENTOS   ////////////////////
+

@@ -1,0 +1,316 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Medicamentos
+{% endblock %}
+
+{%block titulo-conteudo %}
+Medicamentos Cadastrados
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div>    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <form method="GET">
+                    <div class="input-group-prepend">                    
+                        <input type="text" class="form-control" placeholder="Nome" name="buscamedic" id="buscamedic">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                    </div>              
+                    </form>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Classificação</th>
+                    <th scope="col">Princípio Ativo</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>            
+            {% for i in lista %}
+            {% if not i.excluido  %}                      
+            <tbody>
+                <tr class={{i.id_medicamento}}>
+                    <th scope="row">{{i.id_medicamento}}</th>
+                    <td class = "nome">{{i.nome_medicamento}}</td>
+                    <td class = "classificacao">{{i.classificacao}}</td>
+                    <td class = "principio">{{i.principio_ativo}}</td>
+                    <td>
+                        <form class= "centro">
+                            <button value = {{i.id_medicamento}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                        </form>
+                    </td>
+                   
+                    <td>
+                        <form class= "centro">
+                            <style>
+                                .centro{
+                                    text-align: center;            
+                                }
+                                .botao{
+                                    margin-bottom:6px;
+                                }
+                            </style>  
+                            <button  value = {{i.id_medicamento}} name = 'delete' class="btn btn-danger botao" type = "submit">X</button>                                                                       
+                        </form>                        
+                    </td>
+                </tr>
+            </tbody>
+                
+            {% endif %}    
+            {% endfor %}
+            
+        </table>
+    </div>   
+        {% if editar %}  
+        <script>
+            valid_classifications = [
+                'Sem tarja', 
+                'Tarja vermelha sem retenção de receita', 
+                'Tarja vermelha com retenção da receita',
+                'Tarja preta',
+                'Tarja amarela'
+            ]
+            // valid_active_substances = [
+            //     'Acebrofilina',
+            //     'Aceclofenaco',
+            //     'Acetato de abiraterona',
+            //     'Acetato de atosibana',
+            //     'Acetato de betametasona + fosfato dissodico de betametasona',
+            //     'Acetato de caspofungina',
+            //     'Acetato de ciproterona',
+            //     'Acetato de ciproterona + etinilestradiol',
+            //     'Acetato de clormadinona+ etinilestradiol',
+            //     'Acetato de clostebol + sulfato de neomicina',
+            //     'Acetato de desmopressina',
+            //     'Acetato de dexametasona'
+            // ]
+    
+            valid_active_substances = {{ droga | safe }}
+    
+            valid_brands = []
+    
+            // valid_brands = [
+            //     'ABBOTT LABORATORIOS DO BRASIL LTDA',
+            //     'ACCORD FARMACEUTICA LTDA',
+            //     'ACHE LABORATORIOS FARMACEUTICOS S.A.',
+            //     'ACTAVIS FARMACEUTICA LTDA.',
+            //     'AGILA ESPECIALIDADES FARMACEUTICAS LTDA',
+            //     'AIRELA INDUSTRIA FARMACEUTICA LTDA.',
+            //     'ALLERGAN PRODUTOS FARMACEUTICOS LTDA',
+            //     'ALTHAIA S.A INDUSTRIA FARMACEUTICA',
+            //     'ANTIBIOTICOS DO BRASIL LTDA',
+            //     'APSEN FARMACEUTICA S/A',
+            //     'ARESE PHARMA LTDA',
+            //     'ARISTON INDUSTRIAS QUIMICAS E FARMACEUTICAS LTDA',
+            //     'ASPEN PHARMA INDUSTRIA FARMACEUTICA LTDA',
+            //     'ASTELLAS FARMA BRASIL IMPORTAÇAO E DISTRIBUIÇAO DE MEDICAMENTOS LTDA.',
+            //     'ASTRAZENECA DO BRASIL LTDA',
+            //     'ATIVUS FARMACEUTICA LTDA',
+            //     'AUROBINDO PHARMA INDUSTRIA FARMACEUTICA LIMITADA',
+            //     'AVERT LABORATORIOS LTDA'
+            // ]
+        
+        
+            adiciona_principio_ativo_a_lista = function () {
+                if (valid_active_substances.includes($("#active_substance_input").val())){
+                    $("#active_substances").append(
+                        '<li>{active}<button type="button" class="close fake-btn" onclick="remove_parent(this)">x</button></li>'.formatUnicorn({
+                            active: $("#active_substance_input").val()
+                            }
+                        )
+                    )
+                }
+            }
+            // cadastrar_nova_marca = function(){
+            //     $("#brand_input").val()
+            //     $.ajax({
+            //         url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
+            //         data: {
+            //         },
+            //         dataType: 'json',
+            //         success: function (data) {
+            //             console.log(data)
+            //         }
+            //     });
+            // }
+            cadastra_novo_principio_ativo = function(){
+                $('#principio_ativo_cadastrado').text('Princípio ativo ' + $("#active_substance_input").val() + ' cadastrado');
+                $('#principio_ativo_cadastrado').css('visibility','visible');
+                $.ajax({
+                    url: 'cadastrar_principio_ativo',//<pagina_para_fazer_o_update_do_banco>
+                    method: "POST",
+                    data: {
+                        nome_principio_ativo : $("#active_substance_input").val(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data)
+                    }
+                });
+    
+                valid_active_substances.push($("#active_substance_input").val())
+            }
+            remove_parent = function (item){ 
+                item.parentNode.parentNode.removeChild(item.parentNode)
+            }
+            adiciona_sugestoes_de_classificacoes = function(){
+                $("#suggestions_classification").empty()
+                valid_classifications.forEach(classification_type => {
+                    $("#suggestions_classification").append('<option value="{valor}"">'.formatUnicorn({valor : classification_type}))
+                });
+            }
+            adiciona_sugestoes_de_principios_ativos = function(){
+                $("#suggestions_active_substance").empty()
+                valid_active_substances.forEach(active_substance => {
+                    $("#suggestions_active_substance").append('<option value="{valor}"">'.formatUnicorn({valor : active_substance}))
+                });
+            }
+            adiciona_sugestao_de_marca = function(){
+                valid_brands.forEach(brand => {
+                    $("#suggestions_brands").append('<option value="{valor}"">'.formatUnicorn({valor : brand}))
+                });
+            }
+            add_sugestoes = function(){
+                adiciona_sugestoes_de_classificacoes()
+                adiciona_sugestoes_de_principios_ativos()
+                adiciona_sugestao_de_marca()
+            }
+        
+            principio_ativo_ja_esta_registrado_check = function(){
+                if(valid_active_substances.includes($("#active_substance_input").val())){
+                    $("#active_substance_register_button").prop("disabled", true)
+                }
+                else{
+                    $("#active_substance_register_button").prop("disabled", false)
+                }
+            }
+            marca_ja_registrada_check = function(){
+                if(valid_brands.includes($("#brand_input").val())){
+                    console.log('disabled')
+                    $("#register_brand_button").prop("disabled", true)
+                }
+                else{
+                    $("#register_brand_button").prop("disabled", false)
+                }
+            }
+            cadastrar_medicamento = function(){
+                alert('Medicamento cadastrado')
+            }
+            $(document).ready(function () {
+                add_sugestoes()
+            });
+        </script>      
+        {% for i in lista %}
+
+        <form class = "formulario" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Nome do medicamento</label>
+                <input value = {{i.nome_medicamento}} type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
+            </div>
+            <div class="form-group">
+                <label>Classificação</label>
+                <input
+                    id="classification_input"
+                    value = {{i.classificacao}}
+                    type="text" 
+                    list="suggestions_classification" 
+                    class="form-control background-none custom-input" 
+                    id="classification_input"
+                    name="classificacao"
+                >
+                <datalist id="suggestions_classification">
+                </datalist>
+                
+            </div>
+
+            <div class="form-group">
+                <label>Princípio ativo</label>
+                <div>
+                    <input 
+                        value={{i.principio_ativo}}
+                        type="text" 
+                        onkeyup="principio_ativo_ja_esta_registrado_check()"
+                        onselect="principio_ativo_ja_esta_registrado_check()"
+                        onchange="principio_ativo_ja_esta_registrado_check()"
+                        onblur="principio_ativo_ja_esta_registrado_check()"
+                            
+                        list="suggestions_active_substance" 
+                        class="form-control background-none custom-input float-left" 
+                        id="active_substance_input"
+                        name="principio_ativo"
+                    >
+                    <div class="btn-group btn-block">
+                        <button type='button' class="btn btn-outline-info custom-btn" onclick="adiciona_principio_ativo_a_lista()">Adicionar princípio ativo</button>
+                        <button 
+                            id="active_substance_register_button"
+                            type='button' 
+                            class="btn btn-outline-info custom-btn" 
+                            onclick="cadastra_novo_principio_ativo()">
+                            Cadastrar princípio ativo</button>
+                    </div>
+                </div>
+                <datalist id="suggestions_active_substance">
+                </datalist>
+                
+            </div>
+            <ul class="list-unstyled" id="active_substances">
+
+            </ul> 
+            <p id="principio_ativo_cadastrado" style="visibility: hidden;color: red;"></p>
+
+
+            <!-- <div class="form-group">
+                <label>Marca do medicamento</label>
+                <div>
+                    <input 
+                        type="text" 
+                        class="form-control background-none custom-input" 
+                        id="brand_input"
+                        list="suggestions_brands"
+                        onfocus="marca_ja_registrada_check()"
+                        onblur="marca_ja_registrada_check()"
+                        onselect="marca_ja_registrada_check()"
+                        onchange="marca_ja_registrada_check()"
+                        onkeyup="marca_ja_registrada_check()"
+                        >
+                    <button 
+                        id="register_brand_button"
+                        type="button" 
+                        class="btn btn-outline-info custom-btn col-6 float-right" 
+                        onclick="cadastrar_nova_marca()"
+                        >Cadastrar nova marca</button> 
+                </div>
+                <datalist id="suggestions_brands">
+                </datalist>
+            </div> -->
+            <button
+                type="submit" 
+                id="cadastrar_button" 
+                class="btn  btn-block btn-outline-info custom-btn"
+                onclick="cadastrar_medicamento()"
+                >
+                Editar</button>
+        </form>
+     
+        {% endfor %}
+        
+        {% endif %}  
+        
+          
+</div>
+
+
+{% endblock %}
