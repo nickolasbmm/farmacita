@@ -203,5 +203,40 @@ def cadastro_fornecedor(request):
     return render(request,'pessoas/pagina_cadastro_fornecedor.html')
 
 
+def editar_fornecedor(request):    
+    if request.user.is_authenticated:
+        editar = False
+
+        lista = fornecedor.objects.filter(ativo=True)
+        
+        busca = request.GET.get('buscafornecedor')
+        if busca:
+            editar = False
+            lista = fornecedor.objects.filter(nome_fornecedor__icontains = busca)
+
+        delete = request.GET.get('delete')
+        if delete:
+            teste = fornecedor.objects.filter(id_fornecedor = delete)
+            teste.update(ativo=False)
+        
+        editando = request.GET.get('edit')
+        if editando:
+            editar = True
+            lista = fornecedor.objects.filter(id_fornecedor = editando)
+
+        if request.method == "POST":
+            p = request.POST          
+            editarfornecedor = fornecedor.objects.filter(id_fornecedor=editando)
+
+            editarfornecedor.update(
+                nome_fornecedor= p.get('nome_fornecedor'),
+                telefone = p.get('telefone'),
+            )
+
+        return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar})
+    else:
+        return failed_login(request)
+
+
     
 

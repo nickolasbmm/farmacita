@@ -37,3 +37,4 @@ class fornecedor(models.Model):
     nome_fornecedor = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=18)
     telefone = models.CharField(max_length=15)
+    ativo = models.BooleanField(default=True)
