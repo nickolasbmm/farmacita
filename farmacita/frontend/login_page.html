@@ -1,7 +1,7 @@
 {% extends 'template/padrao.html' %}
 
 {%block titulo %}
-Cadastro Medicamento
+Log in
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@ Cadastro Medicamento
                 <h1 class="h1">Log in to FarmacITA</h1>
             </div>
         </div>
-        <div class="row">
+        <div class="row formulario">
             <div class="col-sm-12">
                 <div>
                     <form method="POST">{% csrf_token %}

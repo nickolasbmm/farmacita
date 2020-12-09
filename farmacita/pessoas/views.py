@@ -72,7 +72,7 @@ def cadastro_cliente(request):
             )
         novocliente.save()
             
-    return render(request,'pagina_cadastro_cliente.html')
+    return render(request,'pessoas/pagina_cadastro_cliente.html')
 
 def cadastro_usuario(request):
     if request.method == "POST":
@@ -90,7 +90,7 @@ def cadastro_usuario(request):
         print(novofuncionario.data_de_admissao)
         novofuncionario.save()
 
-    return render(request,'pagina_cadastro_de_usuario.html')
+    return render(request,'pessoas/pagina_cadastro_de_usuario.html')
 
 
 def editar_usuario(request):
@@ -140,7 +140,7 @@ def demitir_usuario(request):
         usuario.save()
         excluirfuncionario.save()
 
-    return render(request,'pagina_demissao_de_usuario.html')
+    return render(request,'pessoas/pagina_demissao_de_usuario.html')
 
 def cadastro_fornecedor(request):
     if request.method == "POST":
@@ -153,7 +153,7 @@ def cadastro_fornecedor(request):
             )
         novofornecedor.save()
             
-    return render(request,'pagina_cadastro_fornecedor.html')
+    return render(request,'pessoas/pagina_cadastro_fornecedor.html')
 
 
     
