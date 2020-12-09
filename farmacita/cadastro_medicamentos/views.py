@@ -3,10 +3,10 @@ from .models import medicamento, principio_ativo
 
 # Create your views here.
 def cadastro_medicamentos(request):
-    droga = medicamento.objects.values_list("principio_ativo", flat=True)
+    principiosativos = principio_ativo.objects.all()
     droga_list = list()
-    for i in droga:
-        droga_list.append(i)
+    for i in principiosativos:
+        droga_list.append(i.nome_principio_ativo)
     if request.method == "POST":
         p = request.POST
         item = medicamento(
@@ -15,9 +15,6 @@ def cadastro_medicamentos(request):
             principio_ativo =p.get("principio_ativo")
             )
         item.save()
-        print(item.nome_medicamento)
-    
-    
 
     return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list})
 
