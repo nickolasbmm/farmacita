@@ -11,7 +11,7 @@ class lote_medicamento(models.Model):
     quantidade_de_caixas = models.CharField(max_length=100)
     quantidade_por_caixa = models.CharField(max_length=100)
     dosagem = models.CharField(max_length=100)
-    data_de_validade = models.DateTimeField(auto_now=False,auto_now_add=False,null=False)
+    data_de_validade = models.DateField(auto_now=False,auto_now_add=False,null=False)
     industria_farmaceutica = models.CharField(max_length=100)
     excluido = models.BooleanField(default=False)
 

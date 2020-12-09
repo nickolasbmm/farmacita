@@ -46,4 +46,4 @@ def excluir_lote(request):
         excluirlote.excluido = True
         excluirlote.save()
 
-    return render(request,'pagina_excluir_lote.html')
+    return render(request,'estoque/pagina_excluir_lote.html')
