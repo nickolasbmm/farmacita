@@ -5,6 +5,7 @@ from controle_estoque.models import lote_medicamento
 from cadastro_medicamentos.models import medicamento
 from django.contrib.auth.models import User
 from datetime import datetime
+from .models import ordem_de_venda
 import json
 
 # Create your views here.
@@ -18,8 +19,9 @@ def autorizar_desconto(password):
 
 
 def criar_ordem_de_venda(request):
-    
+    quant_est = 0
     cpf_cliente_validos = []
+
     clientes_validos = cliente.objects.all()
     for x in clientes_validos:
         cpf_cliente_validos.append(x.cpf)
@@ -41,26 +43,22 @@ def criar_ordem_de_venda(request):
     
     if id_lote:
         lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
-        nome = lista.get().id_medicamento
+        busca = lista.get().id_medicamento
         quant_est = lista.get().quantidade_de_caixas 
 
 
     if request.method == "POST":
-        
         p = request.POST
         qtd = p.get("quantidade")
+        CPF = p.get("cpf")
         
-        if qtd > lote_medicamento.objects.get(id_lote_medicamento = id_lote).quantidade_de_caixas:
-            alert("quantidade inválida")
-        else:
-            cpf = p.get("cpf")
-            novaordemvenda = cliente(
-                id_cliente = cliente.objects.get(cpf = cpf).id_cliente, 
-                id_lote_medicamento = id_lote,
-                quantidade = qtd,
-                desconto = autorizar_desconto(p.get("senha"))
-                )
-            novaordemvenda.save()
+        novaordemvenda = ordem_de_venda(
+            id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
+            id_cliente = cliente.objects.get(cpf = CPF), 
+            quantidade = qtd,
+            #desconto = autorizar_desconto(p.get("senha"))
+            )
+        novaordemvenda.save()
         
 
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
