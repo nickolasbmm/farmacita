@@ -13,34 +13,36 @@ function mascara_cpf(i){
 
 }
 
+
 function testa_cpf(campo_cpf){
     valor_do_campo = campo_cpf.value
     cpf = valor_do_campo.replace(/[.-]/g,'')
-    
-    soma1 = 0
-    for(i = 0; i < 9; i++){
-        soma1 += cpf[i] * (10-i)
-    }
-    resto1 = ((soma1 * 10) % 11)%10
+    valido = false
+    if (cpf.length == 11){
+        soma1 = 0
+        for(i = 0; i < 9; i++){
+            soma1 += cpf[i] * (10-i)
+        }
+        resto1 = ((soma1 * 10) % 11)%10
 
-    soma2 = 0
-    for(i = 0; i < 10; i++){
-        soma2 += cpf[i] * (11-i)
-    }
-    resto2 = ((soma2 * 10) % 11)%10
+        soma2 = 0
+        for(i = 0; i < 10; i++){
+            soma2 += cpf[i] * (11-i)
+        }
+        resto2 = ((soma2 * 10) % 11)%10
 
-    valido = true
-
-    if(resto1 == cpf[9] & resto2 == cpf[10]){
         valido = true
-    }
-    else{
-        valido = false
-    }
-    if(/^(.)\1*$/.test(cpf)){
-        valido = false
-    }
 
+        if(resto1 == cpf[9] & resto2 == cpf[10]){
+            valido = true
+        }
+        else{
+            valido = false
+        }
+        if(/^(.)\1*$/.test(cpf)){
+            valido = false
+        }
+    }
     if(!valido){
         selectCPF = $("#cpf")[0]
         $("#cpf").val("")
@@ -53,6 +55,51 @@ function testa_cpf(campo_cpf){
     }
 
 };
+validarCNPJ = (campo_cnpj) =>{
+    cnpj = campo_cnpj.value.replace(/\D/g,"")
+    valid = false
+    console.log(cnpj.length)
+    if(cnpj.length == 14){
+        array_validacao1 = [5,4,3,2,9,8,7,6,5,4,3,2]
+        sum1 = 0
+        for (i = 0; i < array_validacao1.length; i++){
+            sum1 += cnpj[i] * array_validacao1[i]
+        }
+        resto1 = sum1%11
+        if (resto1 < 2){
+            resto1 = 0
+        }else{
+            resto1 = 11 - resto1
+        }
+
+        array_validacao2 = [6,5,4,3,2,9,8,7,6,5,4,3,2]
+        sum2 = 0
+        for (i = 0; i < array_validacao2.length; i++){
+            sum2 += cnpj[i] * array_validacao2[i]
+        }
+        resto2 = sum2%11
+        if (resto2 < 2){
+            resto2 = 0
+        }else{
+            resto2 = 11 - resto2
+        }
+        console.log(resto1, cnpj[12], resto2, cnpj[13])
+        if (resto1 == cnpj[12] && resto2 == cnpj[13]){
+            valid = true
+        }
+    }
+
+    if(!valid){
+        selectCNPJ = $("#cnpj")[0]
+        $("#cnpj").val("")
+        selectCNPJ.placeholder="cnpj inválido"
+        $("#cnpj").css("border", "1px solid red")
+    }
+    else{
+        $("#cnpj").css("border", "1px solid #ced4da")
+    }
+    
+}
 
 function confirmar_senha(campo_senha){
     campo = campo_senha.value
@@ -108,6 +155,7 @@ function fMascEx() {
 obj.value=masc(obj.value)
 }
 
+
 function mCPF(cpf){
     cpf=cpf.replace(/\D/g,"")
     cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
@@ -122,6 +170,16 @@ function mTel(tel){
     tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
     tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
     return tel
+}
+
+//04.946.087/0001-45
+function mCNPJ(cnpj){
+    cnpj=cnpj.replace(/\D/g,"")
+    cnpj=cnpj.replace(/(\d{2})(\d)/,"$1.$2")
+    cnpj=cnpj.replace(/(\d{3})(\d)/,"$1.$2")
+    cnpj=cnpj.replace(/(\d{3})(\d{6})$/,"$1/$2")
+    cnpj=cnpj.replace(/(\d{4})(\d{2})$/,"$1-$2")
+    return cnpj
 }
 
 function idade(nascimento) {
