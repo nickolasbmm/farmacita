@@ -1,0 +1,104 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{%block titulo-conteudo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div>
+    <script>
+        
+        industrias_farmaceuticas_validas = []
+
+        lista_de_medicamentos_validos = {{nomes_medicamentos_validos | safe }}
+        lista_fornecedores_validos = {{nomes_fornecedores_validos | safe}}
+
+        add_sugestoes = function () {
+            adiciona_sugestao_generic(lista_de_medicamentos_validos, "suggestions_medicine")
+            adiciona_sugestao_generic(lista_fornecedores_validos, "suggestions_providers")
+            adiciona_sugestao_generic(industrias_farmaceuticas_validas, "suggestions_industries")
+        }
+        $(document).ready(function () {
+            add_sugestoes()
+        });
+        
+    </script>
+    
+
+    </div>
+    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input 
+                            type="text" 
+                            class="form-control background-none custom-input"
+                            list="suggestions_client"
+                            name="nome_cliente"
+                        >
+                        <datalist
+                            id="suggestions_client"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Medicamento</label>
+                        <input 
+                            type="text" 
+                            class="form-control background-none custom-input"
+                            list="suggestions_medicamento"
+                            name="nome_medicamento"
+                        >
+                        <datalist
+                            id="suggestions_medicamento"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <div class="input-group">
+                            <input type="number"
+                             class="form-control"
+                             name="quantidade"
+                             min=0>
+                
+                          </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Desconto</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">%</span>
+                            </div>
+                            <input 
+                                type="number" 
+                                step="0.01"
+                                min="0"
+                                class="form-control background-none custom-input"
+                                name="desconto"
+                            >
+                        </div>
+                        <br>
+
+                    <button 
+                        type="submit" 
+                        class="btn  btn-block btn-outline-info custom-btn">
+                        Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+{% endblock %}

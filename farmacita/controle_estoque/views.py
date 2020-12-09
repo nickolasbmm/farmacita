@@ -26,7 +26,7 @@ def entrada_estoque(request):
         novo_lote.save()   
 
     nomes_medicamentos_validos = []
-    medicamentos_validos=medicamento.objects.all()
+    medicamentos_validos = medicamento.objects.all()
     for x in medicamentos_validos:
         nomes_medicamentos_validos.append(x.nome_medicamento)
     
