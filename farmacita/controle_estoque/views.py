@@ -36,7 +36,7 @@ def entrada_estoque(request):
         nomes_fornecedores_validos.append(x.nome_fornecedor)
 
 
-    return render(request,'pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
+    return render(request,'estoque/pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
 
 def excluir_lote(request):
     

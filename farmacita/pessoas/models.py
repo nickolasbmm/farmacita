@@ -9,6 +9,7 @@ from datetime import datetime
 # Para a lista de propriedades e métodos de User veja https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#user-model
 
 class funcionario(models.Model):
+    id = models.AutoField(primary_key=True, auto_created=True)
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     nome_funcionario = models.CharField(max_length=300)
     cpf = models.CharField(max_length=14) 
@@ -17,6 +18,8 @@ class funcionario(models.Model):
     #privilegio = models.CharField(max_length=100)
     data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=False,null=False)
     data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False,null=True)
+    class Meta:
+        db_table = 'funcionarios'
 
 class cliente(models.Model):
     id_cliente = models.AutoField(primary_key=True)

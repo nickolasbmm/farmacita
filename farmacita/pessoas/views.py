@@ -94,6 +94,7 @@ def cadastro_usuario(request):
 
 
 def editar_usuario(request):
+    '''
     if request.method == "POST":
         p = request.POST
         user = request.user
@@ -118,6 +119,7 @@ def editar_usuario(request):
         return redirect('/')
 
     user = funcionario.objects.get(user=request.user)
+    
     dados= {
         "nome_funcionario" : user.nome_funcionario,
         "cpf" : user.cpf,
@@ -126,8 +128,36 @@ def editar_usuario(request):
         "data_de_admissao" : user.data_de_admissao.isoformat()
     }
     dados = json.dumps(dados)
-    
-    return render(request,'pagina_edicao_de_usuario.html',{'dados':dados})
+    return render(request,'pessoas/pagina_edicao_de_usuario.html',{'dados':dados})
+    '''
+    if request.user.is_authenticated:
+        editar = False
+
+        lista = funcionario.objects.all()
+        
+        busca = request.GET.get('buscacliente')
+        if busca:
+            editar = False
+            lista = funcionario.objects.filter(nome_funcionario__icontains = busca)
+
+        delete = request.GET.get('delete')
+        data = request.GET.get('data_de_demissao')
+        if delete:
+            print("olha aki")
+            teste = funcionario.objects.filter(id = delete)
+            print(data)
+            teste.update(data_de_demissao = data)
+        
+        editando = request.GET.get('edit')
+        if editando:
+            editar = True
+            lista = funcionario.objects.filter(id = editando)
+
+
+
+        return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar})
+    else:
+        return failed_login(request)
 
 
 def demitir_usuario(request):
