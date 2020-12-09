@@ -27,6 +27,9 @@ class cliente(models.Model):
     cpf = models.CharField(max_length=14)
     telefone = models.CharField(max_length=15)
     data_nascimento = models.DateField(default=datetime.now)
+    ativo = models.BooleanField(default=True)
+    class Meta:
+        db_table = 'clientes'
     
 
 class fornecedor(models.Model):

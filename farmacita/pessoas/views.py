@@ -74,6 +74,32 @@ def cadastro_cliente(request):
             
     return render(request,'pessoas/pagina_cadastro_cliente.html')
 
+def editar_cliente(request): 
+    if request.user.is_authenticated:
+        editar = False
+
+        lista = cliente.objects.all()
+        
+        busca = request.GET.get('buscacliente')
+        if busca:
+            editar = False
+            lista = cliente.objects.filter(nome_cliente__icontains = busca)
+
+        delete = request.GET.get('delete')
+        
+        if delete:            
+            teste = cliente.objects.filter(id_cliente = delete)
+            teste.update(ativo = False)
+        
+        editando = request.GET.get('edit')
+        if editando:
+            editar = True
+            lista = cliente.objects.filter(id_cliente = editando)      
+
+        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar})
+    else:
+        return failed_login(request)
+
 def cadastro_usuario(request):
     if request.method == "POST":
         p = request.POST
@@ -92,44 +118,7 @@ def cadastro_usuario(request):
 
     return render(request,'pessoas/pagina_cadastro_de_usuario.html')
 
-
-def editar_usuario(request):
-    '''
-    if request.method == "POST":
-        p = request.POST
-        user = request.user
-        editarfuncionario = funcionario.objects.filter(user=user)
-        senha_nova = p.get('senha',None)
-        senha_antiga = p.get('senha_antiga')
-        print(senha_nova)
-        print(senha_antiga)
-        print(user.password)
-        if senha_nova != None:
-            if user.check_password(senha_antiga):
-                user.set_password(senha_nova)
-                user.save()
-
-        editarfuncionario.update(
-            nome_funcionario = p.get('nome_funcionario'),
-            cpf = p.get('cpf'),
-            telefone = p.get('telefone'),
-            cargo = p.get('cargo'),
-            data_de_admissao = p.get('data_de_admissao'),
-        )
-        return redirect('/')
-
-    user = funcionario.objects.get(user=request.user)
-    
-    dados= {
-        "nome_funcionario" : user.nome_funcionario,
-        "cpf" : user.cpf,
-        "telefone" : user.telefone,
-        "cargo" : user.cargo,
-        "data_de_admissao" : user.data_de_admissao.isoformat()
-    }
-    dados = json.dumps(dados)
-    return render(request,'pessoas/pagina_edicao_de_usuario.html',{'dados':dados})
-    '''
+def editar_usuario(request):    
     if request.user.is_authenticated:
         editar = False
 
@@ -153,13 +142,42 @@ def editar_usuario(request):
             editar = True
             lista = funcionario.objects.filter(id = editando)
 
-
+        if request.method == "POST":
+            p = request.POST          
+            user = request.user
+            editarfuncionario = funcionario.objects.filter(id=editando)
+            senha_nova = p.get('senha',None)
+            senha_antiga = p.get('senha_antiga')
+            print(senha_nova)
+            print(senha_antiga)
+            print(user.password)
+            if senha_nova != None:
+                if user.check_password(senha_antiga):
+                    user.set_password(senha_nova)
+                    user.save()
+                        
+            
+            if(p.get('data_de_admissao')== ""):
+                print("entrou na data")                
+                editarfuncionario.update(
+                nome_funcionario = p.get('nome_funcionario'),
+                telefone = p.get('telefone'),
+                cargo = p.get('cargo'),
+                )  
+            else:     
+                print("nao entrou na data")           
+                editarfuncionario.update(
+                    nome_funcionario = p.get('nome_funcionario'),
+                    telefone = p.get('telefone'),
+                    cargo = p.get('cargo'),
+                    data_de_admissao = p.get('data_de_admissao'),
+                )
 
         return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar})
     else:
         return failed_login(request)
 
-
+''' nao vai ser utilizada
 def demitir_usuario(request):
     if request.method == "POST":
         p = request.POST
@@ -171,6 +189,7 @@ def demitir_usuario(request):
         excluirfuncionario.save()
 
     return render(request,'pessoas/pagina_demissao_de_usuario.html')
+'''
 
 def cadastro_fornecedor(request):
     if request.method == "POST":

@@ -42,6 +42,9 @@ function testa_cpf(campo_cpf){
     }
 
     if(!valido){
+        selectCPF = $("#cpf")[0]
+        $("#cpf").val("")
+        selectCPF.placeholder="CPF inválido"
         $("#cpf").css("border", "1px solid red")
         console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
     }
@@ -50,6 +53,20 @@ function testa_cpf(campo_cpf){
     }
 
 };
+
+function confirmar_senha(campo_senha){
+    campo = campo_senha.value
+    if($("#senha").val()==campo){
+        $("#confirmacao_senha").css("border", "1px solid #ced4da")
+        $("#texto_confirmacao_senha").css('visibility','hidden');
+    }
+    else{
+        $("#confirmacao_senha").val("")
+        $("#texto_confirmacao_senha").css('visibility','visible');
+        $("#confirmacao_senha").css("border", "1px solid red")
+    }
+}
+
 String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
 function () {
     "use strict";
@@ -105,4 +122,29 @@ function mTel(tel){
     tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
     tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
     return tel
+}
+
+function idade(nascimento) {
+    console.log(nascimento)
+    var hoje = new Date
+    var nascimento2 = new Date(nascimento)
+    var diferencaAnos = hoje.getFullYear() - nascimento2.getFullYear();
+    if ( new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()) < 
+        new Date(hoje.getFullYear(), nascimento2.getMonth(), nascimento2.getDate()) )
+        diferencaAnos--;
+    return diferencaAnos;
+}
+
+function checarIdade(nascimento){
+    var anos = idade(nascimento)
+    console.log(anos)
+    if (anos<18){
+        $("#data_nasc").css("border", "1px solid red")
+        alert("O cliente deve ser maior de idade!")
+        $("#data_nasc").val("")
+        
+    }
+    else{
+        $("data_nasc").css("border", "1px solid #ced4da")
+    }
 }

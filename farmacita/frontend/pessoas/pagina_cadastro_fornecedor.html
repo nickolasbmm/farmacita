@@ -1,4 +1,3 @@
-
 {% extends 'template/padrao.html' %}
 
 {%block titulo %}
@@ -68,7 +67,15 @@ Cadastro de Fornecedor
                             placeholder=""
                             maxlength=14
                             required> -->
-                            <input type="text" class="form-control background-none custom-input" id="cnpj" name="cnpj" required>
+                            <input 
+                                type="text" 
+                                class="form-control background-none custom-input" 
+                                id="cnpj" 
+                                name="cnpj"
+                                onblur="validarCNPJ(this)" 
+                                required
+                                maxlength=18
+                                >
                         
                         
                     </div>
