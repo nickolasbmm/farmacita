@@ -14,24 +14,17 @@ def deslogar(request):
 def principal(request):
     return render(request,'sucessful_login.html')
 
-
-##add fernanda
 def direcionar_usuario(request,cargo):
         if cargo == "Balconista":
-            print("você é balconista")
-            return sucessful_login(request)
+            return render(request,'pessoas/inicio_balconista.html')
         elif cargo == "Caixa":
-            print("você é caixa")
-            return sucessful_login(request)
+            return render(request,'pessoas/inicio_caixa.html')
         elif cargo == "Farmacêutico":
-            print("você é farmaceutico")
-            return sucessful_login(request)
+            return render(request,'pessoas/inicio_farmaceutico.html')
         elif cargo == "Gerente Financeiro":
-            print("você é gerente financeiro")
-            return sucessful_login(request)
+            return render(request,'pessoas/inicio_gerente_financeiro.html')
         else:
             return failed_login(request)
-##
 
 def authentication(request):
     if request.user.is_authenticated:
@@ -47,8 +40,6 @@ def authentication(request):
             func = funcionario.objects.get(user=user)
             cargo = func.cargo
             return direcionar_usuario(request, cargo)
-            ##
-            return sucessful_login(request)
         else:
             return failed_login(request)
     else:
