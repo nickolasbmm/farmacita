@@ -11,3 +11,7 @@ class medicamento(models.Model):
     
     def __str__(self):
         return self.nome_medicamento
+
+
+class principio_ativo(models.Model):
+    nome_principio_ativo = models.CharField(max_length=100)

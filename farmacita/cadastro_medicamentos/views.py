@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from .models import medicamento
+from django.shortcuts import render, HttpResponse
+from .models import medicamento, principio_ativo
 
 # Create your views here.
 def cadastro_medicamentos(request):
@@ -16,6 +16,9 @@ def cadastro_medicamentos(request):
             )
         item.save()
         print(item.nome_medicamento)
+    
+    
+
     return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list})
 
 def editar_medicamento(request):   
@@ -39,4 +42,12 @@ def excluir_medicamento(request):
         )
     return render(request,'medicamento/pagina_exclusao_medicamento.html')
 
+def cadastrar_principio_ativo(request):
+    if request.method == "POST":
+        p = request.POST
+        novonome = p.get("nome_principio_ativo")
+        novoprincipioativo = principio_ativo(nome_principio_ativo=novonome)
+        novoprincipioativo.save()
+
+    return HttpResponse(200)
 
