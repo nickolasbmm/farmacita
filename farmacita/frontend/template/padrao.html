@@ -19,7 +19,17 @@
     <script src="{% static 'bootstrap-4.5.3-dist/js/bootstrap.bundle.js' %}" type="text/javascript"></script>
     <script src="{% static '_js/script.js' %}" type="text/javascript"></script>
 
-    
+    <!-- Se o usuário não estiver logado, redireciona para pagina de login -->
+    <!-- ###login_redirect### -->
+    {% if not user.is_authenticated %}
+        <script>
+            console.log(window.location)
+            if(window.location.pathname != '/pessoas/authentication'){
+                window.location='/pessoas/authentication'
+            }
+        </script>
+    {% endif %}
+
 
 </head>
 
