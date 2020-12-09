@@ -1,0 +1,125 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Medicamentos
+{% endblock %}
+
+{%block titulo-conteudo %}
+Medicamentos Cadastrados
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div>    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <form method="GET">
+                    <div class="input-group-prepend">                    
+                        <input type="text" class="form-control" placeholder="Nome" name="buscacliente" id="buscacliente">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                    </div>              
+                    </form>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nome do Cliente</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Nascimento</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>            
+            {% for i in lista %}
+            {% if i.ativo %}                      
+            <tbody>
+                <tr class={{i.id_cliente}}>
+                    <th scope="row">{{i.id_cliente}}</th>
+                    <td class = "nome">{{i.nome_cliente}}</td>
+                    <td class = "cpf">{{i.cpf}}</td>
+                    <td class = "telefone">{{i.telefone}}</td>
+                    <td class = "nascimento">{{i.data_nascimento}} </td>
+                    <td>
+                        <form class= "centro">
+                            <button value = {{i.id_cliente}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                        </form>
+                    </td>
+                   
+                    <td>
+                        <form class= "centro">
+                            <style>
+                                .centro{
+                                    text-align: center;            
+                                }
+                                .botao{
+                                    margin-bottom:6px;
+                                }
+                            </style>  
+                            <button  value = {{i.id_cliente}} name = 'delete' class="btn btn-danger botao" type = "submit">X</button>                                                                       
+                        </form>                        
+                    </td>
+                </tr>
+            </tbody>
+                
+            {% endif %}    
+            {% endfor %}
+            
+        </table>
+        
+        {% if editar %}
+        {% for i in lista %}
+
+        <form class="formulario" method="POST" autocomplete="off">
+            {% csrf_token %}            
+            <div class="form-group">
+                <label>Nome</label>
+                <input value = {{i.nome_cliente}} type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
+            </div>
+            <div class="form-group">
+                <label>CPF</label>
+                <p>{{i.cpf}}</p>
+            </div>
+            <div class="form-group">
+                <label>Telefone</label>
+                <p>Anterior : {{i.telefone}}</p>
+                <input 
+                value = {{i.telefone}}
+                type="tel" 
+                name="telefone" 
+                class="form-control background-none custom-input" 
+                id="telefone" 
+                onkeydown="javascript: fMasc( this, mTel )" 
+                maxlength=15
+                required>
+            </div>                    
+            <div class="form-group">
+                <label>Data de Nascimento</label> 
+                <p>Data anterior : {{i.data_nascimento}}</p>
+                <input 
+                    value = None 
+                    type="date" 
+                    class="form-control background-none custom-input" 
+                    id="data_de_admissao" 
+                    name = 'data_de_admissao'
+                    onchange="checarIdade(value)"
+                    >
+            </div>           
+            <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
+        </form>
+        {% endfor %}
+        
+        {% endif %}  
+        
+    </div>       
+</div>
+
+
+{% endblock %}

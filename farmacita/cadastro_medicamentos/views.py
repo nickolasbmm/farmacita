@@ -28,7 +28,7 @@ def editar_medicamento(request):
             classificacao = p.get("classificacao"), 
             principio_ativo =p.get("principio_ativo")
         )
-    return render(request,'medicamento/pagina_edicao_medicamento.html')
+    return render(request,'medicamento/editar_medicamento.html')
 
 def excluir_medicamento(request):   
     if request.method == "POST":
