@@ -41,6 +41,9 @@ def vender(id_cliente):
             "ativo": ordem.ativo
         }
         dados = json.dumps(dados)
+        ##diminuir estoque
+
+
 
 def desistir_compra(request):
     if request.method == "POST":
@@ -63,7 +66,6 @@ def vender_medicamento(request):
         cpf = p.get("cpf")
         id_cliente = cliente.objects.filter(cpf = cpf).id_cliente
         vender(id_cliente)
-        ##diminuir estoque
     return render(request,'pagina_vender_medicamento.html')
 
 
