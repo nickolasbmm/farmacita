@@ -1,11 +1,11 @@
 {% extends 'template/padrao.html' %}
 
 {%block titulo %}
-Cadastro de Ordem de Venda
+Consulta de Ordem de Venda
 {% endblock %}
 
 {%block titulo-conteudo %}
-Cadastro de Ordem de Venda
+Consulta de Ordem de Venda
 {% endblock %}
 
 {% block content %}
@@ -93,17 +93,17 @@ Cadastro de Ordem de Venda
                                                 </td>
                                                 <td>
                         <form class= "centro">
-                            <button value = {{i.id_ordem}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
+                            <button value = {{i.id_ordem_de_venda}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
                         </form>
                     </td>
                     <td>
                         <form class= "centro">
-                            <button value = {{i.id_ordem}} name = "edit" class="btn btn-warning"  type = "submit" >Editar</button>
+                            <button value = {{i.id_ordem_de_venda}} name = "edit" class="btn btn-warning"  type = "submit" >Editar</button>
                         </form>
                     </td>
                     <td>
                         <form class= centro>
-                            <button value = {{i.id_ordem}} name = 'excluir' class="btn btn-danger"  type = "submit" ><i class="fas fa-trash-alt"></i></button> 
+                            <button value = {{i.id_ordem_de_venda}} name = 'delete' class="btn btn-danger"  type = "submit" ><i class="fas fa-trash-alt"></i></button> 
                         </form>
                     </td>
                     

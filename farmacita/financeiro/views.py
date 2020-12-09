@@ -76,7 +76,6 @@ def consultar_ordem_de_venda(request):
     for x in clientes_validos:
         cpf_cliente_validos.append(x.cpf)
 
-
     lista = []
 
     busca = request.GET.get("buscaCliente")
@@ -89,6 +88,14 @@ def consultar_ordem_de_venda(request):
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
+
+    delete = request.GET.get('delete')
+    if delete:            
+            teste = ordem_de_venda.objects.filter(id_ordem_de_venda = delete)
+            teste.update(ativo = False)
+
+   
+
 
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
                                                                                 "lista":lista,
