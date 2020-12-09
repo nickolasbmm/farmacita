@@ -10,61 +10,14 @@ import json
 # Create your views here.
 def autorizar_desconto(password):
     user = User.objects.filter(password = password)
-    func = funcionario.objects.get(user=user)
-    if(func.cargo == "Gerente Financeiro"):
+    func = funcionario.objects.get(user=user).id
+    if(func):
         return True
     return False
 
 
-def criar_ordem_de_venda(request, busca, id):
-    get_aplicar_deconto = request.GET.get('aplicar_desconto')
-    if get_aplicar_deconto:
-        aplicar_desconto = True
-    cpf_cliente_validos = []
-    clientes_validos = cliente.objects.all()
 
-    for x in clientes_validos:
-        cpf_cliente_validos.append(x.cpf)
-        
-    nome_med_validos= []
-    
-    
-    medicamentos = medicamento.objects.all()
-    for x in medicamentos:
-        nome_med_validos.append(x.nome_medicamento)
-
-    nome_med = ""
-    if request.method == "POST":
-        p = request.POST
-        id_lote = p.get("id_lote")
-        id_med = lote_medicamento.objects.get(id_lote_medicamento = id_lote).id_medicamento
-        nome_med = medicamentos.get(id_medicamento = id_med)
-        qtd = p.get("quantidade")
-        #if qtd > lote_medicamento.objects.filter(id_lote_medicamento = id_lote).quantidade:
-            #return render(request,'pagina_falha_criar_ordem_de_venda.html')
-        cpf = p.get("cpf")
-        novaordemvenda = cliente(
-            id_cliente = cliente.objects.filter(cpf = cpf).id_cliente, 
-            id_lote_medicamento = id_lote,
-            quantidade = qtd,
-            desconto = autorizar_desconto(p.get("cod_desconto"))
-            )
-        novaordemvenda.save()  
-         
-    return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"aplicar_desconto": aplicar_desconto,
-                                                                            "cpf_cliente_validos":cpf_cliente_validos, 
-                                                                            "nome_med_validos" : nome_med_validos, 
-                                                                            "id_lote": id_lote,
-                                                                            "nome_med" :nome_med} )
-
-
-def pesquisa_lote(request):
-    lote_med_id = []
-    nome = []
-    lista_lote = lote_medicamento.objects.all()
-    for x in lista_lote:
-        lote_med_id.append(x.id_lote_medicamento)
-        nome.append(x.id_lote_medicamento)
+def criar_ordem_de_venda(request):
     
     cpf_cliente_validos = []
     clientes_validos = cliente.objects.all()
@@ -87,15 +40,36 @@ def pesquisa_lote(request):
     id_lote = request.GET.get('vender') 
     
     if id_lote:
-        
-        return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"id_lote": id_lote, 
-                                                                                "cpf_cliente_validos":cpf_cliente_validos,
-                                                                                "nome":nome,
-                                                                                "lote_med_id":lote_med_id})
+        lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
+        nome = lista.get().id_medicamento
+        quant_est = lista.get().quantidade_de_caixas 
 
-    return render(request,'financeiro/pagina_pesquisa_lote.html', {"lista": lista,
+
+    if request.method == "POST":
+        
+        p = request.POST
+        qtd = p.get("quantidade")
+        
+        if qtd > lote_medicamento.objects.get(id_lote_medicamento = id_lote).quantidade_de_caixas:
+            alert("quantidade inválida")
+        else:
+            cpf = p.get("cpf")
+            novaordemvenda = cliente(
+                id_cliente = cliente.objects.get(cpf = cpf).id_cliente, 
+                id_lote_medicamento = id_lote,
+                quantidade = qtd,
+                desconto = autorizar_desconto(p.get("senha"))
+                )
+            novaordemvenda.save()
+        
+
+    return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
                                                             "nome_med_validos" : nome_med_validos, 
-                                                            "busca" :busca} )
+                                                            "busca" :busca,
+                                                            "id_lote": id_lote,
+                                                            "nome": nome,
+                                                            "quant_est": quant_est,
+                                                            "cpf_cliente_validos":cpf_cliente_validos} )
 
 
 

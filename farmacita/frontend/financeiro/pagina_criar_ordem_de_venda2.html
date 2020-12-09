@@ -13,78 +13,96 @@ Cadastro de Ordem de Venda
 {% load static %}
 
 <div>
-    
+    <script>
+        function fMasc(objeto,mascara) {
+            obj=objeto
+            masc=mascara
+            setTimeout("fMascEx()",1)
+            }
+
+            function fMascEx() {
+            obj.value=masc(obj.value)
+            }
+
+            function mCPF(cpf){
+                cpf=cpf.replace(/\D/g,"")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+                return cpf    
+            }
+        
+            function mTel(tel){
+                tel=tel.replace(/\D/g,"")
+                tel=tel.replace(/(\d{1})/,"($1")
+                tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
+                tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
+                return tel
+            }
+
+            function testa_cpf(campo_cpf){
+            valor_do_campo = campo_cpf.value
+            cpf = valor_do_campo.replace(/[.-]/g,'')
+            
+            soma1 = 0
+            for(i = 0; i < 9; i++){
+                soma1 += cpf[i] * (10-i)
+            }
+            resto1 = ((soma1 * 10) % 11)%10
+
+            soma2 = 0
+            for(i = 0; i < 10; i++){
+                soma2 += cpf[i] * (11-i)
+            }
+            resto2 = ((soma2 * 10) % 11)%10
+
+            valido = true
+
+            if(resto1 == cpf[9] & resto2 == cpf[10]){
+                valido = true
+            }
+            else{
+                valido = false
+            }
+            if(/^(.)\1*$/.test(cpf)){
+                valido = false
+            }
+
+            if(!valido){
+                selectCPF = $("#cpf")[0]
+                $("#cpf").val("")
+                selectCPF.placeholder="CPF inválido"
+                $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
+            }
+            else{
+                
+                $("#cpf").css("border", "1px solid #ced4da")
+                
+            }
+
+        };
+        
+    </script>
     <script>
         
-        
+        industrias_farmaceuticas_validas = []
+
         lista_de_medicamentos_validos = {{nome_med_validos | safe }}
         lista_cpf_cliente = {{cpf_cliente_validos | safe}}
-
 
         add_sugestoes = function () {
             adiciona_sugestao_generic(lista_de_medicamentos_validos, "suggestions_medicine")
             adiciona_sugestao_generic(lista_cpf_cliente, "suggestions_client")
+            adiciona_sugestao_generic(industrias_farmaceuticas_validas, "suggestions_industries")
         }
         $(document).ready(function () {
             add_sugestoes()
+            
         });
         
+        
     </script>
-    
-    <div class="row formulario">
-        <div class="col-sm-12">
-            <div>                
-                <form method="GET">
-
-                    <div class="input-group-prepend">
-                    
-                        <input type="text" class="form-control" placeholder="Medicamento" list="suggestions_medicamento" name="buscaMedicamento" id="buscaMedicamento">
-                        <datalist
-                            id="suggestions_medicamento"></datalist>
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
-                        
-                    </div>              
-                
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="tabela">
-        <table class="table table-hover">
-            <thead class="table-info">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Nome do Medicamento</th>
-                    <th scope="col">Quantidade por caixa</th>
-                    <th scope="col">Dosagem</th>
-                    <th scope="col">Data de Validade</th>
-                    <th scope="col">Preço</th>
-                    <th scope="col">Quantidade em estoque</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>            
-            {% for i in lista %}                      
-            <tbody>
-                <tr class={{i.id}}>
-                    <th scope="row">{{i.id_lote_medicamento}}</th>
-                    <td class = "nome">{{busca}}</td>
-                    <td class = "Quantidade">{{i.quantidade_por_caixa}}</td>
-                    <td class = "Dosagem">{{i.dosagem}}</td>
-                    <td class = "Data de Validade">{{i.data_de_validade}}</td>
-                    <td class = "Preço">{{i.preco}}</td>
-                    <td class = "Quantidade em estoque">{{i.quantidade_de_caixas}}</td>
-                    
-                    <td>
-                        <form class= "centro">
-                            <button value = {{i.id_lote_medicamento}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-            {% endfor %}
-        </table>        
-    </div>
     <div class="row formulario">
         <div class="col-sm-12">
             <div>
@@ -114,10 +132,6 @@ Cadastro de Ordem de Venda
                              class="form-control"
                              name="quantidade"
                              min=0
-                             max = {{quant_est}}
-                             onchange="checar(this)"
-                             id = "quantidade"
-                             placeholder= ""
                              required>
                 
                           </div>
@@ -128,9 +142,10 @@ Cadastro de Ordem de Venda
                             type="text" 
                             class="form-control background-none custom-input"
                             name="nome_med"
-                            value= {{nome}}
+                            value= {{busca}}
                             disabled>
                     </div>
+                    
                     <div class="form-group">
                         <label>Nº Lote</label>
                         <input 
@@ -147,7 +162,7 @@ Cadastro de Ordem de Venda
                         
                         <div class="input-group">
                             <label class="btn btn-outline-primary form-check-label">
-                            <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this)"> Desconto
+                            <button type="button" id="desconto" value="clicked" name = 'desconto' onchange="handle_change(this)"> Desconto</button>
                         </label>
 
                             <div class="input-group-prepend">
@@ -175,7 +190,7 @@ Cadastro de Ordem de Venda
                             id= "senha"
                             type="password" 
                             class="form-control background-none custom-input"
-                            name="senha"
+                            name="Senha"
                         >
                     </div>
 
@@ -184,28 +199,20 @@ Cadastro de Ordem de Venda
                         class="btn  btn-block btn-outline-info custom-btn">
                         Cadastrar</button>
                 </form>
+                <br>
+                <form class= "centro">
+                    <button value = "True" name = 'voltar' class="btn  btn-block btn-outline-info custom-btn"  type = "submit" >Voltar</button> 
+                </form>
                 
             </div>
         </div>
     </div>
-    
-    
     <script>
-        function haddle(checkboxElem) {
-            if (checkboxElem.checked) {
-                $('#senha').attr("required", "req");
-                $('#perc_desc').attr("required", "req");
-            } else {
-                $('#senha').removeAttr("required", "req");
-                $('#perc_desc').removeAttr("required", "req");
-            }
-}
+
+
     
     </script>
-
-
-
-
+</div>
     <script src="./jquery-3.5.1.min.js"></script>
     <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
     <script src="_js/script.js"></script>
