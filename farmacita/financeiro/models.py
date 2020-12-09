@@ -2,6 +2,8 @@ from django.db import models
 from pessoas.models import cliente
 from controle_estoque.models import lote_medicamento
 from datetime import datetime
+from cadastro_medicamentos.models import medicamento
+from pessoas.models import fornecedor
 
 # Create your models here.
 '''
