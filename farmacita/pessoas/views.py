@@ -156,22 +156,20 @@ def editar_usuario(request):
                     user.set_password(senha_nova)
                     user.save()
                         
-            
-            if(p.get('data_de_admissao')== ""):
-                print("entrou na data")                
-                editarfuncionario.update(
+            admissao = p.get('data_de_admissao')
+            demissao = p.get('data_de_demissao')
+            if(admissao== ""):
+                admissao = editarfuncionario.data_de_admissao
+            if(demissao== ""):
+                demissao = editarfuncionario.data_de_demissao
+
+            editarfuncionario.update(
                 nome_funcionario = p.get('nome_funcionario'),
                 telefone = p.get('telefone'),
                 cargo = p.get('cargo'),
-                )  
-            else:     
-                print("nao entrou na data")           
-                editarfuncionario.update(
-                    nome_funcionario = p.get('nome_funcionario'),
-                    telefone = p.get('telefone'),
-                    cargo = p.get('cargo'),
-                    data_de_admissao = p.get('data_de_admissao'),
-                )
+                data_de_admissao = admissao,
+                data_de_demissao= demissao
+            )
 
         return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar})
     else:

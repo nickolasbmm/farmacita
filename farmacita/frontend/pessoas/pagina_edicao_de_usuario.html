@@ -146,8 +146,7 @@ Dados Funcionários
                 <label>Telefone</label>
                 <p>Anterior : {{i.telefone}}</p>
                 <input 
-                value = {{i.telefone}}
-                type="tel" 
+                type="text" 
                 name="telefone" 
                 class="form-control background-none custom-input" 
                 id="telefone" 
@@ -155,6 +154,7 @@ Dados Funcionários
                 maxlength=15
                 required>
             </div>
+            <script>document.getElementById("telefone").value = "{{i.telefone}}"</script>
             <label class="label d-block">Cargo</label>
             <div class="form-check-inline">
 
@@ -175,6 +175,11 @@ Dados Funcionários
                 <label>Data de admissão</label> 
                 <p>Data anterior : {{i.data_de_admissao}}</p>
                 <input value = None type="date" class="form-control background-none custom-input" id="data_de_admissao", name = 'data_de_admissao'>
+            </div>
+            <div class="form-group">
+                <label>Data de demissão</label> 
+                <p>Data anterior : {{i.data_de_demissao}}</p>
+                <input value = None type="date" class="form-control background-none custom-input" id="data_de_demissao", name = 'data_de_demissao'>
             </div>
             <div class="form-group">
                 <label>Senha antiga</label>

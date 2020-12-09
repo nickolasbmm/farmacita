@@ -16,8 +16,8 @@ class funcionario(models.Model):
     telefone = models.CharField(max_length=15)
     cargo = models.CharField(max_length=100)
     #privilegio = models.CharField(max_length=100)
-    data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=False,null=False)
-    data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False,null=True)
+    data_de_admissao = models.DateField(auto_now=False,auto_now_add=False,null=False)
+    data_de_demissao = models.DateField(auto_now=False,auto_now_add=False,null=True)
     class Meta:
         db_table = 'funcionarios'
 

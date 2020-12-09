@@ -22,7 +22,7 @@ class ordem_de_venda(models.Model):
     desconto =  models.BooleanField(default=False)
     venda =  models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
-    data_de_venda = models.DateTimeField(auto_now=False,auto_now_add=False,null=True)
+    data_de_venda = models.DateField(auto_now=False,auto_now_add=False,null=True)
 
 class ordem_de_compra(models.Model):
     id_ordem_de_compra = models.AutoField(primary_key=True)
@@ -30,5 +30,5 @@ class ordem_de_compra(models.Model):
     id_medicamento = models.ForeignKey(medicamento,on_delete=models.PROTECT)
     preco_lote = models.DecimalField(max_digits=40,decimal_places=2)
     quantidade_lote = models.IntegerField(default = 0)
-    data_de_compra = models.DateTimeField(auto_now=True,auto_now_add=False, null=False)
+    data_de_compra = models.DateField(auto_now=True,auto_now_add=False, null=False)
     
