@@ -19,7 +19,6 @@ class ordem_de_venda(models.Model):
     id_cliente = models.ForeignKey(cliente,on_delete=models.PROTECT)
     id_lote_medicamento = models.ForeignKey(lote_medicamento,on_delete=models.PROTECT)
     quantidade = models.IntegerField(default = 0)
-    percentual_desconto = models.DecimalField(max_digits=40,decimal_places=2, default = 0)
     desconto =  models.BooleanField(default=False)
     venda =  models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
