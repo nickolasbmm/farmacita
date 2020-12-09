@@ -37,3 +37,13 @@ def entrada_estoque(request):
 
 
     return render(request,'pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
+
+def excluir_lote(request):
+    
+    if request.method == "POST":
+        p = request.POST
+        excluirlote = lote_medicamento.objects.get(id_medicamento=p.get('numero_lote'))
+        excluirlote.excluido = True
+        excluirlote.save()
+
+    return render(request,'pagina_excluir_lote.html')

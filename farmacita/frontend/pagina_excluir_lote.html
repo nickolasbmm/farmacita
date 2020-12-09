@@ -1,0 +1,110 @@
+{% extends 'template/padrao.html' %}
+{% load static %}
+
+{%block titulo %}
+Cadastro Medicamento
+{% endblock %}
+
+
+
+{% block content %}
+<div>
+    <script>
+        function testa_cpf(campo_cpf){
+            valor_do_campo = campo_cpf.value
+            cpf = valor_do_campo.replace(/[.-]/g,'')
+            
+            soma1 = 0
+            for(i = 0; i < 9; i++){
+                soma1 += cpf[i] * (10-i)
+            }
+            resto1 = ((soma1 * 10) % 11)%10
+
+            soma2 = 0
+            for(i = 0; i < 10; i++){
+                soma2 += cpf[i] * (11-i)
+            }
+            resto2 = ((soma2 * 10) % 11)%10
+
+            valido = true
+
+            if(resto1 == cpf[9] & resto2 == cpf[10]){
+                valido = true
+            }
+            else{
+                valido = false
+            }
+            if(/^(.)\1*$/.test(cpf)){
+                valido = false
+            }
+
+            if(!valido){
+                selectCPF = $("#cpf")[0]
+                $("#cpf").val("")
+                selectCPF.placeholder="CPF inválido"
+                $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
+            }
+            else{
+                $("#cpf").css("border", "1px solid #ced4da")
+            }
+
+        };
+
+        function confirmar_senha(campo_senha){
+            campo = campo_senha.value
+            if($("#senha").val()==campo){
+                $("#confirmacao_senha").css("border", "1px solid #ced4da")
+                $("#texto_confirmacao_senha").css('visibility','hidden');
+            }
+            else{
+                $("#confirmacao_senha").val("")
+                $("#texto_confirmacao_senha").css('visibility','visible');
+                $("#confirmacao_senha").css("border", "1px solid red")
+            }
+        }
+        
+    </script>    
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1 class="h1">Excluir Lote</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <!-- 
+                id_funcionario = User.pk
+                nome_funcionario = models.CharField(max_length=300)
+                cpf = models.CharField(max_length=11) 
+                telefone = models.CharField(max_length=12)
+                cargo = models.CharField(max_length=100)
+                privilegio = models.CharField(max_length=100)
+                data_de_admissao = models.DateTimeField(auto_now=False,auto_now_add=True)
+                data_de_demissao = models.DateTimeField(auto_now=False,auto_now_add=False)
+                -->
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Número do Lote</label>
+                        <input type="text" class="form-control background-none custom-input" id="login_usuario", name = 'numero_lote'>
+                    </div>
+
+                    <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>
+                    <!-- <button type="button" class="btn btn-block btn-link text-center">Já possui login?</button> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        dados = JSON.parse('{{dados | safe}}');
+        document.getElementById("nome_usuario").value = dados.nome_funcionario
+        document.getElementById("cpf").value = dados.cpf
+        document.getElementById("telefone").value=dados.telefone
+        document.getElementById("data_de_admissao").value= dados.data_de_admissao.split('T')[0]
+        document.getElementById(dados.cargo).checked = true
+</script>
+
+{% endblock %}
