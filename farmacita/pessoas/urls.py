@@ -10,6 +10,7 @@ urlpatterns = [
     path('cadastro_fornecedor',views.cadastro_fornecedor, name = 'cadastro_fornecedor'),
     path('cadastro_usuario',views.cadastro_usuario, name = 'cadastro_usuario'),
     path('editar_usuario',views.editar_usuario, name = 'editar_usuario'),
+    path('editar_fornecedor',views.editar_fornecedor, name = 'editar_fornecedor'),
     #path('demitir_usuario',views.demitir_usuario, name = 'demitir_usuario'),
     path('deslogar',views.deslogar,name='deslogar')
 ]
