@@ -11,21 +11,18 @@ def deslogar(request):
     logout(request)
     return redirect('/')
 
-def principal(request):
-    return render(request,'sucessful_login.html')
-
 def pagina_principal(request):
         user = request.user
         func =  funcionario.objects.filter(user = user)[0]
         cargo = func.cargo
         if cargo == "Balconista":
-            return render(request,'pessoas/inicio_balconista.html')
+            return render(request,'pessoas/inicio_balconista.html', {'nome_funcionario':func.nome_funcionario})
         elif cargo == "Caixa":
-            return render(request,'pessoas/inicio_caixa.html')
+            return render(request,'pessoas/inicio_caixa.html', {'nome_funcionario':func.nome_funcionario})
         elif cargo == "Farmacêutico":
-            return render(request,'pessoas/inicio_farmaceutico.html')
+            return render(request,'pessoas/inicio_farmaceutico.html', {'nome_funcionario':func.nome_funcionario})
         elif cargo == "Gerente Financeiro":
-            return render(request,'pessoas/inicio_gerente_financeiro.html')
+            return render(request,'pessoas/inicio_gerente_financeiro.html', {'nome_funcionario':func.nome_funcionario})
         else:
             return failed_login(request)
 
@@ -39,14 +36,14 @@ def authentication(request):
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request,user)
-            return pagina_principal(request)
+            return sucessful_login(request)
         else:
             return failed_login(request)
     else:
         return failed_login(request)
 
 def sucessful_login(request):
-    return redirect('principal')
+    return redirect('pagina_principal')
 
 def failed_login(request):
     return render(request,'login_page.html')
