@@ -1,7 +1,11 @@
 {% extends 'template/padrao.html' %}
 
 {%block titulo %}
-Cadastro Medicamento
+Cadastro Funcionário
+{% endblock %}
+
+{%block titulo-conteudo %}
+Cadastro de Funcionário
 {% endblock %}
 
 {% block content %}
@@ -34,12 +38,7 @@ Cadastro Medicamento
             }
         
     </script>
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <h1 class="h1">Cadastro de Funcionário</h1>
-        </div>
-    </div>
-    <div class="row">
+    <div class="row formulario">
         <div class="col-sm-12">
             <div>
                 <!-- 
@@ -98,7 +97,7 @@ Cadastro Medicamento
                             <input type="radio"  id="option3", name = 'cargo', value="Caixa"> Caixa
                         </label>
                         <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio"  id="option4", name = 'cargo', value="Gerente Financeiro"> Gerente Financeiro
+                            <input type="radio"  id="option4", name = 'cargo', value="Gerente Financeiro"> Ger. Financeiro
                         </label>
                     </div>
 

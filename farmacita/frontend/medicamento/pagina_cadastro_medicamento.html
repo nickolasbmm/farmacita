@@ -1,7 +1,13 @@
 {% extends 'template/padrao.html' %}
+
 {%block titulo %}
-Cadastro Medicamento
+Cadastro Medicamentos
 {% endblock %}
+
+{%block titulo-conteudo %}
+Cadastro de Medicamentos
+{% endblock %}
+
 {% load static %}
 
 {% block content %}
@@ -153,18 +159,8 @@ Cadastro Medicamento
         }
     </style>
     
-<div>          
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <p class="logo">Farmac<span class="logo-span">ITA</span></p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <h1 class="h1">Cadastro de medicamento</h1>
-        </div>
-    </div>
-    <div class="row">
+<div>         
+    <div class="row formulario">
         <div class="col-sm-12">
             <div>
                 <!--     

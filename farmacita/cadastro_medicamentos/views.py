@@ -16,7 +16,7 @@ def cadastro_medicamentos(request):
             )
         item.save()
         print(item.nome_medicamento)
-    return render(request,'pagina_cadastro_medicamento.html',{"droga":droga_list})
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list})
 
 def editar_medicamento(request):   
     if request.method == "POST":
@@ -28,7 +28,7 @@ def editar_medicamento(request):
             classificacao = p.get("classificacao"), 
             principio_ativo =p.get("principio_ativo")
         )
-    return render(request,'pagina_edicao_medicamento.html')
+    return render(request,'medicamento/pagina_edicao_medicamento.html')
 
 def excluir_medicamento(request):   
     if request.method == "POST":
@@ -37,6 +37,6 @@ def excluir_medicamento(request):
         editarmedicamento.update(
            excluido = True
         )
-    return render(request,'pagina_exclusao_medicamento.html')
+    return render(request,'medicamento/pagina_exclusao_medicamento.html')
 
 
