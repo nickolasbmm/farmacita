@@ -21,20 +21,25 @@ Cadastro de Medicamentos
             'Tarja preta',
             'Tarja amarela'
         ]
-        valid_active_substances = [
-            'Acebrofilina',
-            'Aceclofenaco',
-            'Acetato de abiraterona',
-            'Acetato de atosibana',
-            'Acetato de betametasona + fosfato dissodico de betametasona',
-            'Acetato de caspofungina',
-            'Acetato de ciproterona',
-            'Acetato de ciproterona + etinilestradiol',
-            'Acetato de clormadinona+ etinilestradiol',
-            'Acetato de clostebol + sulfato de neomicina',
-            'Acetato de desmopressina',
-            'Acetato de dexametasona'
-        ]
+        // valid_active_substances = [
+        //     'Acebrofilina',
+        //     'Aceclofenaco',
+        //     'Acetato de abiraterona',
+        //     'Acetato de atosibana',
+        //     'Acetato de betametasona + fosfato dissodico de betametasona',
+        //     'Acetato de caspofungina',
+        //     'Acetato de ciproterona',
+        //     'Acetato de ciproterona + etinilestradiol',
+        //     'Acetato de clormadinona+ etinilestradiol',
+        //     'Acetato de clostebol + sulfato de neomicina',
+        //     'Acetato de desmopressina',
+        //     'Acetato de dexametasona'
+        // ]
+
+        valid_active_substances = {{ droga | safe }}
+
+        valid_brands = []
+
         // valid_brands = [
         //     'ABBOTT LABORATORIOS DO BRASIL LTDA',
         //     'ACCORD FARMACEUTICA LTDA',
@@ -80,7 +85,8 @@ Cadastro de Medicamentos
         //     });
         // }
         cadastra_novo_principio_ativo = function(){
-            alert($("#active_substance_input").val())
+            $('#principio_ativo_cadastrado').text('Princípio ativo ' + $("#active_substance_input").val() + ' cadastrado');
+            $('#principio_ativo_cadastrado').css('visibility','visible');
             $.ajax({
                 url: 'cadastrar_principio_ativo',//<pagina_para_fazer_o_update_do_banco>
                 method: "POST",
@@ -93,6 +99,8 @@ Cadastro de Medicamentos
                     console.log(data)
                 }
             });
+
+            valid_active_substances.push($("#active_substance_input").val())
         }
         remove_parent = function (item){ 
             item.parentNode.parentNode.removeChild(item.parentNode)
@@ -125,7 +133,6 @@ Cadastro de Medicamentos
                 $("#active_substance_register_button").prop("disabled", true)
             }
             else{
-                console.log('enable')
                 $("#active_substance_register_button").prop("disabled", false)
             }
         }
@@ -135,7 +142,6 @@ Cadastro de Medicamentos
                 $("#register_brand_button").prop("disabled", true)
             }
             else{
-                console.log('enable')
                 $("#register_brand_button").prop("disabled", false)
             }
         }
@@ -224,6 +230,7 @@ Cadastro de Medicamentos
                     <ul class="list-unstyled" id="active_substances">
 
                     </ul> 
+                    <p id="principio_ativo_cadastrado" style="visibility: hidden;color: red;"></p>
 
 
                     <!-- <div class="form-group">
