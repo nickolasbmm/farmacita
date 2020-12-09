@@ -70,7 +70,29 @@ def criar_ordem_de_venda(request):
                                                             "cpf_cliente_validos":cpf_cliente_validos} )
 
 
+def consultar_ordem_de_venda(request):
+    cpf_cliente_validos = []
+    clientes_validos = cliente.objects.all()
+    for x in clientes_validos:
+        cpf_cliente_validos.append(x.cpf)
 
+
+    lista = []
+
+    busca = request.GET.get("buscaCliente")
+    id_cli = 0
+    lista_cli = cliente.objects.filter(cpf = busca)
+    for x in lista_cli:
+        id_cli = x.id_cliente
+    print(id_cli)
+    if busca:
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        for x in lista_ordem_de_venda:
+            lista.append(x)
+
+    return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
+                                                                                "lista":lista,
+                                                                                "cpf_cliente_validos":cpf_cliente_validos})
 
 
 def vender(id_cliente):

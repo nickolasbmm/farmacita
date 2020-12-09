@@ -1,0 +1,121 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{%block titulo-conteudo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div>
+    
+    <script>
+        
+        lista_cpf_cliente = {{cpf_cliente_validos | safe}}
+
+
+        add_sugestoes = function () {
+            
+            adiciona_sugestao_generic(lista_cpf_cliente, "suggestions_client")
+        }
+        $(document).ready(function () {
+            add_sugestoes()
+        });
+
+        
+    </script>
+    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <form method="GET">
+
+                    <div class="input-group-prepend">
+                    
+                        <input type="text" class="form-control" 
+                        placeholder="CPF Cliente" 
+                        list="suggestions_client" 
+                        name="buscaCliente" 
+                        id="buscaCliente"
+                        onkeydown="javascript: fMasc( this, mCPF )"
+                        maxlength=14>
+                        <datalist
+                            id="suggestions_client"></datalist>
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                        
+                    </div>              
+                
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">CPF</th>
+                    <th scope="col">Nome do Medicamento</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Nº Lote</th>
+                    <th scope="col">Valor Unitário</th>
+                    <th scope="col">Desconto</th>
+                    <th scope="col">Vender</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Excluir</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>            
+            {% for i in lista %}                      
+            <tbody>
+                <tr class={{i.id}}>
+                    <th scope="row">{{i.id_ordem_de_venda}}</th>
+                    <td class = "CPF">{{busca}}</td>
+                    <td class = "Nome">{{i.id_lote_medicamento.id_medicamento}}</td>
+                    <td class = "Quantidade">{{i.quantidade}}</td>
+                    <td class = "Nº Lote">{{i.id_lote_medicamento.id_lote_medicamento}}</td>
+                    <td class = "Valor Unitário">
+                        {{i.id_lote_medicamento.preco | floatformat}}</td>
+                    
+                
+                    
+                    <td class = "Valor Desconto">{% if i.id_lote_medicamento.preco == True%}
+                                                {{ "10%" }}
+                                                {%else%}
+                                                {{  "0%" }}
+                                                {% endif%} 
+                                                </td>
+                                                <td>
+                        <form class= "centro">
+                            <button value = {{i.id_ordem}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
+                        </form>
+                    </td>
+                    <td>
+                        <form class= "centro">
+                            <button value = {{i.id_ordem}} name = "edit" class="btn btn-warning"  type = "submit" >Editar</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form class= centro>
+                            <button value = {{i.id_ordem}} name = 'excluir' class="btn btn-danger"  type = "submit" ><i class="fas fa-trash-alt"></i></button> 
+                        </form>
+                    </td>
+                    
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>        
+    </div>
+
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+{% endblock %}
