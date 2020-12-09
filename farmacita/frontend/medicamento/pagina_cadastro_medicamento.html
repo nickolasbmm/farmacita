@@ -35,26 +35,26 @@ Cadastro de Medicamentos
             'Acetato de desmopressina',
             'Acetato de dexametasona'
         ]
-        valid_brands = [
-            'ABBOTT LABORATORIOS DO BRASIL LTDA',
-            'ACCORD FARMACEUTICA LTDA',
-            'ACHE LABORATORIOS FARMACEUTICOS S.A.',
-            'ACTAVIS FARMACEUTICA LTDA.',
-            'AGILA ESPECIALIDADES FARMACEUTICAS LTDA',
-            'AIRELA INDUSTRIA FARMACEUTICA LTDA.',
-            'ALLERGAN PRODUTOS FARMACEUTICOS LTDA',
-            'ALTHAIA S.A INDUSTRIA FARMACEUTICA',
-            'ANTIBIOTICOS DO BRASIL LTDA',
-            'APSEN FARMACEUTICA S/A',
-            'ARESE PHARMA LTDA',
-            'ARISTON INDUSTRIAS QUIMICAS E FARMACEUTICAS LTDA',
-            'ASPEN PHARMA INDUSTRIA FARMACEUTICA LTDA',
-            'ASTELLAS FARMA BRASIL IMPORTAÇAO E DISTRIBUIÇAO DE MEDICAMENTOS LTDA.',
-            'ASTRAZENECA DO BRASIL LTDA',
-            'ATIVUS FARMACEUTICA LTDA',
-            'AUROBINDO PHARMA INDUSTRIA FARMACEUTICA LIMITADA',
-            'AVERT LABORATORIOS LTDA'
-        ]
+        // valid_brands = [
+        //     'ABBOTT LABORATORIOS DO BRASIL LTDA',
+        //     'ACCORD FARMACEUTICA LTDA',
+        //     'ACHE LABORATORIOS FARMACEUTICOS S.A.',
+        //     'ACTAVIS FARMACEUTICA LTDA.',
+        //     'AGILA ESPECIALIDADES FARMACEUTICAS LTDA',
+        //     'AIRELA INDUSTRIA FARMACEUTICA LTDA.',
+        //     'ALLERGAN PRODUTOS FARMACEUTICOS LTDA',
+        //     'ALTHAIA S.A INDUSTRIA FARMACEUTICA',
+        //     'ANTIBIOTICOS DO BRASIL LTDA',
+        //     'APSEN FARMACEUTICA S/A',
+        //     'ARESE PHARMA LTDA',
+        //     'ARISTON INDUSTRIAS QUIMICAS E FARMACEUTICAS LTDA',
+        //     'ASPEN PHARMA INDUSTRIA FARMACEUTICA LTDA',
+        //     'ASTELLAS FARMA BRASIL IMPORTAÇAO E DISTRIBUIÇAO DE MEDICAMENTOS LTDA.',
+        //     'ASTRAZENECA DO BRASIL LTDA',
+        //     'ATIVUS FARMACEUTICA LTDA',
+        //     'AUROBINDO PHARMA INDUSTRIA FARMACEUTICA LIMITADA',
+        //     'AVERT LABORATORIOS LTDA'
+        // ]
     
     
         adiciona_principio_ativo_a_lista = function () {
@@ -67,23 +67,26 @@ Cadastro de Medicamentos
                 )
             }
         }
-        cadastrar_nova_marca = function(){
-            $("#brand_input").val()
-            $.ajax({
-                url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
-                data: {
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data)
-                }
-            });
-        }
+        // cadastrar_nova_marca = function(){
+        //     $("#brand_input").val()
+        //     $.ajax({
+        //         url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
+        //         data: {
+        //         },
+        //         dataType: 'json',
+        //         success: function (data) {
+        //             console.log(data)
+        //         }
+        //     });
+        // }
         cadastra_novo_principio_ativo = function(){
             alert($("#active_substance_input").val())
             $.ajax({
-                url: 'https://reqres.in/api/users?page=2',//<pagina_para_fazer_o_update_do_banco>
+                url: 'cadastrar_principio_ativo',//<pagina_para_fazer_o_update_do_banco>
+                method: "POST",
                 data: {
+                    nome_principio_ativo : $("#active_substance_input").val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 dataType: 'json',
                 success: function (data) {
