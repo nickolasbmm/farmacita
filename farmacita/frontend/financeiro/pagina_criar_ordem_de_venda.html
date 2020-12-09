@@ -1,0 +1,204 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{%block titulo-conteudo %}
+Cadastro de Ordem de Venda
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div>
+    <script>
+        function fMasc(objeto,mascara) {
+            obj=objeto
+            masc=mascara
+            setTimeout("fMascEx()",1)
+            }
+
+            function fMascEx() {
+            obj.value=masc(obj.value)
+            }
+
+            function mCPF(cpf){
+                cpf=cpf.replace(/\D/g,"")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+                return cpf    
+            }
+        
+            function mTel(tel){
+                tel=tel.replace(/\D/g,"")
+                tel=tel.replace(/(\d{1})/,"($1")
+                tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
+                tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
+                return tel
+            }
+
+            function testa_cpf(campo_cpf){
+            valor_do_campo = campo_cpf.value
+            cpf = valor_do_campo.replace(/[.-]/g,'')
+            
+            soma1 = 0
+            for(i = 0; i < 9; i++){
+                soma1 += cpf[i] * (10-i)
+            }
+            resto1 = ((soma1 * 10) % 11)%10
+
+            soma2 = 0
+            for(i = 0; i < 10; i++){
+                soma2 += cpf[i] * (11-i)
+            }
+            resto2 = ((soma2 * 10) % 11)%10
+
+            valido = true
+
+            if(resto1 == cpf[9] & resto2 == cpf[10]){
+                valido = true
+            }
+            else{
+                valido = false
+            }
+            if(/^(.)\1*$/.test(cpf)){
+                valido = false
+            }
+
+            if(!valido){
+                selectCPF = $("#cpf")[0]
+                $("#cpf").val("")
+                selectCPF.placeholder="CPF inválido"
+                $("#cpf").css("border", "1px solid red")
+                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
+            }
+            else{
+                
+                $("#cpf").css("border", "1px solid #ced4da")
+                
+            }
+
+        };
+        
+    </script>
+    <script>
+        
+        industrias_farmaceuticas_validas = []
+
+        lista_de_medicamentos_validos = {{nome_med_validos | safe }}
+        lista_cpf_cliente = {{cpf_cliente_validos | safe}}
+
+        add_sugestoes = function () {
+            adiciona_sugestao_generic(lista_de_medicamentos_validos, "suggestions_medicine")
+            adiciona_sugestao_generic(lista_cpf_cliente, "suggestions_client")
+            adiciona_sugestao_generic(industrias_farmaceuticas_validas, "suggestions_industries")
+        }
+        $(document).ready(function () {
+            add_sugestoes()
+        });
+        
+    </script>
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>
+                
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input 
+                            onkeydown="javascript: fMasc( this, mCPF )"
+                            onblur="testa_cpf(this)"
+                            type="text" 
+                            class="form-control background-none custom-input"
+                            list="suggestions_client"
+                            maxlength=14
+                            name="cpf"
+                        >
+                        <datalist
+                            id="suggestions_client"></datalist>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <div class="input-group">
+                            <input type="number"
+                             class="form-control"
+                             name="quantidade"
+                             min=0
+                             required>
+                
+                          </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nº Lote</label>
+                        <input 
+                            type="text" 
+                            class="form-control background-none custom-input"
+                            name="id_lote"
+                            value= {{id_lote}}
+                            disabled>
+                    </div>
+                    <div class="form-group">
+                        
+
+                    <div class="form-group">
+                        
+                        <div class="input-group">
+                            <label class="btn btn-outline-primary form-check-label">
+                            <input type="checkbox" id="desconto" name = 'desconto' > Desconto
+                        </label>
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">%</span>
+                            </div>
+                            <input 
+                                type="number" 
+                                step="0.01"
+                                min="0"
+                                class="form-control background-none custom-input"
+                                name="perc_desconto"
+                            >
+                        </div>
+                    
+                   
+                
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label>Senha - Autorização de Desconto</label>
+                        <input 
+                            type="password" 
+                            class="form-control background-none custom-input"
+                            name="Senha"
+                        >
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="btn  btn-block btn-outline-info custom-btn">
+                        Cadastrar</button>
+                </form>
+                <br>
+                <form class= "centro">
+                    <button value = "True" name = 'voltar' class="btn  btn-block btn-outline-info custom-btn"  type = "submit" >Voltar</button> 
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+{% endblock %}

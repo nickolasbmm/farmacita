@@ -14,3 +14,6 @@ class lote_medicamento(models.Model):
     data_de_validade = models.DateTimeField(auto_now=False,auto_now_add=False,null=False)
     industria_farmaceutica = models.CharField(max_length=100)
     excluido = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'lote_medicamento'
