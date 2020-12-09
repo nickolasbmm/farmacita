@@ -18,7 +18,7 @@ Medicamentos Cadastrados
             <div>                
                 <form method="GET">
                     <div class="input-group-prepend">                    
-                        <input type="text" class="form-control" placeholder="Nome" name="buscacliente" id="buscacliente">
+                        <input type="text" class="form-control" placeholder="Nome" name="buscamedic" id="buscamedic">
                     <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
                     </div>              
                     </form>
@@ -30,26 +30,24 @@ Medicamentos Cadastrados
             <thead class="table-info">
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Nome do Cliente</th>
-                    <th scope="col">CPF</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Nascimento</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Classificação</th>
+                    <th scope="col">Princípio Ativo</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>            
             {% for i in lista %}
-            {% if i.ativo %}                      
+            {% if not i.excluido  %}                      
             <tbody>
-                <tr class={{i.id_cliente}}>
-                    <th scope="row">{{i.id_cliente}}</th>
-                    <td class = "nome">{{i.nome_cliente}}</td>
-                    <td class = "cpf">{{i.cpf}}</td>
-                    <td class = "telefone">{{i.telefone}}</td>
-                    <td class = "nascimento">{{i.data_nascimento}} </td>
+                <tr class={{i.id_medicamento}}>
+                    <th scope="row">{{i.id_medicamento}}</th>
+                    <td class = "nome">{{i.nome_medicamento}}</td>
+                    <td class = "classificacao">{{i.classificacao}}</td>
+                    <td class = "principio">{{i.principio_ativo}}</td>
                     <td>
                         <form class= "centro">
-                            <button value = {{i.id_cliente}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                            <button value = {{i.id_medicamento}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
                         </form>
                     </td>
                    
@@ -63,7 +61,7 @@ Medicamentos Cadastrados
                                     margin-bottom:6px;
                                 }
                             </style>  
-                            <button  value = {{i.id_cliente}} name = 'delete' class="btn btn-danger botao" type = "submit">X</button>                                                                       
+                            <button  value = {{i.id_medicamento}} name = 'delete' class="btn btn-danger botao" type = "submit">X</button>                                                                       
                         </form>                        
                     </td>
                 </tr>
@@ -74,45 +72,98 @@ Medicamentos Cadastrados
             
         </table>
         
-        {% if editar %}
+        {% if editar %}        
         {% for i in lista %}
 
-        <form class="formulario" method="POST" autocomplete="off">
-            {% csrf_token %}            
+        <form class = "formulario" method="POST">
+            {% csrf_token %}
             <div class="form-group">
-                <label>Nome</label>
-                <input value = {{i.nome_cliente}} type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
+                <label>Nome do medicamento</label>
+                <input type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
             </div>
             <div class="form-group">
-                <label>CPF</label>
-                <p>{{i.cpf}}</p>
-            </div>
-            <div class="form-group">
-                <label>Telefone</label>
-                <p>Anterior : {{i.telefone}}</p>
-                <input 
-                value = {{i.telefone}}
-                type="tel" 
-                name="telefone" 
-                class="form-control background-none custom-input" 
-                id="telefone" 
-                onkeydown="javascript: fMasc( this, mTel )" 
-                maxlength=15
-                required>
-            </div>                    
-            <div class="form-group">
-                <label>Data de Nascimento</label> 
-                <p>Data anterior : {{i.data_nascimento}}</p>
-                <input 
-                    value = None 
-                    type="date" 
+                <label>Classificação</label>
+                <input
+                    id="classification_input" 
+                    type="text" 
+                    list="suggestions_classification" 
                     class="form-control background-none custom-input" 
-                    id="data_de_admissao" 
-                    name = 'data_de_admissao'
-                    onchange="checarIdade(value)"
+                    id="classification_input"
+                    name="classificacao"
+                >
+                <datalist id="suggestions_classification">
+                </datalist>
+                
+            </div>
+
+            <div class="form-group">
+                <label>Princípio ativo</label>
+                <div>
+                    <input 
+                        type="text" 
+                        onkeyup="principio_ativo_ja_esta_registrado_check()"
+                        onselect="principio_ativo_ja_esta_registrado_check()"
+                        onchange="principio_ativo_ja_esta_registrado_check()"
+                        onblur="principio_ativo_ja_esta_registrado_check()"
+                            
+                        list="suggestions_active_substance" 
+                        class="form-control background-none custom-input float-left" 
+                        id="active_substance_input"
+                        name="principio_ativo"
                     >
-            </div>           
-            <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
+                    <div class="btn-group btn-block">
+                        <button type='button' class="btn btn-outline-info custom-btn" onclick="adiciona_principio_ativo_a_lista()">Adicionar princípio ativo</button>
+                        <button 
+                            id="active_substance_register_button"
+                            type='button' 
+                            class="btn btn-outline-info custom-btn" 
+                            onclick="cadastra_novo_principio_ativo()">
+                            Cadastrar princípio ativo</button>
+                    </div>
+                </div>
+                <datalist id="suggestions_active_substance">
+                </datalist>
+                
+            </div>
+            <ul class="list-unstyled" id="active_substances">
+
+            </ul> 
+
+
+            <!-- <div class="form-group">
+                <label>Marca do medicamento</label>
+                <div>
+                    <input 
+                        type="text" 
+                        class="form-control background-none custom-input" 
+                        id="brand_input"
+                        list="suggestions_brands"
+                        onfocus="marca_ja_registrada_check()"
+                        onblur="marca_ja_registrada_check()"
+                        onselect="marca_ja_registrada_check()"
+                        onchange="marca_ja_registrada_check()"
+                        onkeyup="marca_ja_registrada_check()"
+                        >
+                    <button 
+                        id="register_brand_button"
+                        type="button" 
+                        class="btn btn-outline-info custom-btn col-6 float-right" 
+                        onclick="cadastrar_nova_marca()"
+                        >Cadastrar nova marca</button> 
+                </div>
+                <datalist id="suggestions_brands">
+                </datalist>
+            </div> -->
+
+
+
+            <button
+                type="submit" 
+                id="cadastrar_button" 
+                class="btn  btn-block btn-outline-info custom-btn"
+                onclick="cadastrar_medicamento()"
+                >
+                Cadastrar</button>
         </form>
         {% endfor %}
         
