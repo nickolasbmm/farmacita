@@ -12,26 +12,31 @@
     <script src="{% static '_js/script.js' %}"></script>
 
     <script>
-        lista_de_medicamentos_validos = [
-            'ABC',
-            'BANANA',
-            'GOIABA',
-            'PARACETAMOL',
-            'MOPA'
-        ]
-        lista_fornecedores_validos = [
-            'fornecedor 1',
-            'fornecedor 2',
-            'candy shop',
-            'maromba',
-            'droguita'
-        ]
-        industrias_farmaceuticas_validas = [
-            '123_vamofazerremedio',
-            'gerador de maconha',
-            'breaking bad farmacos',
-            'guerra do ópio distribuidoras LTDA'
-        ]
+        // lista_de_medicamentos_validos = [
+        //     'ABC',
+        //     'BANANA',
+        //     'GOIABA',
+        //     'PARACETAMOL',
+        //     'MOPA'
+        // ]
+        // lista_fornecedores_validos = [
+        //     'fornecedor 1',
+        //     'fornecedor 2',
+        //     'candy shop',
+        //     'maromba',
+        //     'droguita'
+        // ]
+        // industrias_farmaceuticas_validas = [
+        //     '123_vamofazerremedio',
+        //     'gerador de maconha',
+        //     'breaking bad farmacos',
+        //     'guerra do ópio distribuidoras LTDA'
+        // ]
+
+        industrias_farmaceuticas_validas = []
+
+        lista_de_medicamentos_validos = {{nomes_medicamentos_validos | safe }}
+        lista_fornecedores_validos = {{nomes_fornecedores_validos | safe}}
 
         add_sugestoes = function () {
             adiciona_sugestao_generic(lista_de_medicamentos_validos, "suggestions_medicine")

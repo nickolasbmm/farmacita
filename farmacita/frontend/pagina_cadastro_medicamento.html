@@ -3,8 +3,9 @@
 Cadastro Medicamento
 {% endblock %}
 {% load static %}
-{% block extrahead %}
-    <script src="{% static 'jquery-3.5.1.min.js' %}"></script>
+
+{% block content %}
+<script src="{% static 'jquery-3.5.1.min.js' %}"></script>
     <script src="{% static '_js/script.js' %}"></script>
     <script>
         valid_classifications = [
@@ -151,9 +152,7 @@ Cadastro Medicamento
             margin-top: 40px;
         }
     </style>
-{% endblock %}
-
-{% block content %}
+    
 <div>          
     <div class="row">
         <div class="col-sm-12 text-center">
@@ -173,7 +172,7 @@ Cadastro Medicamento
                     cpf = models.CharField(max_length=11)
                     telefone = models.CharField(max_length=12)
                 -->
-                <form method="POST" autocomplete="off">
+                <form method="POST">
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Nome do medicamento</label>

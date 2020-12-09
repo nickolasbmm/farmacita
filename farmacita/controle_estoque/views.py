@@ -25,5 +25,15 @@ def entrada_estoque(request):
     
         novo_lote.save()   
 
+    nomes_medicamentos_validos = []
+    medicamentos_validos=medicamento.objects.all()
+    for x in medicamentos_validos:
+        nomes_medicamentos_validos.append(x.nome_medicamento)
+    
+    nomes_fornecedores_validos = []
+    fornecedores_validos = fornecedor.objects.all()
+    for x in fornecedores_validos:
+        nomes_fornecedores_validos.append(x.nome_fornecedor)
 
-    return render(request,'pagina_de_entrada_de_estoque.html')
+
+    return render(request,'pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
