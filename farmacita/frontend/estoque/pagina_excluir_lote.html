@@ -2,54 +2,17 @@
 {% load static %}
 
 {%block titulo %}
-Cadastro Medicamento
+Excluir Lote
 {% endblock %}
 
-
+{%block titulo-conteudo %}
+Excluir Lote
+{% endblock %}
 
 {% block content %}
 <div>
     <script>
-        function testa_cpf(campo_cpf){
-            valor_do_campo = campo_cpf.value
-            cpf = valor_do_campo.replace(/[.-]/g,'')
-            
-            soma1 = 0
-            for(i = 0; i < 9; i++){
-                soma1 += cpf[i] * (10-i)
-            }
-            resto1 = ((soma1 * 10) % 11)%10
-
-            soma2 = 0
-            for(i = 0; i < 10; i++){
-                soma2 += cpf[i] * (11-i)
-            }
-            resto2 = ((soma2 * 10) % 11)%10
-
-            valido = true
-
-            if(resto1 == cpf[9] & resto2 == cpf[10]){
-                valido = true
-            }
-            else{
-                valido = false
-            }
-            if(/^(.)\1*$/.test(cpf)){
-                valido = false
-            }
-
-            if(!valido){
-                selectCPF = $("#cpf")[0]
-                $("#cpf").val("")
-                selectCPF.placeholder="CPF inválido"
-                $("#cpf").css("border", "1px solid red")
-                console.log(soma1, resto1, soma2, resto2, valido, /^(.)\1*$/.test(cpf))
-            }
-            else{
-                $("#cpf").css("border", "1px solid #ced4da")
-            }
-
-        };
+        
 
         function confirmar_senha(campo_senha){
             campo = campo_senha.value
@@ -65,12 +28,8 @@ Cadastro Medicamento
         }
         
     </script>    
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <h1 class="h1">Excluir Lote</h1>
-        </div>
-    </div>
-    <div class="row">
+    
+    <div class="row formulario">
         <div class="col-sm-12">
             <div>
                 <!-- 
