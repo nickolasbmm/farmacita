@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ordem_de_venda
+from .models import ordem_de_venda, ordem_de_compra
 
 # Register your models here.
 
