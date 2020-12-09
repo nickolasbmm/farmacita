@@ -14,7 +14,10 @@ def deslogar(request):
 def principal(request):
     return render(request,'sucessful_login.html')
 
-def direcionar_usuario(request,cargo):
+def pagina_principal(request):
+        user = request.user
+        func =  funcionario.objects.filter(user = user)[0]
+        cargo = func.cargo
         if cargo == "Balconista":
             return render(request,'pessoas/inicio_balconista.html')
         elif cargo == "Caixa":
@@ -36,10 +39,7 @@ def authentication(request):
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request,user)
-            ##add fernanda
-            func = funcionario.objects.get(user=user)
-            cargo = func.cargo
-            return direcionar_usuario(request, cargo)
+            return pagina_principal(request)
         else:
             return failed_login(request)
     else:
