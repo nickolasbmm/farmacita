@@ -1,13 +1,17 @@
 {% extends 'template/padrao.html' %}
-{% load static %}
 
 {%block titulo %}
-Cadastro Medicamento
+Entrada de Estoque
 {% endblock %}
 
-
+{%block titulo-conteudo %}
+Entrada de Estoque
+{% endblock %}
 
 {% block content %}
+
+{% load static %}
+
 <div>
     <script>
         function testa_cpf(campo_cpf){
@@ -64,13 +68,20 @@ Cadastro Medicamento
             }
         }
         
+<<<<<<< HEAD
     </script>    
     <div class="row">
         <div class="col-sm-12 text-center">
             <h1 class="h1">Excluir Lote</h1>
         </div>
+=======
+    </script>
+    
+
+>>>>>>> main
     </div>
-    <div class="row">
+    
+    <div class="row formulario">
         <div class="col-sm-12">
             <div>
                 <!-- 
@@ -96,6 +107,7 @@ Cadastro Medicamento
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
 
 <script>
@@ -107,4 +119,11 @@ Cadastro Medicamento
         document.getElementById(dados.cargo).checked = true
 </script>
 
+=======
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_js/script.js"></script>
+</div>
+
+>>>>>>> main
 {% endblock %}
