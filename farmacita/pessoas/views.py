@@ -59,6 +59,7 @@ def cadastro_cliente(request):
     return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso})
 
 def editar_cliente(request): 
+    sucesso = False
     if request.user.is_authenticated:
         editar = False
 
@@ -82,7 +83,6 @@ def editar_cliente(request):
 
         if request.method == "POST":
             p = request.POST          
-            user = request.user
             editarcliente = cliente.objects.filter(id_cliente=editando)
                                     
             nasc = p.get('data_nascimento')
@@ -98,7 +98,7 @@ def editar_cliente(request):
             )
             sucesso=True      
 
-        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar})
+        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
     else:
         return failed_login(request)
 
