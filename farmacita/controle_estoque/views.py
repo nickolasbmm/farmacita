@@ -2,10 +2,12 @@ from django.shortcuts import render
 from .models import lote_medicamento
 from pessoas.models import fornecedor
 from cadastro_medicamentos.models import medicamento
+from pessoas.models import funcionario
 
 # Create your views here.
 
 def entrada_estoque(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso = False
     if request.method == "POST":
         p = request.POST
@@ -37,9 +39,10 @@ def entrada_estoque(request):
         nomes_fornecedores_validos.append(x.nome_fornecedor)
 
 
-    return render(request,'estoque/pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos,"sucesso":sucesso})
+    return render(request,'estoque/pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos,"sucesso":sucesso,'cargo':cargo})
 
 def excluir_lote(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.method == "POST":
         p = request.POST
@@ -48,9 +51,10 @@ def excluir_lote(request):
         excluirlote.save()
         sucesso=True
 
-    return render(request,'estoque/pagina_excluir_lote.html',{"sucesso":sucesso})
+    return render(request,'estoque/pagina_excluir_lote.html',{"sucesso":sucesso,'cargo':cargo})
 
 def editar_lote(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     if request.user.is_authenticated:
         lista = lote_medicamento.objects.all().order_by('data_de_validade')
         
@@ -64,6 +68,6 @@ def editar_lote(request):
             teste = lote_medicamento.objects.filter(id_lote_medicamento = delete)
             teste.update(excluido= True)
             
-        return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista})
+        return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista,'cargo':cargo})
     else:
         return failed_login(request)

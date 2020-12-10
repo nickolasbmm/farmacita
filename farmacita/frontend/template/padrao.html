@@ -23,8 +23,6 @@
     <script src="{% static '_js/script.js' %}" type="text/javascript"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-    
-
 </head>
 
 <body>
@@ -131,6 +129,29 @@
     <div id="footer">
         <p class="rodape-texto align-text-bottom">CES-28 Grupo HSO</p>
     </div>
+    <script>
+
+        // Comentar esse bloco para debugar
+    
+        cargo = '{{cargo}}'
+    
+        if(cargo == 'Balconista'){
+            $('#dropdownfuncionarios').css('display','none')
+        }
+        if(cargo == 'Caixa'){
+            $('#dropdownmedicamentos').css('display','none')
+            $('#dropdownestoque').css('display','none')
+            $('#dropdownclientes').css('display','none')
+            $('#dropdownfuncionarios').css('display','none')
+        }
+        if(cargo == 'Farmacêutico'){
+            $('#dropdownvendas').css('display','none')
+        }
+        if(cargo == 'Gerente Financeiro'){
+            $('#dropdownclientes').css('display','none')
+            $('#dropdownfuncionarios').css('display','none')
+        }
+    </script>
 
 
 </body>

@@ -8,7 +8,6 @@ from datetime import datetime
 from .models import ordem_de_venda
 import json
 import decimal
-
 # Create your views here.
 # def autorizar_desconto(password):
 #     user = User.objects.filter(password = password)
@@ -20,6 +19,7 @@ import decimal
 
 
 def criar_ordem_de_venda(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso = False
     quant_est = 0
     cpf_cliente_validos = []
@@ -93,10 +93,12 @@ def criar_ordem_de_venda(request):
                                                             "nome": nome,
                                                             "quant_est": quant_est,
                                                             "cpf_cliente_validos":cpf_cliente_validos,
-                                                            "sucesso":sucesso} )
+                                                            "sucesso":sucesso,
+                                                            'cargo':cargo} )
 
 
 def consultar_ordem_de_venda(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     cpf_cliente_validos = []
     clientes_validos = cliente.objects.all()
     for x in clientes_validos:
@@ -125,7 +127,8 @@ def consultar_ordem_de_venda(request):
 
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
                                                                                 "lista":lista,
-                                                                                "cpf_cliente_validos":cpf_cliente_validos})
+                                                                                "cpf_cliente_validos":cpf_cliente_validos,
+                                                                                'cargo':cargo})
 
 
 def vender(id_cliente):
@@ -147,6 +150,7 @@ def vender(id_cliente):
         
 
 def desistir_compra(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
         cpf = p.get("cpf")
@@ -159,18 +163,20 @@ def desistir_compra(request):
             "ativo": ordem_de_venda.ativo
         }
         dados = json.dumps(dados)
-    return render(request,'desistir_compra_medicamento.html')
+    return render(request,'desistir_compra_medicamento.html',{'cargo':cargo})
 
 def vender_medicamento(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
         cpf = p.get("cpf")
         id_cliente = cliente.objects.filter(cpf = cpf).id_cliente
         vender(id_cliente)
-    return render(request,'pagina_vender_medicamento.html')
+    return render(request,'pagina_vender_medicamento.html',{'cargo':cargo})
 
 
 def comprar_medicamento(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
         cnpj = p.get("cnpj")
@@ -182,4 +188,4 @@ def comprar_medicamento(request):
             quantidade_lotes =  p.get("quantidade_lotes")
             )
         novaordemvenda.save()        
-    return render(request,'pagina_criar_ordem_de_venda.html')
+    return render(request,'pagina_criar_ordem_de_venda.html',{'cargo':cargo})
