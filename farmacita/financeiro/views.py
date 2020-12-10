@@ -103,6 +103,7 @@ def consultar_ordem_de_venda(request):
                                                                                 "cpf_cliente_validos":cpf_cliente_validos})
 
 
+
 def vender(id_cliente):
     ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cliente, ativo = True)
     for ordem in ordem_de_venda:
