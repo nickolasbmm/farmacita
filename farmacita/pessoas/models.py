@@ -15,6 +15,7 @@ class funcionario(models.Model):
     cpf = models.CharField(max_length=14) 
     telefone = models.CharField(max_length=15)
     cargo = models.CharField(max_length=100)
+    cod_autorizacao =  models.IntegerField(default = 0)
     #privilegio = models.CharField(max_length=100)
     data_de_admissao = models.DateField(auto_now=False,auto_now_add=False,null=False)
     data_de_demissao = models.DateField(auto_now=False,auto_now_add=False,null=True)
