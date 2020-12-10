@@ -49,6 +49,7 @@ def criar_ordem_de_venda(request):
         lista2 = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
         nome2 = lista2.get().id_medicamento
         quant_est = lista2.get().quantidade_de_caixas 
+        cpf_cliente_validos = lista2.get().preco
         for med in medicamento.objects.filter(nome_medicamento=nome2):
             lista.append({'lotes':lista2,'nome_med':med.nome_medicamento})
     
