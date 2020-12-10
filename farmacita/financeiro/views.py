@@ -48,6 +48,7 @@ def criar_ordem_de_venda(request):
         lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
         busca = lista.get().id_medicamento
         quant_est = lista.get().quantidade_de_caixas 
+        cpf_cliente_validos = lista.get().preco
 
 
     if request.method == "POST":
@@ -65,13 +66,17 @@ def criar_ordem_de_venda(request):
                         quantidade = qtd,
                         desconto=True,
                         percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
-                        preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100)
+                        preco_desconto = str(round(float(p.get("valor_total"))/int(qtd),2)),
+                        valor_total_venda = p.get("valor_total")
                     )
         else:
+            print(p.get("valor_total"))
             novaordemvenda = ordem_de_venda(
                 id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
                 id_cliente = cliente.objects.get(cpf = CPF), 
                 quantidade = qtd,
+                preco_desconto = str(round(float(p.get("valor_total"))/int(qtd),2)),
+                valor_total_venda = p.get("valor_total")
                 )
 
         editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
