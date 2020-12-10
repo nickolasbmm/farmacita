@@ -124,8 +124,18 @@
                 {% endblock %}
             </h1>
         </div>
+        <div>
         {% block content %}
         {% endblock %}
+        <p style="text-align: center;" id="resultado_operacao"></p>
+        <script>
+            sucesso_operacao = '{{sucesso}}'
+            if(sucesso_operacao == 'True'){
+                document.getElementById("resultado_operacao").textContent = "Operação concluída com sucesso"
+                document.getElementById("resultado_operacao").style = "text-align: center;color:green"
+            }
+        </script>
+        </div>
     </div>
     <div id="footer">
         <p class="rodape-texto align-text-bottom">CES-28 Grupo HSO</p>

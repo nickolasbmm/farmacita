@@ -42,7 +42,8 @@ def sucessful_login(request):
 def failed_login(request):
     return render(request,'login_page.html')
 
-def cadastro_cliente(request):   
+def cadastro_cliente(request):  
+    sucesso=False 
     if request.method == "POST":
         p = request.POST
           
@@ -53,8 +54,9 @@ def cadastro_cliente(request):
             data_nascimento = p.get("data_nasc")
             )
         novocliente.save()
+        sucesso=True
             
-    return render(request,'pessoas/pagina_cadastro_cliente.html')
+    return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso})
 
 def editar_cliente(request): 
     if request.user.is_authenticated:
@@ -83,6 +85,7 @@ def editar_cliente(request):
         return failed_login(request)
 
 def cadastro_usuario(request):
+    sucesso=False
     if request.method == "POST":
         p = request.POST
         novousuario = User.objects.create_user(username=p.get("usuario"),password=p.get("senha"))
@@ -97,10 +100,12 @@ def cadastro_usuario(request):
         )
         print(novofuncionario.data_de_admissao)
         novofuncionario.save()
+        sucesso=True
 
-    return render(request,'pessoas/pagina_cadastro_de_usuario.html')
+    return render(request,'pessoas/pagina_cadastro_de_usuario.html',{'sucesso':sucesso})
 
 def editar_usuario(request):    
+    sucesso=False
     if request.user.is_authenticated:
         editar = False
 
@@ -152,8 +157,9 @@ def editar_usuario(request):
                 data_de_admissao = admissao,
                 data_de_demissao= demissao
             )
+            sucesso=True
 
-        return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar})
+        return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
     else:
         return failed_login(request)
 
@@ -172,6 +178,7 @@ def demitir_usuario(request):
 '''
 
 def cadastro_fornecedor(request):
+    sucesso=False
     if request.method == "POST":
         p = request.POST
           
@@ -181,11 +188,13 @@ def cadastro_fornecedor(request):
             telefone = p.get("telefone"), 
             )
         novofornecedor.save()
+        sucesso=True
             
-    return render(request,'pessoas/pagina_cadastro_fornecedor.html')
+    return render(request,'pessoas/pagina_cadastro_fornecedor.html',{'sucesso':sucesso})
 
 
 def editar_fornecedor(request):    
+    sucesso=False
     if request.user.is_authenticated:
         editar = False
 
@@ -214,8 +223,9 @@ def editar_fornecedor(request):
                 nome_fornecedor= p.get('nome_fornecedor'),
                 telefone = p.get('telefone'),
             )
+            sucesso=True
 
-        return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar})
+        return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
     else:
         return failed_login(request)
 

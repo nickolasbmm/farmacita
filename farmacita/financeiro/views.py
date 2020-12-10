@@ -10,16 +10,17 @@ import json
 import decimal
 
 # Create your views here.
-def autorizar_desconto(password):
-    user = User.objects.filter(password = password)
-    func = funcionario.objects.get(user=user).id
-    if(func):
-        return True
-    return False
+# def autorizar_desconto(password):
+#     user = User.objects.filter(password = password)
+#     func = funcionario.objects.get(user=user).id
+#     if(func):
+#         return True
+#     return False
 
 
 
 def criar_ordem_de_venda(request):
+    sucesso = False
     quant_est = 0
     cpf_cliente_validos = []
 
@@ -77,6 +78,7 @@ def criar_ordem_de_venda(request):
         editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
         editarlote.save()
         novaordemvenda.save()
+        sucesso=True
         
 
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
@@ -85,7 +87,8 @@ def criar_ordem_de_venda(request):
                                                             "id_lote": id_lote,
                                                             "nome": nome,
                                                             "quant_est": quant_est,
-                                                            "cpf_cliente_validos":cpf_cliente_validos} )
+                                                            "cpf_cliente_validos":cpf_cliente_validos,
+                                                            "sucesso":sucesso} )
 
 
 def consultar_ordem_de_venda(request):

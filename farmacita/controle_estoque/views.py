@@ -6,7 +6,7 @@ from cadastro_medicamentos.models import medicamento
 # Create your views here.
 
 def entrada_estoque(request):
-
+    sucesso = False
     if request.method == "POST":
         p = request.POST
         print(p.get('nome_medicamento'))
@@ -24,6 +24,7 @@ def entrada_estoque(request):
         )
     
         novo_lote.save()   
+        sucesso = True
 
     nomes_medicamentos_validos = []
     medicamentos_validos=medicamento.objects.all()
@@ -36,14 +37,15 @@ def entrada_estoque(request):
         nomes_fornecedores_validos.append(x.nome_fornecedor)
 
 
-    return render(request,'estoque/pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
+    return render(request,'estoque/pagina_de_entrada_de_estoque.html',{"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos,"sucesso":sucesso})
 
 def excluir_lote(request):
-    
+    sucesso=False
     if request.method == "POST":
         p = request.POST
         excluirlote = lote_medicamento.objects.get(id_medicamento=p.get('numero_lote'))
         excluirlote.excluido = True
         excluirlote.save()
+        sucesso=True
 
-    return render(request,'estoque/pagina_excluir_lote.html')
+    return render(request,'estoque/pagina_excluir_lote.html',{"sucesso":sucesso})

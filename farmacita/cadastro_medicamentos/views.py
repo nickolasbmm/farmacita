@@ -3,6 +3,7 @@ from .models import medicamento, principio_ativo
 
 # Create your views here.
 def cadastro_medicamentos(request):
+    sucesso=False
     principiosativos = principio_ativo.objects.all()
     droga_list = list()
     for i in principiosativos:
@@ -15,11 +16,12 @@ def cadastro_medicamentos(request):
             principio_ativo =p.get("principio_ativo")
             )
         item.save()
+        sucesso=True
 
-    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list})
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso})
 
 def editar_medicamento(request):      
-  
+    sucesso=False
     lista = medicamento.objects.all()
     editar = False
     
@@ -52,12 +54,14 @@ def editar_medicamento(request):
         classificacao = p.get("classificacao"), 
         principio_ativo =p.get("principio_ativo")
         )
+        sucesso=True
 
 
     return render(request,'medicamento/editar_medicamento.html',
     {'lista':lista,
     'editar':editar,
-    "droga":droga_list}
+    "droga":droga_list,
+    "sucesso":sucesso}
     )
 
 '''
