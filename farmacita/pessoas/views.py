@@ -59,6 +59,7 @@ def cadastro_cliente(request):
     return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso})
 
 def editar_cliente(request): 
+    sucesso = False
     if request.user.is_authenticated:
         editar = False
 
@@ -78,9 +79,26 @@ def editar_cliente(request):
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = cliente.objects.filter(id_cliente = editando)      
+            lista = cliente.objects.filter(id_cliente = editando)
 
-        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar})
+        if request.method == "POST":
+            p = request.POST          
+            editarcliente = cliente.objects.filter(id_cliente=editando)
+                                    
+            nasc = p.get('data_nascimento')
+            
+            if(nasc== ""):
+                nasc = editarcliente.first().data_nascimento
+            
+            editarcliente.update(
+                nome_cliente = p.get('nome_cliente'),
+                telefone = p.get('telefone'),
+                data_nascimento = nasc,
+                
+            )
+            sucesso=True      
+
+        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
     else:
         return failed_login(request)
 
@@ -160,19 +178,6 @@ def editar_usuario(request):
     else:
         return failed_login(request)
 
-''' nao vai ser utilizada
-def demitir_usuario(request):
-    if request.method == "POST":
-        p = request.POST
-        usuario = User.objects.get(username=p.get('usuario'))
-        excluirfuncionario = funcionario.objects.get(user=usuario,nome_funcionario=p.get('nome_funcionario'))
-        excluirfuncionario.data_de_demissao=p.get('data_de_demissao')
-        usuario.is_active = False
-        usuario.save()
-        excluirfuncionario.save()
-
-    return render(request,'pessoas/pagina_demissao_de_usuario.html')
-'''
 
 def cadastro_fornecedor(request):
     sucesso=False
