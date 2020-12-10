@@ -1,0 +1,87 @@
+{% extends 'template/padrao.html' %}
+
+{% load static %}
+
+{%block head %}
+Cliente
+{% endblock %}
+
+{%block titulo-conteudo %}
+Dados Clientes
+{% endblock %}
+
+{% block content %}
+
+<div>    
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <form method="GET">
+                    <div class="input-group-prepend">                    
+                        <input type="text" class="form-control" placeholder="Nome" name="buscalote" id="buscalote">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                    </div>              
+                    </form>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Medicamento</th>
+                    <th scope="col">Fornecedor</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Qtd. Caixas</th>
+                    <th scope="col">Qtd. por Caixa</th>
+                    <th scope="col">Dosagem</th>
+                    <th scope="col">Ind. Farmaceutica</th>
+                    <th scope="col">Data de Validade</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>            
+            {% for i in lista %}
+            {% if not i.excluido %}                      
+            <tbody>
+                <tr class={{i.id_lote_medicamento}}>
+                    <th scope="row">{{i.id_lote_medicamento}}</th>
+                    <td class = "nome_medicamento">{{i.id_medicamento.nome_medicamento}}</td>
+                    <td class = "nome_fornecedor">{{i.id_fornecedor.nome_fornecedor}}</td>
+                    <td class = "preco">{{i.preco}}</td>
+                    <td class = "qtd_caixas">{{i.quantidade_de_caixas}}</td>
+                    <td class = "qtd_caixas">{{i.quantidade_por_caixa}}</td>
+                    <td class = "qtd_caixas">{{i.dosagem}}</td>
+                    <td class = "qtd_caixas">{{i.industria_farmaceutica}}</td>
+                    <td class = "qtd_caixas">{{i.data_de_validade}}</td>
+                   
+                    <td>
+                        <form class= "centro">
+                            <style>
+                                .centro{
+                                    text-align: center;            
+                                }
+                                .botao{
+                                    margin-bottom:6px;
+                                }
+                            </style>  
+                            <button  value = {{i.id_lote_medicamento}} name = 'delete' class="btn btn-danger botao" type = "submit"><i class="fas fa-trash-alt"></i></button>                                                                       
+                        </form>                        
+                    </td>
+                </tr>
+            </tbody>
+                
+            {% endif %}    
+            {% endfor %}
+            
+        </table>
+        
+    </div>
+        
+    
+
+
+</div>
+
+{% endblock %}

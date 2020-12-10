@@ -49,3 +49,21 @@ def excluir_lote(request):
         sucesso=True
 
     return render(request,'estoque/pagina_excluir_lote.html',{"sucesso":sucesso})
+
+def editar_lote(request):
+    if request.user.is_authenticated:
+        lista = lote_medicamento.objects.all().order_by('data_de_validade')
+        
+        busca = request.GET.get('buscalote')
+        if busca:
+            lista = lote_medicamento.objects.filter(id_medicamento__in=medicamento.objects.filter(nome_medicamento__icontains = busca)).order_by('data_de_validade')
+
+        delete = request.GET.get('delete')
+        
+        if delete:            
+            teste = lote_medicamento.objects.filter(id_lote_medicamento = delete)
+            teste.update(excluido= True)
+            
+        return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista})
+    else:
+        return failed_login(request)
