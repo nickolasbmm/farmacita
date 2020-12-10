@@ -1,0 +1,43 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+O código de autorização atual inserido está incorreto.
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h1 class="h1">Alterar código de autorização.</h1>
+            <div class="col-sm-12 text-center">
+                <h1 class="h3">Código de autorização atual errado.</h1>
+            </div>
+        </div>
+        <div class="row formulario">
+            <div class="col-sm-12">
+                <div>
+                    <form class="formulario" method="POST" autocomplete="off">
+                    {% csrf_token %}   
+                    <div class="form-group">
+                        <label>Código de autorização antigo (igual a 0 para primeiro acesso)</label>
+                        <input type="password" class="form-control background-none custom-input" id="senha_antiga", name = 'senha_antiga'>
+                    </div>
+                    <div class="form-group">
+                        <label>Novo código de autorização (para não alterar, deixe em branco)</label>
+                        <input type="password" class="form-control background-none custom-input" id="senha", name = 'senha'>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar novo código de autorização</label>
+                        <input type="password" class="form-control background-none custom-input" id="confirmacao_senha", onblur="confirmar_senha(this)">
+                        <p id="texto_confirmacao_senha" style="visibility: hidden;color: red;">Senhas não coincidem</p>
+                    </div>
+                        <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Alterar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="./jquery-3.5.1.min.js"></script>
+        <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+        <script src="_js/script.js"></script>
+    </div>
+{% endblock %}
