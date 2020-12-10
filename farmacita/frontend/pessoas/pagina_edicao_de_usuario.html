@@ -76,7 +76,7 @@ Dados Funcionários
                                 }
                             </style>  
                             <button  value = {{i.id}} name = 'delete' class="btn btn-danger botao" type = "submit">Demitir</button>                          
-                            <input type="date" required class="form-control background-none custom-input" id="data_de_admissao", name = 'data_de_demissao'>                                             
+                            <input type="date" required class="form-control background-none custom-input", name = 'data_de_demissao'>                                             
                         </form>
                         {% endif%} 
                     </td>
@@ -154,7 +154,6 @@ Dados Funcionários
                 maxlength=15
                 required>
             </div>
-            <script>document.getElementById("telefone").value = "{{i.telefone}}"</script>
             <label class="label d-block">Cargo</label>
             <div class="form-check-inline">
 
@@ -198,6 +197,11 @@ Dados Funcionários
 
             <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
         </form>
+        <script>
+            document.getElementById("telefone").value = "{{i.telefone}}"
+            document.getElementById('{{i.cargo}}').checked = true
+        
+        </script>
         {% endfor %}
         {% endif %}  
         

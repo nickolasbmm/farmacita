@@ -135,9 +135,6 @@ def editar_usuario(request):
             editarfuncionario = funcionario.objects.filter(id=editando)
             senha_nova = p.get('senha',None)
             senha_antiga = p.get('senha_antiga')
-            print(senha_nova)
-            print(senha_antiga)
-            print(user.password)
             if senha_nova != None:
                 if user.check_password(senha_antiga):
                     user.set_password(senha_nova)
@@ -146,9 +143,9 @@ def editar_usuario(request):
             admissao = p.get('data_de_admissao')
             demissao = p.get('data_de_demissao')
             if(admissao== ""):
-                admissao = editarfuncionario.data_de_admissao
+                admissao = editarfuncionario.first().data_de_admissao
             if(demissao== ""):
-                demissao = editarfuncionario.data_de_demissao
+                demissao = editarfuncionario.first().data_de_demissao
 
             editarfuncionario.update(
                 nome_funcionario = p.get('nome_funcionario'),
