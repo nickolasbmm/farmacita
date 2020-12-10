@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from .models import ordem_de_venda
 import json
+import decimal
 
 # Create your views here.
 def autorizar_desconto(password):
@@ -33,14 +34,14 @@ def criar_ordem_de_venda(request):
         
     
     lista = []
-    busca = request.GET.get('buscaMedicamento')
+    busca = request.GET.get('buscaMedicamento','')
     nome = busca
     if busca:
         busca=''
         for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
             lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
     
-    id_lote = request.GET.get('vender') 
+    id_lote = request.GET.get('vender','') 
     
     if id_lote:
         lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
@@ -52,17 +53,28 @@ def criar_ordem_de_venda(request):
         p = request.POST
         qtd = p.get("quantidade")
         CPF = p.get("cpf")
-        
-        novaordemvenda = ordem_de_venda(
-            id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
-            id_cliente = cliente.objects.get(cpf = CPF), 
-            quantidade = qtd,
-            
-            #desconto = autorizar_desconto(p.get("senha"))
-            )
+        if p.get('desconto'):
+            usuario = User.objects.get(username=p.get('login'))
+            gerente = funcionario.objects.get(user=usuario)
+            if usuario.check_password(p.get('senha')):
+                if gerente.cargo == 'Gerente Financeiro' or gerente.cargo == 'Farmacêutico':
+                    novaordemvenda = ordem_de_venda(
+                        id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
+                        id_cliente = cliente.objects.get(cpf = CPF), 
+                        quantidade = qtd,
+                        desconto=True,
+                        percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
+                        preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100)
+                    )
+        else:
+            novaordemvenda = ordem_de_venda(
+                id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
+                id_cliente = cliente.objects.get(cpf = CPF), 
+                quantidade = qtd,
+                )
 
         editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
-        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) -1)
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
         editarlote.save()
         novaordemvenda.save()
         
