@@ -167,9 +167,7 @@ Cadastro de Ordem de Venda
                             <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais()"> Desconto
                         </label>
 
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">%</span>
-                            </div>
+
                             <input 
                                 id="perc_desc"
                                 type="number" 
@@ -177,7 +175,11 @@ Cadastro de Ordem de Venda
                                 min="0"
                                 class="form-control background-none custom-input"
                                 name="perc_desconto"
+                                style="display: none;"
                             >
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
+                            </div>
                         </div>
                     
                    
@@ -228,6 +230,8 @@ Cadastro de Ordem de Venda
         }
         function toggle_credenciais(){
             $('#credenciais_gerente').toggle()
+            $('#perc_desc').toggle()
+            $('#basic-addon1').toggle()
         }
     
     </script>
