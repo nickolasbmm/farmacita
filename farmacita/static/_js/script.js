@@ -198,7 +198,8 @@ function checarIdade(nascimento){
     console.log(anos)
     if (anos<18){
         $("#data_nasc").css("border", "1px solid red")
-        alert("O cliente deve ser maior de idade!")
+        //alert("O cliente deve ser maior de idade!")
+        $('#cadastro_cliente_maior_idade').css('display','inline')
         $("#data_nasc").val("")
         
     }

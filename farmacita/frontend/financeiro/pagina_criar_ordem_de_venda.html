@@ -17,13 +17,27 @@ Cadastro de Ordem de Venda
     <script>
         
         
-        lista_de_medicamentos_validos = {{nome_med_validos | safe }}
+        lista_de_medicamentos_validos = {{med_validos | safe }}
         lista_cpf_cliente = {{cpf_cliente_validos | safe}}
 
 
+        adiciona_sugestoes_de_medicamentos = function(){
+            $("#suggestions_medicamento").empty()
+            lista_de_medicamentos_validos.forEach(medicamento_valido => {
+                $("#suggestions_medicamento").append('<option value="{valor}"">'.formatUnicorn({valor : medicamento_valido}))
+            });
+        }
+
+        adiciona_sugestoes_de_cpfs = function(){
+            $("#suggestions_client").empty()
+            lista_cpf_cliente.forEach(cpf_valido => {
+                $("#suggestions_client").append('<option value="{valor}"">'.formatUnicorn({valor : cpf_valido}))
+            });
+        }
+
         add_sugestoes = function () {
-            adiciona_sugestao_generic(lista_de_medicamentos_validos, "suggestions_medicine")
-            adiciona_sugestao_generic(lista_cpf_cliente, "suggestions_client")
+            adiciona_sugestoes_de_medicamentos()
+            adiciona_sugestoes_de_cpfs()
         }
         $(document).ready(function () {
             add_sugestoes()
@@ -63,12 +77,13 @@ Cadastro de Ordem de Venda
                     <th></th>
                     <th></th>
                 </tr>
-            </thead>            
-            {% for i in lista %}                      
+            </thead>
+            {% for j in lista %}            
+            {% for i in j.lotes %}                      
             <tbody>
                 <tr class={{i.id}}>
                     <th scope="row">{{i.id_lote_medicamento}}</th>
-                    <td class = "nome">{{busca}}</td>
+                    <td class = "nome">{{ j.nome_med }}</td>
                     <td class = "Quantidade">{{i.quantidade_por_caixa}}</td>
                     <td class = "Dosagem">{{i.dosagem}}</td>
                     <td class = "Data de Validade">{{i.data_de_validade}}</td>
@@ -77,11 +92,12 @@ Cadastro de Ordem de Venda
                     
                     <td>
                         <form class= "centro">
-                            <button value = {{i.id_lote_medicamento}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
+                            <button value = {{i.id_lote_medicamento}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit">Vender</button> 
                         </form>
                     </td>
                 </tr>
             </tbody>
+            {% endfor %}
             {% endfor %}
         </table>        
     </div>
@@ -92,7 +108,7 @@ Cadastro de Ordem de Venda
                 <form method="POST" autocomplete="off">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label>Cliente</label>
+                        <label>Cpf do cliente</label>
                         <input 
                             onkeydown="javascript: fMasc( this, mCPF )"
                             onblur="testa_cpf(this)"
@@ -128,7 +144,7 @@ Cadastro de Ordem de Venda
                             type="text" 
                             class="form-control background-none custom-input"
                             name="nome_med"
-                            value= {{busca}}
+                            value= "{{busca}}"
                             disabled>
                     </div>
                     <div class="form-group">
@@ -206,9 +222,6 @@ Cadastro de Ordem de Venda
 
 
 
-    <script src="./jquery-3.5.1.min.js"></script>
-    <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="_js/script.js"></script>
 </div>
 
 {% endblock %}

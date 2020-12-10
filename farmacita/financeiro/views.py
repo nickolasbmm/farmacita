@@ -27,17 +27,18 @@ def criar_ordem_de_venda(request):
         cpf_cliente_validos.append(x.cpf)
     
     medicamentos = medicamento.objects.all()
-    nome_med_validos= []
+    med_validos= []
     for x in medicamentos:
-        nome_med_validos.append(x.nome_medicamento)
+        med_validos.append(x.nome_medicamento)
         
     
     lista = []
     busca = request.GET.get('buscaMedicamento')
     nome = busca
     if busca:
-        id_med = medicamento.objects.get(nome_medicamento=busca).id_medicamento
-        lista = lote_medicamento.objects.filter(id_medicamento = id_med).order_by('data_de_validade')
+        busca=''
+        for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
+            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
     
     id_lote = request.GET.get('vender') 
     
@@ -59,11 +60,15 @@ def criar_ordem_de_venda(request):
             
             #desconto = autorizar_desconto(p.get("senha"))
             )
+
+        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) -1)
+        editarlote.save()
         novaordemvenda.save()
         
 
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
-                                                            "nome_med_validos" : nome_med_validos, 
+                                                            "med_validos" : med_validos, 
                                                             "busca" :busca,
                                                             "id_lote": id_lote,
                                                             "nome": nome,

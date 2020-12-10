@@ -52,6 +52,7 @@ Cadastro de Cliente
                     <div class="form-group">
                         <label>Data de nascimento</label>
                         <input type="date" class="form-control background-none custom-input" id="data_nasc" placeholder="" name="data_nasc" onchange="checarIdade(value)" required>
+                        <p id="cadastro_cliente_maior_idade" style="display: none;color: red;">O cliente deve ser maior de idade!</p>
                     </div>
                     <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>
                 </form>
