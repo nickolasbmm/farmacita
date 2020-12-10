@@ -1,8 +1,10 @@
 from django.shortcuts import render, HttpResponse
 from .models import medicamento, principio_ativo
+from pessoas.models import funcionario
 
 # Create your views here.
 def cadastro_medicamentos(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     principiosativos = principio_ativo.objects.all()
     droga_list = list()
@@ -18,10 +20,11 @@ def cadastro_medicamentos(request):
         item.save()
         sucesso=True
 
-    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso})
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo})
 
 def editar_medicamento(request):      
     sucesso=False
+    cargo = funcionario.objects.get(user=request.user).cargo
     lista = medicamento.objects.all()
     editar = False
     
@@ -61,19 +64,10 @@ def editar_medicamento(request):
     {'lista':lista,
     'editar':editar,
     "droga":droga_list,
-    "sucesso":sucesso}
+    "sucesso":sucesso,
+    'cargo':cargo}
     )
 
-'''
-def excluir_medicamento(request):   
-    if request.method == "POST":
-        id_medicamento = request.id_medicamento
-        editarmedicamento = medicamento.objects.filter(id_medicamento = id_medicamento)
-        editarmedicamento.update(
-           excluido = True
-        )
-    return render(request,'medicamento/pagina_exclusao_medicamento.html')
-'''
 
 def cadastrar_principio_ativo(request):
     if request.method == "POST":

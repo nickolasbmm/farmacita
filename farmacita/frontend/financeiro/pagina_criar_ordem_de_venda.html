@@ -131,11 +131,11 @@ Cadastro de Ordem de Venda
                             <input type="number"
                              class="form-control"
                              name="quantidade"
-                             min=0
+                             min=1
                              max = {{quant_est}}
-                             onchange="checar(this)"
+                             onchange="atualiza_valor()"
                              id = "quantidade"
-                             placeholder= ""
+                             value='1'
                              required>
                 
                           </div>
@@ -156,7 +156,7 @@ Cadastro de Ordem de Venda
                             class="form-control background-none custom-input"
                             name="id_lote"
                             value= "{{id_lote}}"
-                            disabled>
+                            readonly>
                     </div>
                     <div class="form-group">
                         
@@ -165,12 +165,10 @@ Cadastro de Ordem de Venda
                         
                         <div class="input-group">
                             <label class="btn btn-outline-primary form-check-label">
-                            <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais()"> Desconto
+                            <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais();atualiza_valor()"> Desconto
                         </label>
 
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">%</span>
-                            </div>
+
                             <input 
                                 id="perc_desc"
                                 type="number" 
@@ -178,7 +176,12 @@ Cadastro de Ordem de Venda
                                 min="0"
                                 class="form-control background-none custom-input"
                                 name="perc_desconto"
+                                onchange="atualiza_valor()"
+                                style="display: none;"
                             >
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
+                            </div>
                         </div>
                     
                    
@@ -205,7 +208,30 @@ Cadastro de Ordem de Venda
                             class="form-control background-none custom-input"
                             name="senha">
                     </div>
-
+                    <div class="form-group">
+                        <label>Valor Total</label>
+                        <input 
+                            type="text" 
+                            class="form-control background-none custom-input"
+                            id = 'valor_total'
+                            name="valor_total"
+                            readonly>
+                        <script>
+                        function atualiza_valor(){
+                            valor_unitario = {{cpf_cliente_validos}}
+                            qtd = document.getElementById('quantidade').value
+                            desconto = document.getElementById('desconto').value
+                            if(desconto){
+                                perc = document.getElementById('perc_desc').value/100
+                            }
+                            else{
+                                perc = 0
+                            }
+                            document.getElementById('valor_total').value = (qtd*valor_unitario*(1-perc)).toFixed(2)
+                        }
+                        atualiza_valor()
+                        </script>
+                    </div>
                     <button 
                         type="submit" 
                         class="btn  btn-block btn-outline-info custom-btn">
@@ -231,6 +257,8 @@ Cadastro de Ordem de Venda
         }
         function toggle_credenciais(){
             $('#credenciais_gerente').toggle()
+            $('#perc_desc').toggle()
+            $('#basic-addon1').toggle()
         }
     
     </script>

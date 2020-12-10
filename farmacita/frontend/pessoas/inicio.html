@@ -6,30 +6,6 @@ Cadastro Medicamento
 
 {% block content %}
 
-<script>
-
-    // Comentar esse bloco para debugar
-
-    cargo = '{{cargo}}'
-
-    if(cargo == 'Balconista'){
-        $('#dropdownfuncionarios').css('display','none')
-    }
-    if(cargo == 'Caixa'){
-        $('#dropdownmedicamentos').css('display','none')
-        $('#dropdownestoque').css('display','none')
-        $('#dropdownclientes').css('display','none')
-        $('#dropdownfuncionarios').css('display','none')
-    }
-    if(cargo == 'Farmacêutico'){
-        $('#dropdownvendas').css('display','none')
-    }
-    if(cargo == 'Gerente Financeiro'){
-        $('#dropdownclientes').css('display','none')
-        $('#dropdownfuncionarios').css('display','none')
-    }
-</script>
-
 <h1 style="padding: 50px;">Bem vindo {{ nome_funcionario }}!</h1>
 <h3 style="padding: 50px;">{{cargo}}</h3>
 

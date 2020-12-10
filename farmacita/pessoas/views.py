@@ -42,7 +42,8 @@ def sucessful_login(request):
 def failed_login(request):
     return render(request,'login_page.html')
 
-def cadastro_cliente(request):  
+def cadastro_cliente(request): 
+    cargo = funcionario.objects.get(user=request.user).cargo 
     sucesso=False 
     if request.method == "POST":
         p = request.POST
@@ -56,9 +57,10 @@ def cadastro_cliente(request):
         novocliente.save()
         sucesso=True
             
-    return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso})
+    return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso,'cargo':cargo})
 
 def editar_cliente(request): 
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso = False
     if request.user.is_authenticated:
         editar = False
@@ -98,11 +100,12 @@ def editar_cliente(request):
             )
             sucesso=True      
 
-        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
+        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo})
     else:
         return failed_login(request)
 
 def cadastro_usuario(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.method == "POST":
         p = request.POST
@@ -120,9 +123,10 @@ def cadastro_usuario(request):
         novofuncionario.save()
         sucesso=True
 
-    return render(request,'pessoas/pagina_cadastro_de_usuario.html',{'sucesso':sucesso})
+    return render(request,'pessoas/pagina_cadastro_de_usuario.html',{'sucesso':sucesso,'cargo':cargo})
 
-def editar_usuario(request):    
+def editar_usuario(request):   
+    cargo = funcionario.objects.get(user=request.user).cargo 
     sucesso=False
     if request.user.is_authenticated:
         editar = False
@@ -174,12 +178,13 @@ def editar_usuario(request):
             )
             sucesso=True
 
-        return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
+        return render(request,'pessoas/pagina_edicao_de_usuario.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo})
     else:
         return failed_login(request)
 
 
 def cadastro_fornecedor(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.method == "POST":
         p = request.POST
@@ -192,10 +197,11 @@ def cadastro_fornecedor(request):
         novofornecedor.save()
         sucesso=True
             
-    return render(request,'pessoas/pagina_cadastro_fornecedor.html',{'sucesso':sucesso})
+    return render(request,'pessoas/pagina_cadastro_fornecedor.html',{'sucesso':sucesso,'cargo':cargo})
 
 
-def editar_fornecedor(request):    
+def editar_fornecedor(request):
+    cargo = funcionario.objects.get(user=request.user).cargo    
     sucesso=False
     if request.user.is_authenticated:
         editar = False
@@ -227,7 +233,7 @@ def editar_fornecedor(request):
             )
             sucesso=True
 
-        return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar,'sucesso':sucesso})
+        return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo})
     else:
         return failed_login(request)
 

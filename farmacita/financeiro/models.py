@@ -25,6 +25,7 @@ class ordem_de_venda(models.Model):
     data_de_venda = models.DateField(auto_now=False,auto_now_add=False,null=True)
     percentual_desconto = models.DecimalField(max_digits=40,decimal_places=2,default=0)
     preco_desconto = models.DecimalField(max_digits=40,decimal_places=2,null=True)
+    valor_total_venda = models.DecimalField(max_digits=40,decimal_places=2,null=True)
 
 class ordem_de_compra(models.Model):
     id_ordem_de_compra = models.AutoField(primary_key=True)
