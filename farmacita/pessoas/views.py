@@ -78,7 +78,25 @@ def editar_cliente(request):
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = cliente.objects.filter(id_cliente = editando)      
+            lista = cliente.objects.filter(id_cliente = editando)
+
+        if request.method == "POST":
+            p = request.POST          
+            user = request.user
+            editarcliente = cliente.objects.filter(id_cliente=editando)
+                                    
+            nasc = p.get('data_nascimento')
+            
+            if(nasc== ""):
+                nasc = editarcliente.first().data_nascimento
+            
+            editarcliente.update(
+                nome_cliente = p.get('nome_cliente'),
+                telefone = p.get('telefone'),
+                data_nascimento = nasc,
+                
+            )
+            sucesso=True      
 
         return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar})
     else:

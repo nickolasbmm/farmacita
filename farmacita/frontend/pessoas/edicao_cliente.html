@@ -75,13 +75,54 @@ Dados Clientes
         </table>
         
         {% if editar %}
+        <script>
+            function fMasc(objeto,mascara) {
+                obj=objeto
+                masc=mascara
+                setTimeout("fMascEx()",1)
+                }
+    
+                function fMascEx() {
+                obj.value=masc(obj.value)
+                }
+    
+                function mCPF(cpf){
+                    cpf=cpf.replace(/\D/g,"")
+                    cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                    cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+                    cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+                    return cpf    
+                }
+            
+                function mTel(tel){
+                    tel=tel.replace(/\D/g,"")
+                    tel=tel.replace(/(\d{1})/,"($1")
+                    tel=tel.replace(/(\d{1})(\d)/,"$1$2) ")
+                    tel=tel.replace(/(\d{5})(\d)/,"$1-$2")
+                    return tel
+                }
+            
+
+                function confirmar_senha(campo_senha){
+                campo = campo_senha.value
+                if($("#senha").val()==campo){
+                    $("#confirmacao_senha").css("border", "1px solid #ced4da")
+                    $("#texto_confirmacao_senha").css('visibility','hidden');
+                    }
+                else{
+                    $("#confirmacao_senha").val("")
+                    $("#texto_confirmacao_senha").css('visibility','visible');
+                    $("#confirmacao_senha").css("border", "1px solid red")
+                    }
+                }
+        </script>
         {% for i in lista %}
 
         <form class="formulario" method="POST" autocomplete="off">
             {% csrf_token %}            
             <div class="form-group">
                 <label>Nome</label>
-                <input value = {{i.nome_cliente}} type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
+                <input value = {{i.nome_cliente}} type="text" class="form-control background-none custom-input" id="nome_cliente", name = 'nome_cliente'>
             </div>
             <div class="form-group">
                 <label>CPF</label>
@@ -91,15 +132,14 @@ Dados Clientes
                 <label>Telefone</label>
                 <p>Anterior : {{i.telefone}}</p>
                 <input 
-                value = {{i.telefone}}
-                type="tel" 
+                type="text" 
                 name="telefone" 
                 class="form-control background-none custom-input" 
                 id="telefone" 
                 onkeydown="javascript: fMasc( this, mTel )" 
                 maxlength=15
                 required>
-            </div>                    
+            </div>                   
             <div class="form-group">
                 <label>Data de Nascimento</label> 
                 <p>Data anterior : {{i.data_nascimento}}</p>
@@ -107,13 +147,17 @@ Dados Clientes
                     value = None 
                     type="date" 
                     class="form-control background-none custom-input" 
-                    id="data_de_admissao" 
-                    name = 'data_de_admissao'
+                    id="data_nascimento" 
+                    name = 'data_nascimento'
                     onchange="checarIdade(value)"
                     >
             </div>           
             <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
         </form>
+        <script>
+            document.getElementById("telefone").value = "{{i.telefone}}"
+                    
+        </script>
         {% endfor %}
         
         {% endif %}  
