@@ -225,6 +225,24 @@ def editar_fornecedor(request):
     else:
         return failed_login(request)
 
+def editar_cod_autorizacao(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            p = request.POST          
+            user = request.user
+            func = funcionario.objects.filter(user = user)[0]
+            cod_antigo = int(p.get('senha_antiga'))
+            if(func.cod_autorizacao == cod_antigo ):
+                print('oioi')
+                func.cod_autorizacao = int(p.get('senha'))
+                return render(request,'pessoas/cod_autorizacao_sucesso.html')
+            else:
+                return render(request,'pessoas/cod_autorizacao_cod_errado.html')
+        return render(request,'pessoas/cod_autorizacao.html')
+    else:
+        return failed_login(request)
+
+
 
     
 
