@@ -105,19 +105,15 @@ def criar_ordem_de_venda(request):
                                                             "quant_est": quant_est,
                                                             "cpf_cliente_validos":cpf_cliente_validos,
                                                             "sucesso":sucesso,
-<<<<<<< HEAD
+                                                            'cargo':cargo
                                                             } )
+
+
 
 
 def consultar_ordem_de_venda(request):
     editar = False
-=======
-                                                            'cargo':cargo} )
-
-
-def consultar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo
->>>>>>> f18b77dd2474a55b2562071acb7c473f0a950cfd
     cpf_cliente_validos = []
     clientes_validos = cliente.objects.all()
     for x in clientes_validos:
@@ -238,12 +234,9 @@ def consultar_ordem_de_venda(request):
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
                                                                                 "lista":lista,
                                                                                 "cpf_cliente_validos":cpf_cliente_validos,
-<<<<<<< HEAD
                                                                                 "editar":editar,
-                                                                                "lista_edit":lista_edit})
-=======
+                                                                                "lista_edit":lista_edit,
                                                                                 'cargo':cargo})
->>>>>>> f18b77dd2474a55b2562071acb7c473f0a950cfd
 
 
 def vender(id_cliente):
