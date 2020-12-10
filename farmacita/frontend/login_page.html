@@ -1,10 +1,20 @@
-{% extends 'template/padrao_login.html' %}
+{% extends 'template/padrao.html' %}
 
 {%block titulo %}
 Log in
 {% endblock %}
 
 {% block content %}
+    <script>
+        $('#dropdownusuario').css('display','none')
+        $('#dropdownprincipal').css('display','none')
+        $('#dropdownmedicamentos').css('display','none')
+        $('#dropdownestoque').css('display','none')
+        $('#dropdownclientes').css('display','none')
+        $('#dropdownfuncionarios').css('display','none')
+        $('#dropdownvendas').css('display','none')
+        $('#dropdowncompras').css('display','none')
+    </script>
     <div>
         <div class="row">
             <div class="col-sm-12 text-center">

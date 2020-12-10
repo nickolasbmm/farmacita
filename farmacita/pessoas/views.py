@@ -12,19 +12,13 @@ def deslogar(request):
     return redirect('/')
 
 def pagina_principal(request):
+    try:
         user = request.user
         func =  funcionario.objects.filter(user = user)[0]
         cargo = func.cargo
-        if cargo == "Balconista":
-            return render(request,'pessoas/inicio_balconista.html', {'nome_funcionario':func.nome_funcionario})
-        elif cargo == "Caixa":
-            return render(request,'pessoas/inicio_caixa.html', {'nome_funcionario':func.nome_funcionario})
-        elif cargo == "Farmacêutico":
-            return render(request,'pessoas/inicio_farmaceutico.html', {'nome_funcionario':func.nome_funcionario})
-        elif cargo == "Gerente Financeiro":
-            return render(request,'pessoas/inicio_gerente_financeiro.html', {'nome_funcionario':func.nome_funcionario})
-        else:
-            return failed_login(request)
+        return render(request,'pessoas/inicio.html', {'nome_funcionario':func.nome_funcionario,'cargo':cargo})
+    except:
+        return failed_login(request)
 
 def authentication(request):
     if request.user.is_authenticated:
