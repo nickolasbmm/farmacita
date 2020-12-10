@@ -6,7 +6,7 @@ Cadastro Medicamento
 
 {% block content %}
 
-<!-- <script>
+<script>
 
     // Comentar esse bloco para debugar
 
@@ -14,35 +14,21 @@ Cadastro Medicamento
 
     if(cargo == 'Balconista'){
         $('#dropdownfuncionarios').css('display','none')
-        $('#dropdowncompras').css('display','none')
     }
     if(cargo == 'Caixa'){
         $('#dropdownmedicamentos').css('display','none')
         $('#dropdownestoque').css('display','none')
         $('#dropdownclientes').css('display','none')
         $('#dropdownfuncionarios').css('display','none')
-        $('#dropdowncompras').css('display','none')
     }
     if(cargo == 'Farmacêutico'){
-        $('#dropdownclientes').css('display','none')
-        $('#dropdowncompras').css('display','none')
+        $('#dropdownvendas').css('display','none')
     }
     if(cargo == 'Gerente Financeiro'){
-        $('#dropdownmedicamentos').css('display','none')
-        $('#dropdownestoque').css('display','none')
         $('#dropdownclientes').css('display','none')
         $('#dropdownfuncionarios').css('display','none')
     }
-
-    
-
-    // $('#dropdownmedicamentos').css('display','none')
-    // $('#dropdownestoque').css('display','none')
-    // $('#dropdownclientes').css('display','none')
-    // $('#dropdownfuncionarios').css('display','none')
-    // $('#dropdownvendas').css('display','none')
-    // $('#dropdowncompras').css('display','none')
-</script> -->
+</script>
 
 <h1 style="padding: 50px;">Bem vindo {{ nome_funcionario }}!</h1>
 <h3 style="padding: 50px;">{{cargo}}</h3>
