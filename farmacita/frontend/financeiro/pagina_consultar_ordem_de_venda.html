@@ -63,8 +63,8 @@ Consulta de Ordem de Venda
                     <th scope="col">Nome do Medicamento</th>
                     <th scope="col">Quantidade</th>
                     <th scope="col">Nº Lote</th>
+                    <th scope="col">Valor Desconto</th>
                     <th scope="col">Valor Unitário</th>
-                    <th scope="col">Desconto</th>
                     <th scope="col">Vender</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
@@ -80,20 +80,12 @@ Consulta de Ordem de Venda
                     <td class = "Nome">{{i.id_lote_medicamento.id_medicamento}}</td>
                     <td class = "Quantidade">{{i.quantidade}}</td>
                     <td class = "Nº Lote">{{i.id_lote_medicamento.id_lote_medicamento}}</td>
+                    <td class = "Valor Desconto">{{i.preco_desconto | floatformat }}</td>
                     <td class = "Valor Unitário">
                         {{i.id_lote_medicamento.preco | floatformat}}</td>
-                    
-                
-                    
-                    <td class = "Valor Desconto">{% if i.id_lote_medicamento.preco == True%}
-                                                {{ "10%" }}
-                                                {%else%}
-                                                {{  "0%" }}
-                                                {% endif%} 
-                                                </td>
-                                                <td>
+                        <td>
                         <form class= "centro">
-                            <button value = {{i.id_ordem_de_venda}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
+                            <button value = {{i.id_ordem_de_venda}} name = 'vend' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
                         </form>
                     </td>
                     <td>
@@ -112,6 +104,227 @@ Consulta de Ordem de Venda
             {% endfor %}
         </table>        
     </div>
+    {% if editar %}
+            <script>
+            
+            
+            lista_de_medicamentos_validos = {{med_validos | safe }}
+            lista_cpf_cliente = {{cpf_cliente_validos | safe}}
+
+
+            adiciona_sugestoes_de_medicamentos = function(){
+                $("#suggestions_medicamento").empty()
+                lista_de_medicamentos_validos.forEach(medicamento_valido => {
+                    $("#suggestions_medicamento").append('<option value="{valor}"">'.formatUnicorn({valor : medicamento_valido}))
+                });
+            }
+
+            adiciona_sugestoes_de_cpfs = function(){
+                $("#suggestions_client").empty()
+                lista_cpf_cliente.forEach(cpf_valido => {
+                    $("#suggestions_client").append('<option value="{valor}"">'.formatUnicorn({valor : cpf_valido}))
+                });
+            }
+
+            add_sugestoes = function () {
+                adiciona_sugestoes_de_medicamentos()
+                adiciona_sugestoes_de_cpfs()
+            }
+            $(document).ready(function () {
+                add_sugestoes()
+            });
+            
+        </script>
+        
+        <div class="row formulario">
+            <div class="col-sm-12">
+                <div>                
+                    <form method="GET">
+
+                        <div class="input-group-prepend">
+                        
+                            <input type="text" class="form-control" placeholder="Medicamento" list="suggestions_medicamento" name="buscaMedicamento" id="buscaMedicamento">
+                            <datalist
+                                id="suggestions_medicamento"></datalist>
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                            
+                        </div>              
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tabela">
+            <table class="table table-hover">
+                <thead class="table-info">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nome do Medicamento</th>
+                        <th scope="col">Quantidade por caixa</th>
+                        <th scope="col">Dosagem</th>
+                        <th scope="col">Data de Validade</th>
+                        <th scope="col">Preço</th>
+                        <th scope="col">Quantidade em estoque</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                {% for j in lista %}            
+                {% for i in j.lotes %}                      
+                <tbody>
+                    <tr class={{i.id}}>
+                        <th scope="row">{{i.id_lote_medicamento}}</th>
+                        <td class = "nome">{{ j.nome_med }}</td>
+                        <td class = "Quantidade">{{i.quantidade_por_caixa}}</td>
+                        <td class = "Dosagem">{{i.dosagem}}</td>
+                        <td class = "Data de Validade">{{i.data_de_validade}}</td>
+                        <td class = "Preço">{{i.preco}}</td>
+                        <td class = "Quantidade em estoque">{{i.quantidade_de_caixas}}</td>
+                        
+                        <td>
+                            <form class= "centro">
+                                <button value = {{i.id_lote_medicamento}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit">Vender</button> 
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+                {% endfor %}
+            </table>        
+        </div>
+        <div class="row formulario">
+            <div class="col-sm-12">
+                <div>
+                    {% for i in lista_edit %}
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Cpf do cliente</label>
+                            <input 
+                                onkeydown="javascript: fMasc( this, mCPF )"
+                                onblur="testa_cpf(this)"
+                                type="text" 
+                                class="form-control background-none custom-input"
+                                list="suggestions_client"
+                                maxlength=14
+                                name="cpf"
+                                value= {{i.id_cliente.cpf}}
+                            >
+                            <datalist
+                                id="suggestions_client"></datalist>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <label>Quantidade</label>
+                            <div class="input-group">
+                                <input type="number"
+                                class="form-control"
+                                name="quantidade"
+                                min=0
+                                max = {{quant_est}}
+                                onchange="checar(this)"
+                                id = "quantidade"
+                                placeholder= ""
+                                value = {{i.quantidade}}
+                                required>
+                    
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Medicamento</label>
+                            <input 
+                                type="text" 
+                                class="form-control background-none custom-input"
+                                name="nome_med"
+                                value= "{{i.id_lote_medicamento.id_medicamento}}"
+                                disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº Lote</label>
+                            <input 
+                                type="text" 
+                                class="form-control background-none custom-input"
+                                name="id_lote"
+                                value= "{{i.id_lote_medicamento.id_lote_medicamento}}"
+                                disabled>
+                        </div>
+                        <div class="form-group">
+                            
+
+                        <div class="form-group">
+                            
+                            <div class="input-group">
+                                <label class="btn btn-outline-primary form-check-label">
+                                <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais()"> Desconto
+                            </label>
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                </div>
+                                <input 
+                                    id="perc_desc"
+                                    type="number" 
+                                    step="0.1"
+                                    min="0"
+                                    class="form-control background-none custom-input"
+                                    name="perc_desconto"
+                                >
+                            </div>
+                        
+                    
+                    
+                        </div>
+
+
+
+                        <div class="form-group" id="credenciais_gerente", style="display: none;">
+                            <label>Autorização de Desconto</label>
+                            <input 
+                                id= "senha"
+                                type="password" 
+                                placeholder="Login do gerente"
+                                class="form-control background-none custom-input"
+                                name="login">
+
+                                <p></p> <!-- espaço entre os inputs -->
+
+                            <input 
+                                id= "senha"
+                                type="password" 
+                                placeholder="Senha do gerente"
+                                class="form-control background-none custom-input"
+                                name="senha">
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="btn  btn-block btn-outline-info custom-btn">
+                            Salvar</button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        
+        <script>
+            function haddle(checkboxElem) {
+                if (checkboxElem.checked) {
+                    $('#senha').attr("required", "req");
+                    $('#perc_desc').attr("required", "req");
+                } else {
+                    $('#senha').removeAttr("required", "req");
+                    $('#perc_desc').removeAttr("required", "req");
+                }
+            }
+            function toggle_credenciais(){
+                $('#credenciais_gerente').toggle()
+            }
+        
+        </script>
+
+    {% endif %}
 
     <script src="./jquery-3.5.1.min.js"></script>
     <script src="bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>

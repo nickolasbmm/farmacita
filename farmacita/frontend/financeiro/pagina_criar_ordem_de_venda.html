@@ -117,6 +117,7 @@ Cadastro de Ordem de Venda
                             list="suggestions_client"
                             maxlength=14
                             name="cpf"
+                            required
                         >
                         <datalist
                             id="suggestions_client"></datalist>
@@ -144,7 +145,7 @@ Cadastro de Ordem de Venda
                             type="text" 
                             class="form-control background-none custom-input"
                             name="nome_med"
-                            value= "{{busca}}"
+                            value= "{{nome2}}"
                             disabled>
                     </div>
                     <div class="form-group">
@@ -188,7 +189,7 @@ Cadastro de Ordem de Venda
                     <div class="form-group" id="credenciais_gerente", style="display: none;">
                         <label>Autorização de Desconto</label>
                         <input 
-                            id= "senha"
+                            id= "login"
                             type="password" 
                             placeholder="Login do gerente"
                             class="form-control background-none custom-input"
@@ -218,9 +219,11 @@ Cadastro de Ordem de Venda
     <script>
         function haddle(checkboxElem) {
             if (checkboxElem.checked) {
+                $('#login').attr("required", "req");
                 $('#senha').attr("required", "req");
                 $('#perc_desc').attr("required", "req");
             } else {
+                $('#login').removeAttr("required", "req");
                 $('#senha').removeAttr("required", "req");
                 $('#perc_desc').removeAttr("required", "req");
             }

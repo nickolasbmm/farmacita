@@ -21,6 +21,7 @@ import decimal
 
 def criar_ordem_de_venda(request):
     sucesso = False
+    
     quant_est = 0
     cpf_cliente_validos = []
 
@@ -38,18 +39,21 @@ def criar_ordem_de_venda(request):
     busca = request.GET.get('buscaMedicamento','')
     nome = busca
     if busca:
-        busca=''
+        #busca=''
         for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
             lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
     
     id_lote = request.GET.get('vender','') 
-    
+    nome2 = ''
     if id_lote:
-        lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
-        busca = lista.get().id_medicamento
-        quant_est = lista.get().quantidade_de_caixas 
-
-
+        lista2 = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
+        nome2 = lista2.get().id_medicamento
+        quant_est = lista2.get().quantidade_de_caixas 
+        for med in medicamento.objects.filter(nome_medicamento=nome2):
+            lista.append({'lotes':lista2,'nome_med':med.nome_medicamento})
+    
+        
+        
     if request.method == "POST":
         p = request.POST
         qtd = p.get("quantidade")
@@ -67,31 +71,41 @@ def criar_ordem_de_venda(request):
                         percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
                         preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100)
                     )
+                    editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+                    editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
+                    editarlote.save()
+                    novaordemvenda.save()
+                else:
+                    sucesso =False
+                    
         else:
             novaordemvenda = ordem_de_venda(
                 id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
                 id_cliente = cliente.objects.get(cpf = CPF), 
                 quantidade = qtd,
                 )
+            editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+            editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
+            editarlote.save()
+            novaordemvenda.save()
 
-        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
-        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
-        editarlote.save()
-        novaordemvenda.save()
+        
         sucesso=True
         
 
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
                                                             "med_validos" : med_validos, 
-                                                            "busca" :busca,
+                                                            "nome2" :nome2,
                                                             "id_lote": id_lote,
                                                             "nome": nome,
                                                             "quant_est": quant_est,
                                                             "cpf_cliente_validos":cpf_cliente_validos,
-                                                            "sucesso":sucesso} )
+                                                            "sucesso":sucesso,
+                                                            } )
 
 
 def consultar_ordem_de_venda(request):
+    editar = False
     cpf_cliente_validos = []
     clientes_validos = cliente.objects.all()
     for x in clientes_validos:
@@ -106,21 +120,114 @@ def consultar_ordem_de_venda(request):
         id_cli = x.id_cliente
     print(id_cli)
     if busca:
+        editar = False
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
 
+    vender = request.GET.get('vende')
+    if vender: 
+        editar = False           
+        teste = ordem_de_venda.objects.filter(id_ordem_de_venda = vender)
+        teste.update(ativo = False)
+        id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
+        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+        qtd = teste.get().quantidade
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
+        editarlote.save()
+
+
     delete = request.GET.get('delete')
-    if delete:            
-            teste = ordem_de_venda.objects.filter(id_ordem_de_venda = delete)
-            teste.update(ativo = False)
+    if delete:
+        editar = False            
+        teste = ordem_de_venda.objects.filter(id_ordem_de_venda = delete)
+        teste.update(ativo = False)
+        id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
+        qtd = teste.get().quantidade
+        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) + int(qtd))
+        editarlote.save()
+        
 
-   
+    lista_edit = []
+    editando = request.GET.get('edit')
+    if editando:
+        editar = True
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_ordem_de_venda = editar)
+        for x in lista_ordem_de_venda:
+            lista.append(x)
+        
+        lista_editar_ordem = ordem_de_venda.objects.filter(id_ordem_de_venda = editando)
+        id_lote = lista_editar_ordem.get().id_lote_medicamento.id_lote_medicamento
+        for x in lista_editar_ordem:
+            lista_edit.append(x)
+        
+        qtd = lista_editar_ordem.get().quantidade
+        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) + int(qtd))
+        editarlote.save()
+
+    busca = request.GET.get('buscaMedicamento','')
+    nome = busca
+    if busca:
+        #busca=''
+        for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
+            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
+
+    id_lote2 = request.GET.get('vender','') 
+    nome2 = ''
+    if id_lote2:
+        lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote2)
+        nome2 = lista.get().id_medicamento
+        quant_est = lista.get().quantidade_de_caixas
+        id_lote = id_lote2
+
+    if request.method == "POST":
+        p = request.POST
+        qtd = p.get("quantidade")
+        CPF = p.get("cpf")
+        editar_ordem_venda = ordem_de_venda.objects.filter(id_ordem_de_venda = editando)
+        
+        if p.get('desconto'):
+            usuario = User.objects.get(username=p.get('login'))
+            gerente = funcionario.objects.get(user=usuario)
+            if usuario.check_password(p.get('senha')):
+                if gerente.cargo == 'Gerente Financeiro' or gerente.cargo == 'Farmacêutico':
+                    
+                    editar_ordem_venda.update(
+                        id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
+                        id_cliente = cliente.objects.get(cpf = CPF), 
+                        quantidade = qtd,
+                        desconto=True,
+                        percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
+                        preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100)
+                    )
+        else:
+            editar_ordem_venda.update(
+                id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
+                id_cliente = cliente.objects.get(cpf = CPF), 
+                quantidade = qtd,
+                desconto=False,
+                percentual_desconto=decimal.Decimal(0),
+                preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco
+                )
+        
+        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
+        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
+        editarlote.save()
+        editar = False
+        id_cli = editar_ordem_venda.get().id_cliente.id_cliente
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        for x in lista_ordem_de_venda:
+            lista.append(x)
 
 
+    
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
                                                                                 "lista":lista,
-                                                                                "cpf_cliente_validos":cpf_cliente_validos})
+                                                                                "cpf_cliente_validos":cpf_cliente_validos,
+                                                                                "editar":editar,
+                                                                                "lista_edit":lista_edit})
 
 
 def vender(id_cliente):
