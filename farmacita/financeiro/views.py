@@ -309,3 +309,12 @@ def comprar_medicamento(request):
             )
         novaordemvenda.save()        
     return render(request,'pagina_criar_ordem_de_venda.html',{'cargo':cargo})
+
+
+def historico_vendas(request):
+    cargo = funcionario.objects.get(user=request.user).cargo
+    lista = ordem_de_venda.objects.filter(venda=True)
+
+
+    
+    return render(request, 'financeiro/pagina_historico_de_vendas.html', {"lista":lista,'cargo':cargo})
