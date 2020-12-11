@@ -63,6 +63,7 @@ Consulta de Ordem de Venda
                     <th scope="col">Nome do Medicamento</th>
                     <th scope="col">Quantidade</th>
                     <th scope="col">Nº Lote</th>
+                    <th scope="col">Desconto %</th>
                     <th scope="col">Valor Desconto</th>
                     <th scope="col">Valor Total</th>
                     <th scope="col">Vender</th>
@@ -76,10 +77,11 @@ Consulta de Ordem de Venda
             <tbody>
                 <tr class={{i.id}}>
                     <th scope="row">{{i.id_ordem_de_venda}}</th>
-                    <td class = "CPF">{{busca}}</td>
+                    <td class = "CPF">{{busca2}}</td>
                     <td class = "Nome">{{i.id_lote_medicamento.id_medicamento}}</td>
                     <td class = "Quantidade">{{i.quantidade}}</td>
                     <td class = "Nº Lote">{{i.id_lote_medicamento.id_lote_medicamento}}</td>
+                    <td class = "Desconto %">{{i.percentual_desconto.id_lote_medicamento}}</td>
                     <td class = "Valor Desconto">{{i.preco_desconto | floatformat }}</td>
                     <td class = "Valor Total">
                         {{i.valor_total_venda | floatformat}}</td>

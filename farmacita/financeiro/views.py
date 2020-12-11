@@ -122,28 +122,32 @@ def consultar_ordem_de_venda(request):
 
     lista = []
 
-    busca = request.GET.get("buscaCliente")
+    busca2 = request.GET.get("buscaCliente")
     id_cli = 0
-    lista_cli = cliente.objects.filter(cpf = busca)
+    lista_cli = cliente.objects.filter(cpf = busca2)
     for x in lista_cli:
         id_cli = x.id_cliente
     print(id_cli)
-    if busca:
+    if busca2:
         editar = False
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
 
-    vender = request.GET.get('vende')
+    vender = request.GET.get('vend')
     if vender: 
         editar = False           
         teste = ordem_de_venda.objects.filter(id_ordem_de_venda = vender)
+        teste.update(venda = True)
         teste.update(ativo = False)
+        lista = []
         id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
-        editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
         qtd = teste.get().quantidade
-        editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
-        editarlote.save()
+        busca2 = teste.get().id_cliente.cpf
+        id_cli = teste.get().id_cliente.id_cliente
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        for x in lista_ordem_de_venda:
+            lista.append(x)
 
 
     delete = request.GET.get('delete')
@@ -151,11 +155,17 @@ def consultar_ordem_de_venda(request):
         editar = False            
         teste = ordem_de_venda.objects.filter(id_ordem_de_venda = delete)
         teste.update(ativo = False)
+        lista = []
         id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
         qtd = teste.get().quantidade
         editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
         editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) + int(qtd))
         editarlote.save()
+        busca2 = teste.get().id_cliente.cpf
+        id_cli = teste.get().id_cliente.id_cliente
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        for x in lista_ordem_de_venda:
+            lista.append(x)
         
 
     lista_edit = []
@@ -233,6 +243,7 @@ def consultar_ordem_de_venda(request):
 
     
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
+                                                                                "busca2":busca2,
                                                                                 "lista":lista,
                                                                                 "cpf_cliente_validos":cpf_cliente_validos,
                                                                                 "editar":editar,
