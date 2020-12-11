@@ -7,5 +7,6 @@ urlpatterns = [
     path('consultar_ordem_de_venda',views.consultar_ordem_de_venda, name = 'consultar_ordem_de_venda'),
     path('desistir_compra',views.desistir_compra, name = 'desistir_compra'),
     path('vender_medicamento',views.vender_medicamento, name = 'vender_medicamento'),
-    path('comprar_medicamento',views.comprar_medicamento, name = 'comprar_medicamento')
+    path('comprar_medicamento',views.comprar_medicamento, name = 'comprar_medicamento'),
+    path('historico_vendas',views.historico_vendas, name = 'historico_vendas')
 ]
