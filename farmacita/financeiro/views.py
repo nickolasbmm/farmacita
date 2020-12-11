@@ -302,7 +302,7 @@ def comprar_medicamento(request):
 
 def historico_vendas(request):
     cargo = funcionario.objects.get(user=request.user).cargo
-    lista = ordem_de_venda.objects.filter(ativo=False)
+    lista = ordem_de_venda.objects.filter(venda=True)
 
 
     
