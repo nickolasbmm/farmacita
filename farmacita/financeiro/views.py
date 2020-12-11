@@ -40,8 +40,10 @@ def criar_ordem_de_venda(request):
     nome = busca
     if busca:
         #busca=''
+         
+         
         for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
-            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
+            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).filter(quantidade_de_caixas__gt=  0 ).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
     
     id_lote = request.GET.get('vender','') 
     nome2 = ''
