@@ -21,7 +21,7 @@ import decimal
 def criar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso = False
-    
+    preco=0
     quant_est = 0
     cpf_cliente_validos = []
 
@@ -49,7 +49,7 @@ def criar_ordem_de_venda(request):
         lista2 = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
         nome2 = lista2.get().id_medicamento
         quant_est = lista2.get().quantidade_de_caixas 
-        cpf_cliente_validos = lista2.get().preco
+        preco = lista2.get().preco
         for med in medicamento.objects.filter(nome_medicamento=nome2):
             lista.append({'lotes':lista2,'nome_med':med.nome_medicamento})
     
@@ -106,7 +106,8 @@ def criar_ordem_de_venda(request):
                                                             "quant_est": quant_est,
                                                             "cpf_cliente_validos":cpf_cliente_validos,
                                                             "sucesso":sucesso,
-                                                            'cargo':cargo
+                                                            'cargo':cargo,
+                                                            'preco':preco
                                                             } )
 
 
