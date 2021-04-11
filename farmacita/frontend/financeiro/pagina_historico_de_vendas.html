@@ -13,6 +13,19 @@ Histórico de Vendas
 {% load static %}
 
 <div>
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="input-group-prepend">                    
+                        <input type="text" class="form-control" placeholder="CPF" name="cpf" onkeydown="javascript: fMasc( this, mCPF )" onblur="testa_cpf(this)" maxlength=14>
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
+                    </div>              
+                    </form>
+            </div>
+        </div>
+    </div>
     <div class="tabela">
         <table class="table table-hover">
             <thead class="table-info">
