@@ -12,31 +12,242 @@ Cadastro de Ordem de Venda
 
 {% load static %}
 
-<div>
-    
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css">
+
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+<!-- JS -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+
+<div class="row" style="margin-top: 20px;">
+
+    <div class="col-6" style="padding-left: 50px;">
+        <table id="carrinho" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Qtd.</th>
+                    <th>Dosagem</th>
+                    <th>Validade</th>
+                    <th>Preço</th>
+                    <th>Qtd. em estoque</th>
+                    <th>Subtotal</th>
+                    <th>REMOVE</th>
+                </tr>
+            </thead>
+        </table>      
+    </div>
+    <span class="col-1"></span>
+
+    <div class="col-4">
+        <form id="new_item_form">
+            <h2>Inserir produto ao carrinho</h2>
+            <div class="mb-3">
+                <label for="nome_do_medicamento" class="form-label">Medicamento</label>
+                <input 
+                    class="form-control" 
+                    id="nome_do_medicamento"
+                    list="suggestions_medicamento"
+                    class="form-control background-none custom-input"
+                    name="nome"
+                    onkeyup="configura_qnt()"
+                    onclick="configura_qnt()"
+                    onblur="configura_qnt()"
+                    class="selector-chosen">
+                <datalist
+                id="suggestions_medicamento"></datalist>
+            </div>
+            <div class="mb-3">
+                <label for="quantidade" class="form-label">Quantidade</label>
+                <input type="number" min="1" class="form-control" id="quantidade" name="quantidade">
+            </div>
+            
+            <button 
+                class="btn  btn-block btn-outline-info custom-btnfloat-right btn-lg" 
+                type="button"
+                onclick="adicionar_ao_carrinho(); atualiza_valor()"
+                >Adicionar ao carrinho</button>
+        </form>
+    </div>
+    <span class="col-1"></span>
+</div>
+<div class="row" style="margin-top: 20px;">
+    <div class="col-6" style="padding-left: 50px;">
+        <form method="POST" autocomplete="off" 
+        action = {% url 'cadastrar_ordem_de_venda' %}
+        onsubmit="cadastrar_ordem_de_venda()">
+            {% csrf_token %}
+            <input id="datatable_input" name="datatable" hidden>
+            <div class="form-group">
+                <label>Cpf do cliente</label>
+                <input 
+                    onkeydown="javascript: fMasc( this, mCPF )"
+                    onblur="testa_cpf(this)"
+                    type="text" 
+                    class="form-control background-none custom-input"
+                    list="suggestions_client"
+                    maxlength=14
+                    name="cpf"
+                    id="cpf"
+                    required
+                >
+                <datalist
+                    id="suggestions_client"></datalist>
+            </div>                
+
+            <div class="form-group">
+                <div class="input-group">
+                    <label class="btn btn-outline-primary form-check-label">
+                    <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais();atualiza_valor()"> Desconto
+                </label>
+                    <input 
+                        id="perc_desc"
+                        type="number" 
+                        step="0.1"
+                        min="0"
+                        class="form-control background-none custom-input"
+                        name="perc_desconto"
+                        onchange="atualiza_valor()"
+                        style="display: none;"
+                    >
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="form-group" id="credenciais_gerente", style="display: none;">
+                <label>Autorização de Desconto</label>
+                <input 
+                    id= "login"
+                    type="password" 
+                    placeholder="Login do gerente"
+                    class="form-control background-none custom-input"
+                    name="login">
+
+                    <p></p> <!-- espaço entre os inputs -->
+
+                <input 
+                    id= "senha"
+                    type="password" 
+                    placeholder="Senha do gerente"
+                    class="form-control background-none custom-input"
+                    name="senha">
+            </div>
+            <div class="form-group">
+                <label>Valor Total</label>
+                <input 
+                    type="text" 
+                    class="form-control background-none custom-input"
+                    id = 'valor_total'
+                    name="valor_total"
+                    readonly>
+                <script>
+                function atualiza_valor(){
+                    var table = $('#carrinho').DataTable();
+                    total = 0
+                    if (table.column(0).data().length != 0){
+                        total = table.column(6).data().reduce((a,b) => {return a+b})
+                    }
+                    desconto = document.getElementById('desconto').value
+                    if(desconto){
+                        perc = document.getElementById('perc_desc').value/100
+                    }
+                    else{
+                        perc = 0
+                    }
+                    document.getElementById('valor_total').value = (total*(1-perc)).toFixed(2)
+                }
+                </script>
+            </div>
+            <button 
+                type="submit" 
+                class="btn  btn-block btn-outline-info custom-btn">
+                Cadastrar</button>
+        </form>
+    </div>
+</div>
     <script>
-        
-        
+        lotes = {{lotes | safe}}
         lista_de_medicamentos_validos = {{med_validos | safe }}
         lista_cpf_cliente = {{cpf_cliente_validos | safe}}
-        //lista_cpf_cliente = []
+        
+        function cadastrar_ordem_de_venda(){
+            var table = $('#carrinho').DataTable();
+            var data = table.rows(['']).data().toArray();
+            $("#datatable_input").val(JSON.stringify(data))
+            return true
+        }
 
+        function get_medicamento_info(nome_med){
+            info = false
+            lotes.forEach(elem =>{
+                if (nome_med == elem.nome){
+                    info =  elem
+                }
+            })
+            return info
+        } 
 
-        adiciona_sugestoes_de_medicamentos = function(){
+        function configura_qnt(){
+            med = get_medicamento_info($("#nome_do_medicamento").val())
+            console.log(med)
+            if (med != false){
+                $("#quantidade").prop("min", 1)
+                $("#quantidade").prop("max", med.quantidade_de_caixas)
+            }else{
+                $("#quantidade").prop("min", 0)
+                $("#quantidade").prop("max", 0)
+            }
+        }
+
+        function adicionar_ao_carrinho(){
+            var $inputs = $('#new_item_form :input');
+            var values = {};
+            $inputs.each(function() {
+                values[this.name] = $(this).val();
+            });
+            med = get_medicamento_info(values["nome"])
+            if (med != false && $("#new_item_form").valid()){
+                qntd = values["quantidade"]
+
+                var table = $('#carrinho').DataTable();
+
+                already_exist = table.column(0).data().indexOf(med.nome)
+                console.log(med)
+                if (already_exist == -1){
+                    table.row.add({
+                            "0": med.nome,
+                            "1": qntd,
+                            "2": med.dosagem,
+                            "3": med.data_de_validade,
+                            "4": med.preco,
+                            "5": med.quantidade_de_caixas,
+                            "6": qntd * med.preco,
+                            "7": `<button class="btn-outline-warning remove btn background-none" >x</button>`,
+                            "8": med.id_lote_medicamento
+                    }).draw();
+                }
+            }
+        }
+        function adiciona_sugestoes_de_medicamentos(){
             $("#suggestions_medicamento").empty()
             lista_de_medicamentos_validos.forEach(medicamento_valido => {
                 $("#suggestions_medicamento").append('<option value="{valor}"">'.formatUnicorn({valor : medicamento_valido}))
             });
         }
 
-        adiciona_sugestoes_de_cpfs = function(){
+        function adiciona_sugestoes_de_cpfs(){
             $("#suggestions_client").empty()
             lista_cpf_cliente.forEach(cpf_valido => {
                 $("#suggestions_client").append('<option value="{valor}"">'.formatUnicorn({valor : cpf_valido}))
             });
         }
 
-        add_sugestoes = function () {
+        function add_sugestoes() {
             adiciona_sugestoes_de_medicamentos()
             adiciona_sugestoes_de_cpfs()
         }
@@ -44,206 +255,6 @@ Cadastro de Ordem de Venda
             add_sugestoes()
         });
         
-    </script>
-    
-    <div class="row formulario">
-        <div class="col-sm-12">
-            <div>                
-                <form method="GET">
-
-                    <div class="input-group-prepend">
-                    
-                        <input type="text" class="form-control" placeholder="Medicamento" list="suggestions_medicamento" name="buscaMedicamento" id="buscaMedicamento">
-                        <datalist
-                            id="suggestions_medicamento"></datalist>
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Buscar</button>
-                        
-                    </div>              
-                
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="tabela">
-        <table class="table table-hover">
-            <thead class="table-info">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Nome do Medicamento</th>
-                    <th scope="col">Quantidade por caixa</th>
-                    <th scope="col">Dosagem</th>
-                    <th scope="col">Data de Validade</th>
-                    <th scope="col">Preço</th>
-                    <th scope="col">Quantidade em estoque</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            {% for j in lista %}            
-            {% for i in j.lotes %}                      
-            <tbody>
-                <tr class={{i.id}}>
-                    <th scope="row">{{i.id_lote_medicamento}}</th>
-                    <td class = "nome">{{ j.nome_med }}</td>
-                    <td class = "Quantidade">{{i.quantidade_por_caixa}}</td>
-                    <td class = "Dosagem">{{i.dosagem}}</td>
-                    <td class = "Data de Validade">{{i.data_de_validade}}</td>
-                    <td class = "Preço">{{i.preco}}</td>
-                    <td class = "Quantidade em estoque">{{i.quantidade_de_caixas}}</td>
-                    
-                    <td>
-                        <form class= "centro">
-                            <button value = {{i.id_lote_medicamento}} name = 'vender' class="btn btn-outline-info custom-btn"  type = "submit">Vender</button> 
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-            {% endfor %}
-            {% endfor %}
-        </table>        
-    </div>
-    <div class="row formulario">
-        <div class="col-sm-12">
-            <div>
-                
-                <form method="POST" autocomplete="off">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label>Cpf do cliente</label>
-                        <input 
-                            onkeydown="javascript: fMasc( this, mCPF )"
-                            onblur="testa_cpf(this)"
-                            type="text" 
-                            class="form-control background-none custom-input"
-                            list="suggestions_client"
-                            maxlength=14
-                            name="cpf"
-                            required
-                        >
-                        <datalist
-                            id="suggestions_client"></datalist>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                        <label>Quantidade</label>
-                        <div class="input-group">
-                            <input type="number"
-                             class="form-control"
-                             name="quantidade"
-                             min=1
-                             max = {{quant_est}}
-                             onchange="atualiza_valor()"
-                             id = "quantidade"
-                             value='1'
-                             required>
-                
-                          </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Medicamento</label>
-                        <input 
-                            type="text" 
-                            class="form-control background-none custom-input"
-                            name="nome_med"
-                            value= "{{nome2}}"
-                            disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Nº Lote</label>
-                        <input 
-                            type="text" 
-                            class="form-control background-none custom-input"
-                            name="id_lote"
-                            value= "{{id_lote}}"
-                            readonly>
-                    </div>
-                    <div class="form-group">
-                        
-
-                    <div class="form-group">
-                        
-                        <div class="input-group">
-                            <label class="btn btn-outline-primary form-check-label">
-                            <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais();atualiza_valor()"> Desconto
-                        </label>
-
-
-                            <input 
-                                id="perc_desc"
-                                type="number" 
-                                step="0.1"
-                                min="0"
-                                class="form-control background-none custom-input"
-                                name="perc_desconto"
-                                onchange="atualiza_valor()"
-                                style="display: none;"
-                            >
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
-                            </div>
-                        </div>
-                    
-                   
-                
-                    </div>
-
-
-
-                    <div class="form-group" id="credenciais_gerente", style="display: none;">
-                        <label>Autorização de Desconto</label>
-                        <input 
-                            id= "login"
-                            type="password" 
-                            placeholder="Login do gerente"
-                            class="form-control background-none custom-input"
-                            name="login">
-
-                            <p></p> <!-- espaço entre os inputs -->
-
-                        <input 
-                            id= "senha"
-                            type="password" 
-                            placeholder="Senha do gerente"
-                            class="form-control background-none custom-input"
-                            name="senha">
-                    </div>
-                    <div class="form-group">
-                        <label>Valor Total</label>
-                        <input 
-                            type="text" 
-                            class="form-control background-none custom-input"
-                            id = 'valor_total'
-                            name="valor_total"
-                            readonly>
-                        <script>
-                        function atualiza_valor(){
-                            valor_unitario = {{preco}}
-                            qtd = document.getElementById('quantidade').value
-                            desconto = document.getElementById('desconto').value
-                            if(desconto){
-                                perc = document.getElementById('perc_desc').value/100
-                            }
-                            else{
-                                perc = 0
-                            }
-                            document.getElementById('valor_total').value = (qtd*valor_unitario*(1-perc)).toFixed(2)
-                        }
-                        atualiza_valor()
-                        </script>
-                    </div>
-                    <button 
-                        type="submit" 
-                        class="btn  btn-block btn-outline-info custom-btn">
-                        Cadastrar</button>
-                </form>
-                
-            </div>
-        </div>
-    </div>
-    
-    
-    <script>
         function haddle(checkboxElem) {
             if (checkboxElem.checked) {
                 $('#login').attr("required", "req");
@@ -260,12 +271,43 @@ Cadastro de Ordem de Venda
             $('#perc_desc').toggle()
             $('#basic-addon1').toggle()
         }
-    
+        $(document).ready(function() {
+            configura_qnt()
+            var carrinho = $('#carrinho').dataTable({
+                "columnDefs": [
+                    { 
+                        type: "html",
+                        target: 0,
+                    },
+                    { "visible": false, "targets": 8 },
+                    {"className": "dt-center", "targets": "_all"}
+                        
+                ],                
+
+                "scrollY":        "200px",
+                "scrollCollapse": true,
+                "paging":         false
+            });
+            $('#carrinho').on('click', '.remove', function () {
+                var table = $('#carrinho').DataTable();
+                var row = $(this).parents('tr');
+                
+                if ($(row).hasClass('child')) {
+                    table.row($(row).prev('tr')).remove().draw();
+                }
+                else {
+                    table
+                        .row($(this).parents('tr'))
+                        .remove()
+                    .draw();
+                }
+                atualiza_valor()
+            });
+            atualiza_valor()
+
+        } );
     </script>
-
-
-
-
-</div>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 {% endblock %}

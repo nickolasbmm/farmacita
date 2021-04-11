@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import render
 from pessoas.models import cliente, fornecedor, funcionario
 from controle_estoque.models import lote_medicamento
@@ -6,8 +6,10 @@ from cadastro_medicamentos.models import medicamento
 from django.contrib.auth.models import User
 from datetime import datetime
 from .models import ordem_de_venda
+import pandas as pd
 import json
 import decimal
+from datetime import date
 # Create your views here.
 # def autorizar_desconto(password):
 #     user = User.objects.filter(password = password)
@@ -16,100 +18,90 @@ import decimal
 #         return True
 #     return False
 
+def cadastrar_ordem_de_venda(request):
+    print("cadastrando")
+    print("............")
+    for key, value in request.POST.items():    
+        print('Key: %s' % (key) ) 
+    # print(f'Key: {key}') in Python >= 3.7
+        print('Value %s' % (value) )
 
+    datatable = json.loads(request.POST["datatable"])
+    df = pd.DataFrame.from_dict(datatable)
+    df.columns = [
+        "nome", "quantidade", "dosagem", 
+        "data_de_validade", "preco", "quantidade_em_estoque",
+        "subtotal", "botao", "id_lote_medicamento"]
+    df = df.astype({"preco" : float, "subtotal" : float, "quantidade" : int})
+
+
+    cpf = request.POST["cpf"]
+    id_cliente = cliente.objects.get(cpf = cpf)
+    desconto = request.POST["perc_desconto"] != ''
+    percentual_desconto = 0
+
+    if desconto:
+        percentual_desconto = float(request.POST["perc_desconto"])
+
+    for i, row in df.iterrows():
+        ov = ordem_de_venda(
+            id_cliente = id_cliente,
+            id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento = row["id_lote_medicamento"]),
+            quantidade = row["quantidade"],
+            desconto = desconto,
+            venda = True,
+            ativo = True,
+            data_de_venda = date.today(),
+            percentual_desconto = percentual_desconto,
+            preco_desconto = row["preco"] * (1 - float(percentual_desconto)/100),
+            valor_total_venda = row["preco"] * (1 - float(percentual_desconto)/100) * row["quantidade"]
+        )
+        ov.save()
+        lote_medicamento.objects.filter(
+            id_lote_medicamento=row["id_lote_medicamento"]
+            ).update(quantidade_de_caixas = row["quantidade_em_estoque"] - row["quantidade"])
+    print("inseriuuuu")
+    """
+    id_ordem_de_venda = models.AutoField(primary_key=True) ok
+    id_cliente = models.ForeignKey(cliente,on_delete=models.PROTECT) ok
+    id_lote_medicamento = models.ForeignKey(lote_medicamento,on_delete=models.PROTECT) ok
+    quantidade = models.IntegerField(default = 0) ok
+    desconto =  models.BooleanField(default=False) 
+    venda =  models.BooleanField(default=False) ok
+    ativo = models.BooleanField(default=True) ok
+    data_de_venda = models.DateField(auto_now=False,auto_now_add=False,null=True) ok
+    percentual_desconto = models.DecimalField(max_digits=40,decimal_places=2,default=0) ok
+    preco_desconto = models.DecimalField(max_digits=40,decimal_places=2,null=True)
+    valor_total_venda = models.DecimalField(max_digits=40,decimal_places=2,null=True)
+
+    """
+    return redirect("criar_ordem_de_venda")
 
 def criar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo
-    sucesso = False
-    preco=0
-    quant_est = 0
-    cpf_cliente_validos = []
 
     clientes_validos = cliente.objects.all()
-    for x in clientes_validos:
-        cpf_cliente_validos.append(x.cpf)
+    cpf_cliente_validos = [x.cpf for x in clientes_validos]
     
     medicamentos = medicamento.objects.all()
-    med_validos= []
-    for x in medicamentos:
-        med_validos.append(x.nome_medicamento)
-        
-    
-    lista = []
-    busca = request.GET.get('buscaMedicamento','')
-    nome = busca
-    if busca:
-        #busca=''
-         
-         
-        for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
-            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).filter(quantidade_de_caixas__gt=  0 ).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
-    
-    id_lote = request.GET.get('vender','') 
-    nome2 = ''
-    if id_lote:
-        lista2 = lote_medicamento.objects.filter(id_lote_medicamento=id_lote)
-        nome2 = lista2.get().id_medicamento
-        quant_est = lista2.get().quantidade_de_caixas 
-        preco = lista2.get().preco
-        for med in medicamento.objects.filter(nome_medicamento=nome2):
-            lista.append({'lotes':lista2,'nome_med':med.nome_medicamento})
-    
-        
-        
-    if request.method == "POST":
-        p = request.POST
-        qtd = p.get("quantidade")
-        CPF = p.get("cpf")
-        if p.get('desconto'):
-            usuario = User.objects.get(username=p.get('login'))
-            gerente = funcionario.objects.get(user=usuario)
-            if usuario.check_password(p.get('senha')):
-                if gerente.cargo == 'Gerente Financeiro' or gerente.cargo == 'Farmacêutico':
-                    novaordemvenda = ordem_de_venda(
-                        id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
-                        id_cliente = cliente.objects.get(cpf = CPF), 
-                        quantidade = qtd,
-                        desconto=True,
-                        percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
-                        preco_desconto = str(round(float(p.get("valor_total"))/int(qtd),2)),
-                        valor_total_venda = p.get("valor_total")
-                    )
-                    editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
-                    editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
-                    editarlote.save()
-                    novaordemvenda.save()
-                else:
-                    sucesso =False
-                    
-        else:
-            print(p.get("valor_total"))
-            novaordemvenda = ordem_de_venda(
-                id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento=id_lote),
-                id_cliente = cliente.objects.get(cpf = CPF), 
-                quantidade = qtd,
-                preco_desconto = str(round(float(p.get("valor_total"))/int(qtd),2)),
-                valor_total_venda = p.get("valor_total")
-                )
-            editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)
-            editarlote.quantidade_de_caixas = str(int(editarlote.quantidade_de_caixas) - int(qtd))
-            editarlote.save()
-            novaordemvenda.save()
+    med_validos = pd.DataFrame.from_records([{"id_medicamento_id":x.id_medicamento,"nome":x.nome_medicamento} for x in medicamentos])
+    lotes = pd.DataFrame.from_records(lote_medicamento.objects.all().values())
+    lotes = lotes.astype({"preco" : float, "quantidade_de_caixas" : int, "data_de_validade" : str, "excluido": str})
 
-        
-        sucesso=True
-        
+    lotes = lotes.loc[(lotes["quantidade_de_caixas"] > 0) & (lotes["data_de_validade"] > str(date.today()))]
 
-    return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {"lista": lista,
-                                                            "med_validos" : med_validos, 
-                                                            "nome2" :nome2,
-                                                            "id_lote": id_lote,
-                                                            "nome": nome,
-                                                            "quant_est": quant_est,
+    #lotes = lotes.loc[(lotes["quantidade_de_caixas"] > 0)]
+    lotes = lotes.merge(
+        med_validos,
+        how = "left",
+        on = "id_medicamento_id"
+    )
+    lotes = lotes.sort_values("data_de_validade", ascending = False).groupby('id_medicamento_id').tail()
+    return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {
+                                                            "med_validos" : lotes["nome"].tolist(), 
                                                             "cpf_cliente_validos":cpf_cliente_validos,
-                                                            "sucesso":sucesso,
                                                             'cargo':cargo,
-                                                            'preco':preco
+                                                            "lotes" : lotes.to_dict("records"),
                                                             } )
 
 

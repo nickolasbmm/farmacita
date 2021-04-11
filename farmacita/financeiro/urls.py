@@ -8,5 +8,6 @@ urlpatterns = [
     path('desistir_compra',views.desistir_compra, name = 'desistir_compra'),
     path('vender_medicamento',views.vender_medicamento, name = 'vender_medicamento'),
     path('comprar_medicamento',views.comprar_medicamento, name = 'comprar_medicamento'),
-    path('historico_vendas',views.historico_vendas, name = 'historico_vendas')
+    path('historico_vendas',views.historico_vendas, name = 'historico_vendas'),
+    path('cadastrar_ordem_de_venda', views.cadastrar_ordem_de_venda, name='cadastrar_ordem_de_venda')
 ]
