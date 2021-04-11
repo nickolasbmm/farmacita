@@ -19,13 +19,7 @@ from datetime import date
 #     return False
 
 def cadastrar_ordem_de_venda(request):
-    print("cadastrando")
-    print("............")
-    for key, value in request.POST.items():    
-        print('Key: %s' % (key) ) 
-    # print(f'Key: {key}') in Python >= 3.7
-        print('Value %s' % (value) )
-
+    
     datatable = json.loads(request.POST["datatable"])
     df = pd.DataFrame.from_dict(datatable)
     df.columns = [
@@ -60,21 +54,7 @@ def cadastrar_ordem_de_venda(request):
         lote_medicamento.objects.filter(
             id_lote_medicamento=row["id_lote_medicamento"]
             ).update(quantidade_de_caixas = row["quantidade_em_estoque"] - row["quantidade"])
-    print("inseriuuuu")
-    """
-    id_ordem_de_venda = models.AutoField(primary_key=True) ok
-    id_cliente = models.ForeignKey(cliente,on_delete=models.PROTECT) ok
-    id_lote_medicamento = models.ForeignKey(lote_medicamento,on_delete=models.PROTECT) ok
-    quantidade = models.IntegerField(default = 0) ok
-    desconto =  models.BooleanField(default=False) 
-    venda =  models.BooleanField(default=False) ok
-    ativo = models.BooleanField(default=True) ok
-    data_de_venda = models.DateField(auto_now=False,auto_now_add=False,null=True) ok
-    percentual_desconto = models.DecimalField(max_digits=40,decimal_places=2,default=0) ok
-    preco_desconto = models.DecimalField(max_digits=40,decimal_places=2,null=True)
-    valor_total_venda = models.DecimalField(max_digits=40,decimal_places=2,null=True)
 
-    """
     return redirect("criar_ordem_de_venda")
 
 def criar_ordem_de_venda(request):
