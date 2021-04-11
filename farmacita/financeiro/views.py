@@ -289,7 +289,13 @@ def comprar_medicamento(request):
 def historico_vendas(request):
     cargo = funcionario.objects.get(user=request.user).cargo
     lista = ordem_de_venda.objects.filter(venda=True)
-
-
+    if request.method == "POST":
+        p = request.POST
+        cpf = p.get("cpf")
+        print(cpf)
+        id_cliente = cliente.objects.filter(cpf__icontains = cpf)
+        lista = ordem_de_venda.objects.filter(venda=True,id_cliente__in=id_cliente)
+    else:
+        lista = ordem_de_venda.objects.filter(venda=True)
     
     return render(request, 'financeiro/pagina_historico_de_vendas.html', {"lista":lista,'cargo':cargo})
