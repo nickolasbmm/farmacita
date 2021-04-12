@@ -2,8 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .models import funcionario, cliente, fornecedor
+from financeiro.models import ordem_de_venda
+from controle_estoque.models import lote_medicamento
+from cadastro_medicamentos.models import medicamento
 from django.contrib.auth.models import User
+from django.db.models import F
 import json
+import pandas as pd
 
 # Create your views here.
 
@@ -82,6 +87,10 @@ def editar_cliente(request):
         if editando:
             editar = True
             lista = cliente.objects.filter(id_cliente = editando)
+
+        compras = request.GET.get('compras')
+        if compras:
+            return compras_cliente(request,compras)
 
         if request.method == "POST":
             p = request.POST          
@@ -236,6 +245,23 @@ def editar_fornecedor(request):
         return render(request,'pessoas/pagina_edicao_de_fornecedor.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo})
     else:
         return failed_login(request)
+
+def compras_cliente(request,id):
+    cliente_selecionado = cliente.objects.get(id_cliente=id)
+    cargo = funcionario.objects.get(user=request.user).cargo
+    lista = ordem_de_venda.objects.filter(venda=True,id_cliente=cliente_selecionado)
+    df = pd.DataFrame(list(lista.values()))
+    df = df[['id_lote_medicamento_id','quantidade']]
+    nomes = []
+    for index,row in df.iterrows(): 
+        nomes.append(lote_medicamento.objects.get(id_lote_medicamento=row['id_lote_medicamento_id']).id_medicamento.nome_medicamento)
+    df['nome_medicamento'] = nomes
+    df = df.groupby(['nome_medicamento'])['quantidade'].sum().reset_index()
+    df = df.sort_values(['quantidade'], ascending=False)
+    
+    
+
+    return render(request, 'pessoas/compras_cliente.html', {"lista":df.to_dict('records'),'cargo':cargo,'cliente':cliente_selecionado})
 
 
     

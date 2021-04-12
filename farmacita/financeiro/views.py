@@ -292,7 +292,6 @@ def historico_vendas(request):
     if request.method == "POST":
         p = request.POST
         cpf = p.get("cpf")
-        print(cpf)
         id_cliente = cliente.objects.filter(cpf__icontains = cpf)
         lista = ordem_de_venda.objects.filter(venda=True,id_cliente__in=id_cliente)
     else:

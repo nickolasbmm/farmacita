@@ -11,6 +11,6 @@ urlpatterns = [
     path('cadastro_usuario',views.cadastro_usuario, name = 'cadastro_usuario'),
     path('editar_usuario',views.editar_usuario, name = 'editar_usuario'),
     path('editar_fornecedor',views.editar_fornecedor, name = 'editar_fornecedor'),
-    #path('demitir_usuario',views.demitir_usuario, name = 'demitir_usuario'),
+    # path('compras_cliente',views.compras_cliente, name = 'compras_cliente'),
     path('deslogar',views.deslogar,name='deslogar')
 ]

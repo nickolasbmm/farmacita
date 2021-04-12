@@ -1,0 +1,48 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Histórico de Vendas
+{% endblock %}
+
+{%block titulo-conteudo %}
+Resumo de Compras
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+
+<div>
+    <div class="row formulario">
+        <div class="col-sm-12">
+            <div>                
+                <h5>Cliente : {{cliente.nome_cliente}}</h5>
+                <h5>CPF : {{cliente.cpf}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="tabela">
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th scope="col">Nome do Medicamento</th>
+                    <th scope="col">Quantidade</th>
+                </tr>
+            </thead>            
+            {% for i in lista %}                      
+            <tbody>
+                <tr>
+                    <td class = "Nome">{{i.nome_medicamento}}</td>
+                    <td class = "Quantidade">{{i.quantidade}}</td>             
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>   
+        <form class= "centro">
+            <button class="btn btn-warning"  onclick="href='pessoas/editar_cliente'" >Voltar</button> 
+        </form>     
+    </div>
+</div>
+
+{% endblock %}

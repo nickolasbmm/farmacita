@@ -40,6 +40,7 @@ Clientes Cadastrados
                     <th scope="col">Nascimento</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>            
             {% for i in lista %}
@@ -51,6 +52,11 @@ Clientes Cadastrados
                     <td class = "cpf">{{i.cpf}}</td>
                     <td class = "telefone">{{i.telefone}}</td>
                     <td class = "nascimento">{{i.data_nascimento}} </td>
+                    <td>
+                        <form class= "centro">
+                            <button value = {{i.id_cliente}} name = 'compras' class="btn btn-warning"  type = "submit" >Compras</button> 
+                        </form>
+                    </td>
                     <td>
                         <form class= "centro">
                             <button value = {{i.id_cliente}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
