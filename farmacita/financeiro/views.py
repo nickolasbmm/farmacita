@@ -11,15 +11,22 @@ import json
 import decimal
 from datetime import date
 # Create your views here.
-# def autorizar_desconto(password):
-#     user = User.objects.filter(password = password)
-#     func = funcionario.objects.get(user=user).id
-#     if(func):
-#         return True
-#     return False
+
+def checar_cargo(request):
+    user = request.user
+    if user.is_anonymous:
+        return True, redirect('/')
+    else:
+        cargo = funcionario.objects.get(user=request.user).cargo
+        if cargo == 'Farmacêutico':
+            return True, render(request,'sem_permissao.html',{'cargo':cargo})
+    return False, False
 
 def cadastrar_ordem_de_venda(request):
-    
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo    
     datatable = json.loads(request.POST["datatable"])
     df = pd.DataFrame.from_dict(datatable)
     df.columns = [
@@ -58,6 +65,9 @@ def cadastrar_ordem_de_venda(request):
     return redirect("criar_ordem_de_venda")
 
 def criar_ordem_de_venda(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
 
     clientes_validos = cliente.objects.all()
@@ -88,8 +98,11 @@ def criar_ordem_de_venda(request):
 
 
 def consultar_ordem_de_venda(request):
-    editar = False
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+    editar = False
     cpf_cliente_validos = []
     clientes_validos = cliente.objects.all()
     for x in clientes_validos:
@@ -227,6 +240,10 @@ def consultar_ordem_de_venda(request):
 
 
 def vender(id_cliente):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo
     ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cliente, ativo = True)
     for ordem in ordem_de_venda:
         lote_medicamento = lote_medicamento.objects.filter(id_lote_medicamento = ordem.id_lote_medicamento)
@@ -245,6 +262,9 @@ def vender(id_cliente):
         
 
 def desistir_compra(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
@@ -261,6 +281,9 @@ def desistir_compra(request):
     return render(request,'desistir_compra_medicamento.html',{'cargo':cargo})
 
 def vender_medicamento(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
@@ -271,6 +294,9 @@ def vender_medicamento(request):
 
 
 def comprar_medicamento(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
@@ -287,6 +313,9 @@ def comprar_medicamento(request):
 
 
 def historico_vendas(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     lista = ordem_de_venda.objects.filter(venda=True)
     if request.method == "POST":

@@ -12,6 +12,20 @@ import pandas as pd
 
 # Create your views here.
 
+def checar_cargo(request):
+    user = request.user
+    if user.is_anonymous:
+        return True, redirect('/')
+    else:
+        cargo = funcionario.objects.get(user=request.user).cargo
+        if cargo == 'Caixa':
+            return 1, render(request,'sem_permissao.html',{'cargo':cargo})
+        elif cargo == 'Gerente Financeiro':
+            return 2, render(request,'sem_permissao.html',{'cargo':cargo})
+        elif cargo == 'Balconista':
+            return 3, render(request,'sem_permissao.html',{'cargo':cargo})
+    return False, False
+
 def deslogar(request):
     logout(request)
     return redirect('/')
@@ -48,6 +62,9 @@ def failed_login(request):
     return render(request,'login_page.html')
 
 def cadastro_cliente(request): 
+    check, retorno = checar_cargo(request)
+    if check==1 or check == 2:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo 
     sucesso=False 
     if request.method == "POST":
@@ -65,6 +82,9 @@ def cadastro_cliente(request):
     return render(request,'pessoas/pagina_cadastro_cliente.html',{"sucesso":sucesso,'cargo':cargo})
 
 def editar_cliente(request): 
+    check, retorno = checar_cargo(request)
+    if check==1 or check == 2:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso = False
     if request.user.is_authenticated:
@@ -114,6 +134,9 @@ def editar_cliente(request):
         return failed_login(request)
 
 def cadastro_usuario(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.method == "POST":
@@ -135,7 +158,10 @@ def cadastro_usuario(request):
     return render(request,'pessoas/pagina_cadastro_de_usuario.html',{'sucesso':sucesso,'cargo':cargo})
 
 def editar_usuario(request):   
-    cargo = funcionario.objects.get(user=request.user).cargo 
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.user.is_authenticated:
         editar = False
@@ -193,6 +219,9 @@ def editar_usuario(request):
 
 
 def cadastro_fornecedor(request):
+    check, retorno = checar_cargo(request)
+    if check==1:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.method == "POST":
@@ -210,7 +239,10 @@ def cadastro_fornecedor(request):
 
 
 def editar_fornecedor(request):
-    cargo = funcionario.objects.get(user=request.user).cargo    
+    check, retorno = checar_cargo(request)
+    if check==1:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     if request.user.is_authenticated:
         editar = False
@@ -247,8 +279,11 @@ def editar_fornecedor(request):
         return failed_login(request)
 
 def compras_cliente(request,id):
-    cliente_selecionado = cliente.objects.get(id_cliente=id)
+    check, retorno = checar_cargo(request)
+    if check==1 or check == 2:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+    cliente_selecionado = cliente.objects.get(id_cliente=id)
     lista = ordem_de_venda.objects.filter(venda=True,id_cliente=cliente_selecionado)
     df = pd.DataFrame(list(lista.values()))
     df = df[['id_lote_medicamento_id','quantidade']]

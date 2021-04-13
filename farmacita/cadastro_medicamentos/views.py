@@ -1,9 +1,23 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from .models import medicamento, principio_ativo
 from pessoas.models import funcionario
 
 # Create your views here.
+
+def checar_cargo(request):
+    user = request.user
+    if user.is_anonymous:
+        return True, redirect('/')
+    else:
+        cargo = funcionario.objects.get(user=request.user).cargo
+        if cargo == 'Caixa':
+            return True, render(request,'sem_permissao.html',{'cargo':cargo})
+    return False, False
+    
 def cadastro_medicamentos(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
     principiosativos = principio_ativo.objects.all()
@@ -23,8 +37,11 @@ def cadastro_medicamentos(request):
     return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo})
 
 def editar_medicamento(request):      
-    sucesso=False
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+    sucesso=False
     lista = medicamento.objects.all()
     editar = False
     
@@ -70,6 +87,10 @@ def editar_medicamento(request):
 
 
 def cadastrar_principio_ativo(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo
     if request.method == "POST":
         p = request.POST
         novonome = p.get("nome_principio_ativo")
