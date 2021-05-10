@@ -136,7 +136,25 @@ def consultar_ordem_de_venda(request):
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
-
+    
+    vender_tudo = request.GET.get('vender_tudo')
+    print(vender_tudo)
+    if vender_tudo:
+        print(vender_tudo)
+        editar = False        
+        print([x.cpf for x in cliente.objects.all()])
+        cid = cliente.objects.filter(cpf = vender_tudo).first()
+        teste = ordem_de_venda.objects.filter(id_cliente = cid)
+        teste.update(venda = True)
+        teste.update(ativo = False)
+        #lista = []
+        #id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
+        #qtd = teste.get().quantidade
+        #busca2 = teste.get().id_cliente.cpf
+        #id_cli = teste.get().id_cliente.id_cliente
+        #lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        #for x in lista_ordem_de_venda:
+        #    lista.append(x)
 
     delete = request.GET.get('delete')
     if delete:

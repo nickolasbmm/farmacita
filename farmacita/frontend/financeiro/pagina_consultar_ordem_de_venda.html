@@ -106,6 +106,26 @@ Consulta de Ordem de Venda
             {% endfor %}
         </table>        
     </div>
+    <div class="row">
+        <span class="col-sm-9"></span>
+        <div class="col-sm-2">
+            <form>
+                <button 
+                value = ""
+                name="vender_tudo"
+                onclick="att_button(this)"
+                class="btn btn-outline-info custom-btn" 
+                type = "submit" >
+                    Vender tudo
+                </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function att_button(t){
+            t.value = $(".CPF").first().text()
+        }
+    </script>
     {% if editar %}
             <script>
             
@@ -194,6 +214,7 @@ Consulta de Ordem de Venda
                 {% endfor %}
             </table>        
         </div>
+
         <div class="row formulario">
             <div class="col-sm-12">
                 <div>
