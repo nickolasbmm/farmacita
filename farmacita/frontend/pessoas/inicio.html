@@ -6,7 +6,15 @@ Página Principal
 
 {% block content %}
 
-<h1 style="padding: 50px;">Bem vindo {{ nome_funcionario }}!</h1>
-<h3 style="padding: 50px;">{{cargo}}</h3>
+<style>
+    h1, p {
+        text-align: center;
+    }
+    
+</style>
+
+<h1 style="padding: 50px;">Bem vindo ao <span class="logo" style="color:black">Farmac<span class="logo-span">ITA</span></span>, {{ nome_funcionario }}!</h1>
+<!-- <p style="padding: 50px;">Seu cargo é: {{cargo}}</p> -->
+<p>Navegue pelo menu lateral para acessar a opção desejada.</p>
 
 {% endblock %}

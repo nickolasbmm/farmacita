@@ -23,26 +23,53 @@ Resumo de Compras
         </div>
     </div>
     <div class="tabela">
-        <table class="table table-hover">
+        <table id="clientes" class="table table-hover">
             <thead class="table-info">
                 <tr>
                     <th scope="col">Nome do Medicamento</th>
                     <th scope="col">Quantidade</th>
                 </tr>
-            </thead>            
+            </thead>
+            <tbody>            
             {% for i in lista %}                      
-            <tbody>
                 <tr>
                     <td class = "Nome">{{i.nome_medicamento}}</td>
                     <td class = "Quantidade">{{i.quantidade}}</td>             
                 </tr>
-            </tbody>
             {% endfor %}
+            </tbody>
         </table>   
         <form class= "centro">
             <button class="btn btn-warning"  onclick="href='pessoas/editar_cliente'" >Voltar</button> 
         </form>     
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        var clientes = $('#clientes').dataTable({
+            "columnDefs": [
+                { 
+                    type: "html",
+                    target: 0,
+                },
+                {"className": "dt-center", "targets": "_all"}
+                    
+            ],
+            
+    
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+            },
+            // "scrollY":        "200px",
+            // "scrollCollapse": true,
+            "paging": true
+        });
+    
+    } );
+    </script>
+    
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 {% endblock %}
