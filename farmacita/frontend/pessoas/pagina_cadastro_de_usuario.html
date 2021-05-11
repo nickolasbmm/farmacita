@@ -9,81 +9,81 @@ Cadastro de Funcionário
 {% endblock %}
 
 {% block content %}
-<div>    
-    <div class="row formulario">
-        <div class="col-sm-12">
-            <div>                
-                <form method="POST" autocomplete="off">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label>Usuário</label>
-                        <input type="text" class="form-control background-none custom-input" id="login_usuario", name = 'usuario'>
-                    </div>
-                    <div class="form-group">
-                        <label>Nome completo</label>
-                        <input type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
-                    </div>
-                    <div class="form-group">
-                        <label>CPF</label>
-                        <input 
-                            oninput="mascara_cpf(this)"
-                            type="text" 
-                            class="form-control background-none custom-input" 
-                            id="cpf" 
-                            pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
-                            onblur="testa_cpf(this)"
-                            name = 'cpf'
-                            >
-                    </div>
-                    <div class="form-group">
-                        <label>Telefone</label>
-                        <input type="tel" 
-                        name="telefone" 
-                        class="form-control background-none custom-input" 
-                        id="nome_usuario" 
-                        onkeydown="javascript: fMasc( this, mTel )" 
-                        maxlength=15
-                        required>
-                    </div>
+<style>
+    .custom-form{
 
-                    <label class="label d-block">Cargo</label>
-                    <div class="form-check-inline">
-        
-                        <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio" id="option1", name = 'cargo', value="Balconista" > Balconista
-                        </label>
-                        <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio"  id="option2", name = 'cargo', value="Farmacêutico"> Farmacêutico
-                        </label>
-                        <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio"  id="option3", name = 'cargo', value="Caixa"> Caixa
-                        </label>
-                        <label class="btn btn-outline-primary form-check-label">
-                            <input type="radio"  id="option4", name = 'cargo', value="Gerente Financeiro"> Ger. Financeiro
-                        </label>
-                    </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Data de admissão</label>
-                        <input type="date" class="form-control background-none custom-input" id="data_de_admissao", name = 'data_de_admissao'>
-                    </div>
-                    <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" class="form-control background-none custom-input" id="senha", name = 'senha'>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Confirme sua senha</label>
-                        <input type="password" class="form-control background-none custom-input" id="confirmacao_senha", onblur="confirmar_senha(this)">
-                        <p id="texto_confirmacao_senha" style="visibility: hidden;color: red;">Senhas não coincidem</p>
-                    </div>
-
-                    <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>                    
-                </form>
+    }
+</style>
+<div class="row justify-content-md-center">
+    <div class="col-sm-4">
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Usuário</label>
+                <input type="text" class="form-control background-none custom-input" id="login_usuario", name = 'usuario'>
             </div>
-        </div>
+            <div class="form-group">
+                <label>Nome completo</label>
+                <input type="text" class="form-control background-none custom-input" id="nome_usuario", name = 'nome_funcionario'>
+            </div>
+            <div class="form-group">
+                <label>CPF</label>
+                <input 
+                    oninput="mascara_cpf(this)"
+                    type="text" 
+                    class="form-control background-none custom-input" 
+                    id="cpf" 
+                    pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" 
+                    onblur="testa_cpf(this)"
+                    name = 'cpf'
+                    >
+            </div>
+            <div class="form-group">
+                <label>Telefone</label>
+                <input type="tel" 
+                name="telefone" 
+                class="form-control background-none custom-input" 
+                id="nome_usuario" 
+                onkeydown="javascript: fMasc( this, mTel )" 
+                maxlength=15
+                required>
+            </div>
+
+            <label class="label d-block">Cargo</label>
+            <div class="form-check-inline" style="display: flex; justify-content: space-around; margin: 0px;">
+
+                <label class="btn btn-outline-primary form-check-label">
+                    <input type="radio" id="option1", name = 'cargo', value="Balconista" > Balconista
+                </label>
+                <label class="btn btn-outline-primary form-check-label">
+                    <input type="radio"  id="option2", name = 'cargo', value="Farmacêutico"> Farmacêutico
+                </label>
+                <label class="btn btn-outline-primary form-check-label">
+                    <input type="radio"  id="option3", name = 'cargo', value="Caixa"> Caixa
+                </label>
+                <label class="btn btn-outline-primary form-check-label">
+                    <input type="radio"  id="option4", name = 'cargo', value="Gerente Financeiro"> Ger. Financeiro
+                </label>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label>Data de admissão</label>
+                <input type="date" class="form-control background-none custom-input" id="data_de_admissao", name = 'data_de_admissao'>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" class="form-control background-none custom-input" id="senha", name = 'senha'>
+            </div>
+
+            <div class="form-group">
+                <label>Confirme sua senha</label>
+                <input type="password" class="form-control background-none custom-input" id="confirmacao_senha", onblur="confirmar_senha(this)">
+                <p id="texto_confirmacao_senha" style="visibility: hidden;color: red;">Senhas não coincidem</p>
+            </div>
+
+            <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>                    
+        </form>
     </div>
-      
 </div>
+      
 
 {% endblock %}
