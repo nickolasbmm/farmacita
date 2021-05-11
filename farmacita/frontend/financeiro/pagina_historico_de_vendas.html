@@ -12,9 +12,16 @@ Histórico de Vendas
 
 {% load static %}
 
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+<link data-require="jqueryui@*" data-semver="1.10.0" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />
+<script data-require="jqueryui@*" data-semver="1.10.0" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.js" data-semver="1.9.4" data-require="datatables@*"></script> 
+
 <div>
-    <div class="row formulario">
-        <!-- <div class="col-sm-12">
+    <!-- <div class="row formulario">
+        <div class="col-sm-12">
             <div>                
                 <form method="POST" autocomplete="off">
                     {% csrf_token %}
@@ -24,9 +31,14 @@ Histórico de Vendas
                     </div>              
                     </form>
             </div>
-        </div> -->
-    </div>
+        </div>
+    </div> -->
     <div class="tabela">
+        <h4>Filtro de Datas</h4>
+        <p id="date_filter">
+            <span id="date-label-from" class="date-label">De: </span><input class="date_range_filter date" type="text" id="datepicker_from"/>
+            <span id="date-label-to" class="date-label">Até: <input class="date_range_filter date" type="text" id="datepicker_to" />
+        </p>
         <table id="vendas" class="table table-hover">
             <thead class="table-info">
                 <tr>
@@ -81,11 +93,89 @@ Histórico de Vendas
             // "scrollCollapse": true,
             "paging": true
         });
+
+        $("#datepicker_from").datepicker({
+            showOn: "button",
+            // buttonImage: "images/calendar.gif",
+            buttonImageOnly: false,
+            changeDay: true,
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            "onSelect": function(date) {
+                d = date.split("/")
+                minDateFilter = new Date(d[2],d[1]-1,d[0]).getTime();
+                vendas.fnDraw();
+            }
+        }).keyup(function() {
+            d = date.split("/")
+            minDateFilter = new Date(d[2],d[1]-1,d[0]).getTime();
+            vendas.fnDraw();
+        });
+
+        $("#datepicker_to").datepicker({
+            showOn: "button",
+            // buttonImage: "images/calendar.gif",
+            buttonImageOnly: false,
+            changeDay: true,
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            "onSelect": function(date) {
+                d = date.split("/")
+                maxDateFilter = new Date(d[2],d[1]-1,d[0]).getTime();
+                vendas.fnDraw();
+            }
+        }).keyup(function() {
+            d = date.split("/")
+            maxDateFilter = new Date(d[2],d[1]-1,d[0]).getTime();
+            vendas.fnDraw();
+        });
     
-    } );
+    });
+
+    // Date range filter
+    minDateFilter = "";
+    maxDateFilter = "";
+
+    $.fn.dataTableExt.afnFiltering.push(
+    function(oSettings, aData, iDataIndex) {
+        if (typeof aData._date == 'undefined') {
+            d = aData[7].split("/")
+            aData._date = new Date(d[2],d[1]-1,d[0]).getTime();
+        }
+
+        if (minDateFilter && !isNaN(minDateFilter)) {
+        if (aData._date < minDateFilter) {
+            return false;
+        }
+        }
+
+        if (maxDateFilter && !isNaN(maxDateFilter)) {
+        if (aData._date > maxDateFilter) {
+            return false;
+        }
+        }
+
+        return true;
+    })
+
     </script>
     
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
 
 {% endblock %}
