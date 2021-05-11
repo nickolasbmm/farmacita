@@ -225,7 +225,8 @@ def consultar_ordem_de_venda(request):
                         quantidade = qtd,
                         desconto=True,
                         percentual_desconto=decimal.Decimal(p.get('perc_desconto')),
-                        preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100)
+                        preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*(1-decimal.Decimal(p.get('perc_desconto'))/100),
+                        valor_total_venda = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*int(qtd),
                     )
         else:
             editar_ordem_venda.update(
@@ -234,7 +235,8 @@ def consultar_ordem_de_venda(request):
                 quantidade = qtd,
                 desconto=False,
                 percentual_desconto=decimal.Decimal(0),
-                preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco
+                preco_desconto = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco,
+                valor_total_venda = lote_medicamento.objects.get(id_lote_medicamento=id_lote).preco*int(qtd),
                 )
         
         editarlote = lote_medicamento.objects.get(id_lote_medicamento=id_lote)

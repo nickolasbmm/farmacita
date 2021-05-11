@@ -18,7 +18,7 @@ Fornecedores Cadastrados
 
 <div>    
     <div class="row formulario">
-        <div class="col-sm-12">
+        <!-- <div class="col-sm-12">
             <div>                
                 <form method="GET">
                     <div class="input-group-prepend">                    
@@ -29,10 +29,10 @@ Fornecedores Cadastrados
                 
                     </form>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="tabela">
-        <table class="table table-hover">
+        <table id="fornecedores" class="table table-hover">
             <thead class="table-info">
                 <tr>
                     <th scope="col">Id</th>
@@ -41,11 +41,12 @@ Fornecedores Cadastrados
                     <th scope="col">Telefone</th>
                     <th scope="col">Editar</th>
                     <th></th>
-                    <th></th>
+                    <!-- <th></th> -->
                 </tr>
-            </thead>            
+            </thead>   
+            <tbody>         
             {% for i in lista %}                      
-            <tbody>
+            
                 <tr class={{i.id_fornecedor}}>
                     <th scope="row">{{i.id_fornecedor}}</th>
                     <td class = "nome">{{i.nome_fornecedor}}</td>
@@ -71,10 +72,12 @@ Fornecedores Cadastrados
                         </form>
                     </td>
                 </tr>
-            </tbody>
+            
                 
                 
             {% endfor %}
+
+            </tbody>
             
         </table>
         
@@ -146,5 +149,32 @@ Fornecedores Cadastrados
 
 
 </div>
+
+<script>
+    $(document).ready(function() {
+        var fornecedores = $('#fornecedores').dataTable({
+            "columnDefs": [
+                { 
+                    type: "html",
+                    target: 0,
+                },
+                {"className": "dt-center", "targets": "_all"}
+                    
+            ],
+            
+    
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+            },
+            // "scrollY":        "200px",
+            // "scrollCollapse": true,
+            "paging": true
+        });
+    
+    } );
+    </script>
+    
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 {% endblock %}

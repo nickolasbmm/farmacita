@@ -22,7 +22,7 @@ class ordem_de_venda(models.Model):
     desconto =  models.BooleanField(default=False)
     venda =  models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
-    data_de_venda = models.DateField(auto_now=False,auto_now_add=False,null=True)
+    data_de_venda = models.DateField(auto_now=True,auto_now_add=False,null=False)
     percentual_desconto = models.DecimalField(max_digits=40,decimal_places=2,default=0)
     preco_desconto = models.DecimalField(max_digits=40,decimal_places=2,null=True)
     valor_total_venda = models.DecimalField(max_digits=40,decimal_places=2,null=True)

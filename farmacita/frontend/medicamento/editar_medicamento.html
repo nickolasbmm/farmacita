@@ -14,7 +14,7 @@ Medicamentos Cadastrados
 
 <div>    
     <div class="row formulario">
-        <div class="col-sm-12">
+        <!-- <div class="col-sm-12">
             <div>                
                 <form method="GET">
                     <div class="input-group-prepend">                    
@@ -23,10 +23,10 @@ Medicamentos Cadastrados
                     </div>              
                     </form>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="tabela">
-        <table class="table table-hover">
+        <table id="medicamentos" class="table table-hover">
             <thead class="table-info">
                 <tr>
                     <th scope="col">Id</th>
@@ -36,10 +36,10 @@ Medicamentos Cadastrados
                     <th></th>
                     <th></th>
                 </tr>
-            </thead>            
+            </thead>   
+            <tbody>         
             {% for i in lista %}
             {% if not i.excluido  %}                      
-            <tbody>
                 <tr class={{i.id_medicamento}}>
                     <th scope="row">{{i.id_medicamento}}</th>
                     <td class = "nome">{{i.nome_medicamento}}</td>
@@ -65,10 +65,10 @@ Medicamentos Cadastrados
                         </form>                        
                     </td>
                 </tr>
-            </tbody>
                 
             {% endif %}    
             {% endfor %}
+        </tbody>
             
         </table>
     </div>   
@@ -311,6 +311,33 @@ Medicamentos Cadastrados
         
           
 </div>
+
+<script>
+    $(document).ready(function() {
+        var medicamentos = $('#medicamentos').dataTable({
+            "columnDefs": [
+                { 
+                    type: "html",
+                    target: 0,
+                },
+                {"className": "dt-center", "targets": "_all"}
+                    
+            ],
+            
+    
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+            },
+            // "scrollY":        "200px",
+            // "scrollCollapse": true,
+            "paging": true
+        });
+    
+    } );
+    </script>
+    
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 
 {% endblock %}

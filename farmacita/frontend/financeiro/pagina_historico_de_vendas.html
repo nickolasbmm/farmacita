@@ -14,7 +14,7 @@ Histórico de Vendas
 
 <div>
     <div class="row formulario">
-        <div class="col-sm-12">
+        <!-- <div class="col-sm-12">
             <div>                
                 <form method="POST" autocomplete="off">
                     {% csrf_token %}
@@ -24,10 +24,10 @@ Histórico de Vendas
                     </div>              
                     </form>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="tabela">
-        <table class="table table-hover">
+        <table id="vendas" class="table table-hover">
             <thead class="table-info">
                 <tr>
                     <th scope="col">Id</th>
@@ -37,10 +37,12 @@ Histórico de Vendas
                     <th scope="col">Nº Lote</th>
                     <th scope="col">Valor Unitário</th>
                     <th scope="col">Valor Total</th>
+                    <th scope="col">Data de Venda</th>
                 </tr>
-            </thead>            
+            </thead>    
+            <tbody>        
             {% for i in lista %}                      
-            <tbody>
+            
                 <tr class={{i.id}}>
                     <th scope="row">{{i.id_ordem_de_venda}}</th>
                     <td class = "CPF">{{i.id_cliente.cpf}}</td>
@@ -49,12 +51,41 @@ Histórico de Vendas
                     <td class = "Nº Lote">{{i.id_lote_medicamento.id_lote_medicamento}}</td>
                     <td class = "Valor Unitário">{{i.preco_desconto | floatformat }}</td>
                     <td class = "Valor Total">
-                        {{i.valor_total_venda | floatformat}}</td>                  
+                        {{i.valor_total_venda | floatformat}}</td>     
+                    <td class = "qtd_caixas" data-sort='{{i.data_de_venda|date:"U"}}'>{{i.data_de_venda}}</td>             
                 </tr>
-            </tbody>
+            
             {% endfor %}
+            </tbody>
         </table>        
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        var vendas = $('#vendas').dataTable({
+            "columnDefs": [
+                { 
+                    type: "html",
+                    target: 0,
+                },
+                {"className": "dt-center", "targets": "_all"}
+                    
+            ],
+            
+    
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+            },
+            // "scrollY":        "200px",
+            // "scrollCollapse": true,
+            "paging": true
+        });
+    
+    } );
+    </script>
+    
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 {% endblock %}
