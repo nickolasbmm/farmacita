@@ -74,7 +74,7 @@ def criar_ordem_de_venda(request):
     cpf_cliente_validos = [x.cpf for x in clientes_validos]
     
     medicamentos = medicamento.objects.all()
-    med_validos = pd.DataFrame.from_records([{"id_medicamento_id":x.id_medicamento,"nome":x.nome_medicamento} for x in medicamentos])
+    med_validos = pd.DataFrame.from_records([{"id_medicamento_id":x.id_medicamento,"nome":x.nome_medicamento, "classificacao":x.classificacao} for x in medicamentos])
     lotes = pd.DataFrame.from_records(lote_medicamento.objects.all().values())
     lotes = lotes.astype({"preco" : float, "quantidade_de_caixas" : int, "data_de_validade" : str, "excluido": str})
 
@@ -86,12 +86,16 @@ def criar_ordem_de_venda(request):
         how = "left",
         on = "id_medicamento_id"
     )
+    
     lotes = lotes.sort_values("data_de_validade", ascending = False).groupby('id_medicamento_id').tail()
+    
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {
-                                                            "med_validos" : lotes["nome"].tolist(), 
+                                                            "med_validos" : lotes["nome"].unique().tolist(), 
                                                             "cpf_cliente_validos":cpf_cliente_validos,
                                                             'cargo':cargo,
                                                             "lotes" : lotes.to_dict("records"),
+                                                            "nome": lotes["nome"].tolist(),
+                                                            "classificacao": lotes["classificacao"].tolist()
                                                             } )
 
 

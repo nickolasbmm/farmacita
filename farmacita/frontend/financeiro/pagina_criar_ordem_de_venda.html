@@ -59,8 +59,13 @@ Cadastro de Ordem de Venda
                 id="suggestions_medicamento"></datalist>
             </div>
             <div class="mb-3">
+                <label for="classificacao" class="form-label">Classificação</label>
+                <input type="text" class="form-control" id="classificacao" name="classificacao" placeholder=" " disabled="">
+
+            </div>
+            <div class="mb-3">
                 <label for="quantidade" class="form-label">Quantidade</label>
-                <input type="number" min="1" class="form-control" id="quantidade" name="quantidade">
+                <input type="number" min="1" class="form-control" id="quantidade" name="quantidade" >
             </div>
             
             <button 
@@ -174,6 +179,8 @@ Cadastro de Ordem de Venda
         lotes = {{lotes | safe}}
         lista_de_medicamentos_validos = {{med_validos | safe }}
         lista_cpf_cliente = {{cpf_cliente_validos | safe}}
+        nome = {{nome | safe}}
+        classif = {{classificacao | safe}}
         
         function cadastrar_ordem_de_venda(){
             var table = $('#carrinho').DataTable();
@@ -195,14 +202,27 @@ Cadastro de Ordem de Venda
         function configura_qnt(){
             med = get_medicamento_info($("#nome_do_medicamento").val())
             console.log(med)
+            medi = $("#nome_do_medicamento").val()
+            console.log("****************")
+            console.log(medi)
             if (med != false){
                 $("#quantidade").prop("min", 1)
                 $("#quantidade").prop("max", med.quantidade_de_caixas)
+                mostrar_classificacao(med)
             }else{
                 $("#quantidade").prop("min", 0)
                 $("#quantidade").prop("max", 0)
             }
         }
+
+        function mostrar_classificacao(){
+            med = $("#nome_do_medicamento").val()
+            index = nome.indexOf(medi)
+            tarja = classif[index]
+            console.log(tarja)
+            $("#classificacao").attr('placeholder', tarja)
+        }
+
 
         function adicionar_ao_carrinho(){
             var $inputs = $('#new_item_form :input');
@@ -237,6 +257,7 @@ Cadastro de Ordem de Venda
             $("#suggestions_medicamento").empty()
             lista_de_medicamentos_validos.forEach(medicamento_valido => {
                 $("#suggestions_medicamento").append('<option value="{valor}"">'.formatUnicorn({valor : medicamento_valido}))
+                
             });
         }
 
