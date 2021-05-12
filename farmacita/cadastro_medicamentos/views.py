@@ -26,15 +26,19 @@ def cadastro_medicamentos(request):
         droga_list.append(i.nome_principio_ativo)
     if request.method == "POST":
         p = request.POST
+        princ_ativo = p.get("principio_ativo").split("&")
+        print("****************************************", princ_ativo)
         item = medicamento(
             nome_medicamento = p.get("name"),
             classificacao = p.get("classificacao"), 
             principio_ativo =p.get("principio_ativo")
             )
         item.save()
+        #item.principio_ativo.add(p.get("principio_ativo"))  
         sucesso=True
 
-    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo})
+
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo })
 
 def editar_medicamento(request):      
     check, retorno = checar_cargo(request)
