@@ -10,6 +10,12 @@ import pandas as pd
 import json
 import decimal
 from datetime import date
+
+
+from django.http.response import HttpResponse
+from datetime import timedelta
+import xlwt
+from django.db.models import Sum
 # Create your views here.
 
 def checar_cargo(request):
@@ -356,7 +362,7 @@ def historico_vendas(request):
 def gerar_relatorio(request):
  
     data_fin = datetime.now()
-    data_ini = data_fin - timedelta(10)
+    data_ini = data_fin - timedelta(30)
 
     vendas = ordem_de_venda.objects.filter(venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade'), valor = Sum('valor_total_venda'), avg = Sum('valor_total_venda')/Sum('quantidade')).order_by()
     
