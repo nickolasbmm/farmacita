@@ -22,9 +22,12 @@
 }
 label{
     font-weight: bold;
+    font-family: Montserrat;
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    color: rgb(7, 7, 7);
 }
 #cadastrar_button{
-    margin-top: 40px;
+    margin-left: 0px;
 }
 .logo{
     font-size: 50px;
@@ -32,7 +35,7 @@ label{
     color: rgb(241, 235, 235);
 }
 .logo-span{
-    color: var(--primary);
+    color: #11BE6B  ;
 }
 
 /*coisas da logi_page*/
@@ -106,6 +109,11 @@ label{
     width: var(--form-width);
     margin: 0 auto ;
     padding: 20px;
+    /*background: #00AA8E;*/
+    background: #5793893a;
+    opacity: 0.6;
+    box-shadow: inset -6px -6px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
 }
 
 .tabela{
@@ -127,6 +135,13 @@ body{
     " links conteudo"
     " links rodape" ;
     height: 100vh;
+    /*background:  
+        linear-gradient(
+            121.06deg, 
+            #DFEFF2 28.31%, 
+            rgba(22, 173, 206, 0) 
+            90.27%), 
+        #4A929C;*/
 }
 
 .usuario{
@@ -140,13 +155,15 @@ body{
 
 div#header{ 
     display:grid;   
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.10fr 1fr 1fr;
     grid-area: cabeca;
-    background-color: #428bae
+    background-color: #045A4C /* #428bae*/
     
 
 }
 nav#menu{
+    background-color: #00AA8E;
+    padding-top: 50px;
     grid-area: links ;
 
 }
@@ -158,7 +175,7 @@ div#footer{
     padding-top: 45px ;
     text-align: center;
     grid-area: rodape;
-    /*background-color: brown;*/
+    background-color: rgba(218, 203, 203, 0);
 }
 
 .rodape-texto{
@@ -166,9 +183,66 @@ div#footer{
     width: auto;
     margin-right: 30px;
     padding: 5px 10px ;    
-    background-color:  #428cae73
+    background-color:  #579389;    /*#428cae73*/
+
 }
 
 .titulo_pagina{
     padding: 10px 30px;
+}
+
+.icone{    
+    padding-left: 12px ;
+    padding-top: 12px ;
+    
+}
+
+.list-group-item-info{
+    background-color: #00AA8E;
+}
+
+.list-group-item{
+    font-family: Montserrat;
+    /*font-weight: bold;*/
+    color: rgb(41, 40, 51);
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.btn{
+    font-family: Montserrat;
+    
+    box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.25);
+}
+
+.btn.btn-outline-primary, .custom-btn{
+    color: rgb(219, 218, 230);
+    background-color: #08322F;
+    border-color: #186661;
+}
+
+.btn.btn-outline-info.custom-btn{
+    margin: 10px;
+    /*border-radius: 15px;*/
+}
+
+.btn.btn-outline-primary.form-check-label{
+    margin: 10px;
+}
+
+
+#cad_func{
+    width: 700px;
+}
+
+.h1{
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.table-info{
+    background-color: #00AA8E;
+
+}
+
+.btn-danger{
+    height: 37.833px;
 }

@@ -161,12 +161,8 @@ Cadastro de Medicamentos
             -ms-user-select: none; /* IE10+/Edge */
             user-select: none; /* Standard */
         }
-        label{
-            font-weight: bold;
-        }
-        #cadastrar_button{
-            margin-top: 40px;
-        }
+        
+        
     </style>
     
 <div>         
@@ -215,7 +211,11 @@ Cadastro de Medicamentos
                                 name="principio_ativo"
                             >
                             <div class="btn-group btn-block">
-                                <button type='button' class="btn btn-outline-info custom-btn" onclick="adiciona_principio_ativo_a_lista()">Adicionar princípio ativo</button>
+                                <button 
+                                    type='button' 
+                                    class="btn btn-outline-info custom-btn" 
+                                    onclick="adiciona_principio_ativo_a_lista()">
+                                    Adicionar princípio ativo</button>
                                 <button 
                                     id="active_substance_register_button"
                                     type='button' 
@@ -257,14 +257,11 @@ Cadastro de Medicamentos
                         </div>
                         <datalist id="suggestions_brands">
                         </datalist>
-                    </div> -->
-
-        
-
+                    </div> -->      
                     <button
                         type="submit" 
                         id="cadastrar_button" 
-                        class="btn  btn-block btn-outline-info custom-btn"
+                        class="btn btn-block btn-outline-info custom-btn"
                         onclick="cadastrar_medicamento()"
                         >
                         Cadastrar</button>
