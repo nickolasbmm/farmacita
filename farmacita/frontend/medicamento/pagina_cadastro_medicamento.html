@@ -61,6 +61,7 @@ Cadastro de Medicamentos
         //     'AVERT LABORATORIOS LTDA'
         // ]
     
+        princ_ativo = ""
     
         adiciona_principio_ativo_a_lista = function () {
             if (valid_active_substances.includes($("#active_substance_input").val())){
@@ -70,6 +71,8 @@ Cadastro de Medicamentos
                         }
                     )
                 )
+
+                princ_ativo = princ_ativo + "&" + $("#active_substance_input").val()
             }
         }
         // cadastrar_nova_marca = function(){
@@ -148,6 +151,7 @@ Cadastro de Medicamentos
         }
         cadastrar_medicamento = function(){
             //alert('Medicamento cadastrado')
+            $("#active_substance_input").val(princ_ativo)
         }
         $(document).ready(function () {
             add_sugestoes()
@@ -174,7 +178,7 @@ Cadastro de Medicamentos
                     cpf = models.CharField(max_length=11)
                     telefone = models.CharField(max_length=12)
                 -->
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Nome do medicamento</label>
@@ -271,4 +275,3 @@ Cadastro de Medicamentos
     </div>
 </div>
 {% endblock %}
-

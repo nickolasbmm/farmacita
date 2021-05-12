@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import medicamento, principio_ativo
+from .models import medicamento, principio_ativo, principio_ativo2
 from pessoas.models import funcionario
 
 # Create your views here.
@@ -20,21 +20,35 @@ def cadastro_medicamentos(request):
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
-    principiosativos = principio_ativo.objects.all()
+    principiosativos = principio_ativo2.objects.all()
     droga_list = list()
     for i in principiosativos:
-        droga_list.append(i.nome_principio_ativo)
+        droga_list.append(i.nome_principio_ativo2)
     if request.method == "POST":
         p = request.POST
+        princ_ativo = p.get("principio_ativo").split("&")
+        princ_ativo = princ_ativo[1:]
         item = medicamento(
             nome_medicamento = p.get("name"),
             classificacao = p.get("classificacao"), 
-            principio_ativo =p.get("principio_ativo")
+            #principio_ativo =p.get("principio_ativo")
             )
+        
         item.save()
+        print("aqui")
+        pa = principio_ativo2.objects.all()
+        princ = []
+        for i in pa:
+            if i.nome_principio_ativo2 in princ_ativo:
+                print(i.nome_principio_ativo2)
+                princ.append(i)
+        item.principio_ativo.set(princ)
+        
+        #item.principio_ativo.add(p.get("principio_ativo"))  
         sucesso=True
 
-    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo})
+
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo })
 
 def editar_medicamento(request):      
     check, retorno = checar_cargo(request)
@@ -94,7 +108,7 @@ def cadastrar_principio_ativo(request):
     if request.method == "POST":
         p = request.POST
         novonome = p.get("nome_principio_ativo")
-        novoprincipioativo = principio_ativo(nome_principio_ativo=novonome)
+        novoprincipioativo = principio_ativo2(nome_principio_ativo=novonome)
         novoprincipioativo.save()
 
     return HttpResponse(200)
