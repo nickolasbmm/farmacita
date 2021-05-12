@@ -9,13 +9,9 @@ Cadastro de Funcionário
 {% endblock %}
 
 {% block content %}
-<style>
-    .custom-form{
 
-    }
-</style>
-<div class="row justify-content-md-center">
-    <div class="col-sm-4">
+<div class="row justify-content-md-center formulario" id="cad_func">
+    <div class="col-sm-16">
         <form method="POST" autocomplete="off">
             {% csrf_token %}
             <div class="form-group">
@@ -80,7 +76,7 @@ Cadastro de Funcionário
                 <p id="texto_confirmacao_senha" style="visibility: hidden;color: red;">Senhas não coincidem</p>
             </div>
 
-            <button type="submit" class="btn btn-block btn-outline-info custom-btn">Cadastrar</button>                    
+            <button type="submit" id="cadastrar_button" class="btn btn-block btn-outline-info custom-btn" >Cadastrar</button>                    
         </form>
     </div>
 </div>
