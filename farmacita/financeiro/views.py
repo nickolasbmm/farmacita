@@ -1,3 +1,5 @@
+from django.db.models.fields import DecimalField, FloatField, IntegerField
+from django.db.models import F, ExpressionWrapper
 from django.shortcuts import render, redirect
 from django.shortcuts import render
 from pessoas.models import cliente, fornecedor, funcionario
@@ -364,7 +366,7 @@ def gerar_relatorio(request):
     data_fin = datetime.now()
     data_ini = data_fin - timedelta(30)
 
-    vendas = ordem_de_venda.objects.filter(venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade'), valor = Sum('valor_total_venda'), avg = Sum('valor_total_venda')/Sum('quantidade')).order_by()
+    vendas = ordem_de_venda.objects.filter(venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade', output_Field = FloatField()), valor = Sum('valor_total_venda', output_Field = FloatField())).annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())).order_by()
     
 
     response = HttpResponse(content_type = 'application/vnd.ms-excel')
