@@ -35,3 +35,4 @@ webencodings==0.5.1
 wrapt==1.12.1
 pandas
 xlwt
+django-import-export
