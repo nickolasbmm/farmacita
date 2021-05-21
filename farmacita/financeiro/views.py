@@ -1,3 +1,5 @@
+from django.db.models.fields import DecimalField, FloatField, IntegerField
+from django.db.models import F, ExpressionWrapper
 from django.shortcuts import render, redirect
 from django.shortcuts import render
 from pessoas.models import cliente, fornecedor, funcionario
@@ -10,6 +12,12 @@ import pandas as pd
 import json
 import decimal
 from datetime import date
+
+
+from django.http.response import HttpResponse
+from datetime import timedelta
+import xlwt
+from django.db.models import Sum
 # Create your views here.
 
 def checar_cargo(request):
@@ -351,3 +359,40 @@ def historico_vendas(request):
         lista = ordem_de_venda.objects.filter(venda=True)
     
     return render(request, 'financeiro/pagina_historico_de_vendas.html', {"lista":lista,'cargo':cargo})
+
+
+def gerar_relatorio(request):
+ 
+    data_fin = datetime.now()
+    data_ini = data_fin - timedelta(30)
+
+    vendas = ordem_de_venda.objects.filter(venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade', output_Field = FloatField()), valor = Sum('valor_total_venda', output_Field = FloatField())).annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())).order_by()
+    
+
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename = Expenses' + str(datetime.now()) + '.xls'
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Expenses')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['id_lote_medicamento__id_medicamento__nome_medicamento', 'quant', 'valor', 'avg']
+
+    font_style = xlwt.XFStyle
+    
+    ws.write(row_num,0, "Medicamento")
+    ws.write(row_num,1, "Quantidade")
+    ws.write(row_num,2, "Valor")
+    ws.write(row_num,3, "Preço médio")
+
+    for row in vendas:
+        row_num +=1
+
+        for col_num in range(len(columns)):
+          
+            ws.write(row_num, col_num, str(row[columns[col_num]]))
+
+    
+    wb.save(response)
+    return response
