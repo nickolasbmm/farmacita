@@ -41,13 +41,19 @@ Medicamentos Cadastrados
             {% for i in lista %}
             {% if not i.excluido  %}                      
                 <tr class={{i.id_medicamento}}>
-                    <th scope="row">{{i.id_medicamento}}</th>
-                    <td class = "nome">{{i.nome_medicamento}}</td>
-                    <td class = "classificacao">{{i.classificacao}}</td>
-                    <td class = "principio">{{i.principio_ativo}}</td>
+                    <th scope="row">{{i.med.id_medicamento}}</th>
+                    <td class = "nome">{{i.med.nome_medicamento}}</td>
+                    <td class = "classificacao">{{i.med.classificacao}}</td>
+                    <td class = "principio">
+                        <dl>
+                            {% for j in i.princ_list %}
+                            <dd>{{j}}</dd>
+                            {% endfor %}
+                        </dl>
+                    </td>
                     <td>
                         <form class= "centro">
-                            <button value = {{i.id_medicamento}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                            <button value = {{i.med.id_medicamento}} name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
                         </form>
                     </td>
                    
@@ -61,7 +67,7 @@ Medicamentos Cadastrados
                                     margin-bottom:6px;
                                 }
                             </style>  
-                            <button  value = {{i.id_medicamento}} name = 'delete' class="btn btn-danger botao lixeira" type = "submit"><i class="fas fa-trash-alt"></i></button>                                                                      
+                            <button  value = {{i.med.id_medicamento}} name = 'delete' class="btn btn-danger botao lixeira" type = "submit"><i class="fas fa-trash-alt"></i></button>                                                                      
                         </form>                        
                     </td>
                 </tr>
@@ -205,8 +211,20 @@ Medicamentos Cadastrados
                     $("#register_brand_button").prop("disabled", false)
                 }
             }
+            princ_ativo = ""
             cadastrar_medicamento = function(){
                 //alert('Medicamento cadastrado')
+                $("#active_substances").children().each(function(){
+                console.log($(this).text().toString().slice(0,-1));
+
+                princ_ativo = princ_ativo + ";" +  $(this).text().toString().slice(0,-1)
+                
+                
+                });
+                console.log(princ_ativo)
+                
+
+                $("#active_substance_input").val(princ_ativo)
             }
             $(document).ready(function () {
                 add_sugestoes()
@@ -214,23 +232,24 @@ Medicamentos Cadastrados
         </script>      
         {% for i in lista %}
 
-        <form class = "formulario" method="POST">
+        <form class = "formulario" method="POST" autocomplete="off">
             {% csrf_token %}
             <div class="form-group">
                 <label>Nome do medicamento</label>
-                <input value = {{i.nome_medicamento}} type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
+                <input value = "{{i.med.nome_medicamento|safe}}" type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
             </div>
             <div class="form-group">
                 <label>Classificação</label>
                 <input
                     id="classification_input"
-                    value = {{i.classificacao}}
+                    value = "{{i.med.classificacao|safe}}"
                     type="text" 
                     list="suggestions_classification" 
                     class="form-control background-none custom-input" 
                     id="classification_input"
                     name="classificacao"
                 >
+                
                 <datalist id="suggestions_classification">
                 </datalist>
                 
@@ -240,7 +259,7 @@ Medicamentos Cadastrados
                 <label>Princípio ativo</label>
                 <div>
                     <input 
-                        value={{i.principio_ativo}}
+                        value=""
                         type="text" 
                         onkeyup="principio_ativo_ja_esta_registrado_check()"
                         onselect="principio_ativo_ja_esta_registrado_check()"
@@ -267,6 +286,10 @@ Medicamentos Cadastrados
                 
             </div>
             <ul class="list-unstyled" id="active_substances">
+                {% for j in i.princ_list %}
+                <li>{{j}}<button type="button" class="close fake-btn" onclick="remove_parent(this)">x</button></li>
+
+                {% endfor %}
 
             </ul> 
             <p id="principio_ativo_cadastrado" style="visibility: hidden;color: red;"></p>

@@ -23,5 +23,4 @@ class rel_medicamento_principio_ativo2(models.Model):
     medicamento = models.ForeignKey(medicamento,on_delete=models.PROTECT)
     princ_ativo = models.ForeignKey(principio_ativo2,on_delete=models.PROTECT)
 
-class principio_ativo(models.Model):
-    nome_principio_ativo = models.CharField(max_length=100)
+

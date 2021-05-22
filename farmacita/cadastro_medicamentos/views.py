@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import medicamento, principio_ativo, principio_ativo2
+from .models import medicamento,  principio_ativo2, rel_medicamento_principio_ativo2
 from pessoas.models import funcionario
 
 # Create your views here.
@@ -26,7 +26,7 @@ def cadastro_medicamentos(request):
         droga_list.append(i.nome_principio_ativo2)
     if request.method == "POST":
         p = request.POST
-        princ_ativo = p.get("principio_ativo").split("&")
+        princ_ativo = p.get("principio_ativo").split(";")
         princ_ativo = princ_ativo[1:]
         item = medicamento(
             nome_medicamento = p.get("name"),
@@ -35,13 +35,12 @@ def cadastro_medicamentos(request):
             )
         
         item.save()
-        print("aqui")
         pa = principio_ativo2.objects.all()
         princ = []
         for i in pa:
             if i.nome_principio_ativo2 in princ_ativo:
-                print(i.nome_principio_ativo2)
                 princ.append(i)
+        print(princ)
         item.principio_ativo.set(princ)
         
         #item.principio_ativo.add(p.get("principio_ativo"))  
@@ -50,13 +49,33 @@ def cadastro_medicamentos(request):
 
     return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo })
 
+def default_editar_medicamento():
+    med = medicamento.objects.filter(excluido = False)
+    lista = list()
+    for item in med:
+        princ = ""
+        princ_list = list()
+        principios = rel_medicamento_principio_ativo2.objects.filter(medicamento = item).order_by('princ_ativo')
+    
+        for i in principios:
+            princ = princ + '\n'+ i.princ_ativo.nome_principio_ativo2 
+            princ_list.append(i.princ_ativo.nome_principio_ativo2)
+
+        princ = princ[1:]
+        lista.append({"med": item, "princ": princ, "princ_list": princ_list})
+    return lista
+
+
 def editar_medicamento(request):      
     check, retorno = checar_cargo(request)
     if check:
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     sucesso=False
-    lista = medicamento.objects.all()
+    
+
+    lista = default_editar_medicamento
+
     editar = False
     
     busca = request.GET.get('buscamedic')
@@ -70,24 +89,60 @@ def editar_medicamento(request):
     if delete:            
         teste = medicamento.objects.filter(id_medicamento = delete)
         teste.update(excluido = True)
+        lista = default_editar_medicamento
     
     editando = request.GET.get('edit')
     if editando:
         editar = True
-        lista = medicamento.objects.filter(id_medicamento = editando)
+        
+        med = medicamento.objects.filter(id_medicamento = editando)
 
-    principiosativos = principio_ativo.objects.all()
+        lista = list()
+        for item in med:
+            princ = ""
+            princ_list = list()
+            principios = rel_medicamento_principio_ativo2.objects.filter(medicamento = item).order_by('princ_ativo')
+        
+            for i in principios:
+                princ = princ + '\n'+ i.princ_ativo.nome_principio_ativo2 
+                princ_list.append(i.princ_ativo.nome_principio_ativo2)
+
+            princ = princ[1:]
+            lista.append({"med": item, "princ": med, "princ_list": princ_list})
+
+        
+
+    principiosativos = principio_ativo2.objects.all()
     droga_list = list()
     for i in principiosativos:
-        droga_list.append(i.nome_principio_ativo)
+        droga_list.append(i.nome_principio_ativo2)
 
+   
     if request.method == "POST":
         p = request.POST
-        lista.update(
-        nome_medicamento = p.get("name"),
-        classificacao = p.get("classificacao"), 
-        principio_ativo =p.get("principio_ativo")
+
+        princ_ativo = p.get("principio_ativo").split(";")
+        princ_ativo = princ_ativo[1:]
+
+
+        lista[0]["princ"].update(
+            nome_medicamento = p.get("name"),
+            classificacao = p.get("classificacao"), 
         )
+        
+        princ_ativo = p.get("principio_ativo").split(";")
+        princ_ativo = princ_ativo[1:]
+        rel_medicamento_principio_ativo2.objects.filter(medicamento =  lista[0]["med"]).delete()
+        pa = principio_ativo2.objects.all()
+        princ = []
+        for i in pa:
+            if i.nome_principio_ativo2 in princ_ativo:
+                princ.append(i)
+        
+        lista[0]["med"].principio_ativo.set(princ)
+
+        lista = default_editar_medicamento
+        editar = False
         sucesso=True
 
 

@@ -72,7 +72,7 @@ Cadastro de Medicamentos
                     )
                 )
 
-                princ_ativo = princ_ativo + "&" + $("#active_substance_input").val()
+               
             }
         }
         // cadastrar_nova_marca = function(){
@@ -106,26 +106,31 @@ Cadastro de Medicamentos
             valid_active_substances.push($("#active_substance_input").val())
             add_sugestoes()
         }
+
         remove_parent = function (item){ 
             item.parentNode.parentNode.removeChild(item.parentNode)
         }
+
         adiciona_sugestoes_de_classificacoes = function(){
             $("#suggestions_classification").empty()
             valid_classifications.forEach(classification_type => {
                 $("#suggestions_classification").append('<option value="{valor}"">'.formatUnicorn({valor : classification_type}))
             });
         }
+
         adiciona_sugestoes_de_principios_ativos = function(){
             $("#suggestions_active_substance").empty()
             valid_active_substances.forEach(active_substance => {
                 $("#suggestions_active_substance").append('<option value="{valor}"">'.formatUnicorn({valor : active_substance}))
             });
         }
+
         adiciona_sugestao_de_marca = function(){
             valid_brands.forEach(brand => {
                 $("#suggestions_brands").append('<option value="{valor}"">'.formatUnicorn({valor : brand}))
             });
         }
+
         add_sugestoes = function(){
             adiciona_sugestoes_de_classificacoes()
             adiciona_sugestoes_de_principios_ativos()
@@ -140,6 +145,7 @@ Cadastro de Medicamentos
                 $("#active_substance_register_button").prop("disabled", false)
             }
         }
+
         marca_ja_registrada_check = function(){
             if(valid_brands.includes($("#brand_input").val())){
                 console.log('disabled')
@@ -149,10 +155,23 @@ Cadastro de Medicamentos
                 $("#register_brand_button").prop("disabled", false)
             }
         }
+
+        
         cadastrar_medicamento = function(){
             //alert('Medicamento cadastrado')
+            $("#active_substances").children().each(function(){
+                console.log($(this).text().toString().slice(0,-1));
+
+                princ_ativo = princ_ativo + ";" +  $(this).text().toString().slice(0,-1)
+                
+                
+            });
+            console.log(princ_ativo)
+            
+
             $("#active_substance_input").val(princ_ativo)
         }
+
         $(document).ready(function () {
             add_sugestoes()
         });
