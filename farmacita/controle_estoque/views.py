@@ -43,7 +43,7 @@ def entrada_estoque(request):
         sucesso = True
 
     nomes_medicamentos_validos = []
-    medicamentos_validos=medicamento.objects.all()
+    medicamentos_validos=medicamento.objects.all().filter(excluido = False)
     for x in medicamentos_validos:
         nomes_medicamentos_validos.append(x.nome_medicamento)
     

@@ -57,7 +57,7 @@ Entrada de Estoque
     <div class="row formulario">
         <div class="col-sm-12">
             <div>
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Medicamento</label>
@@ -102,7 +102,8 @@ Entrada de Estoque
                                         
                                 </select>
                             </div>
-                          </div></div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Quantidade por caixa</label>
                         <div class="input-group">

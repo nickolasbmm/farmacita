@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render
 from pessoas.models import cliente, fornecedor, funcionario
 from controle_estoque.models import lote_medicamento
-from cadastro_medicamentos.models import medicamento
+from cadastro_medicamentos.models import medicamento, rel_medicamento_principio_ativo2
 from django.contrib.auth.models import User
 from datetime import datetime
 from .models import ordem_de_venda
@@ -81,10 +81,10 @@ def criar_ordem_de_venda(request):
     clientes_validos = cliente.objects.all()
     cpf_cliente_validos = [x.cpf for x in clientes_validos]
     
-    medicamentos = medicamento.objects.all()
+    medicamentos = medicamento.objects.all().filter(excluido = False)
     med_validos = pd.DataFrame.from_records([{"id_medicamento_id":x.id_medicamento,"nome":x.nome_medicamento, "classificacao":x.classificacao} for x in medicamentos])
-    lotes = pd.DataFrame.from_records(lote_medicamento.objects.all().values())
-    lotes = lotes.astype({"preco" : float, "quantidade_de_caixas" : int, "data_de_validade" : str, "excluido": str})
+    lotes = pd.DataFrame.from_records(lote_medicamento.objects.filter(excluido = False).values())
+    lotes = lotes.astype({"preco" : float, "quantidade_de_caixas" : int,"quantidade_por_caixa": str,  "data_de_validade" : str, "excluido": str})
 
     lotes = lotes.loc[(lotes["quantidade_de_caixas"] > 0) & (lotes["data_de_validade"] > str(date.today()))]
 
@@ -94,8 +94,21 @@ def criar_ordem_de_venda(request):
         how = "left",
         on = "id_medicamento_id"
     )
+
+    lista_principio_ativos = list()
+    for id in lotes["id_medicamento_id"].unique():
+        princ = ""
+        principios = rel_medicamento_principio_ativo2.objects.filter(medicamento = id).order_by('princ_ativo')
     
+        for i in principios:
+            princ = princ + ";" + i.princ_ativo.nome_principio_ativo2 
+        princ = princ[1:]
+        lista_principio_ativos.append({"med":id, "princ": princ})
+    print(lista_principio_ativos)
+
+
     lotes = lotes.sort_values("data_de_validade", ascending = False).groupby('id_medicamento_id').tail()
+    print(lotes)
     
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {
                                                             "med_validos" : lotes["nome"].unique().tolist(), 
@@ -103,7 +116,8 @@ def criar_ordem_de_venda(request):
                                                             'cargo':cargo,
                                                             "lotes" : lotes.to_dict("records"),
                                                             "nome": lotes["nome"].tolist(),
-                                                            "classificacao": lotes["classificacao"].tolist()
+                                                            'lista_principio_ativos': lista_principio_ativos
+                                                            
                                                             } )
 
 

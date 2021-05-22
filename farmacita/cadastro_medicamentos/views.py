@@ -53,16 +53,14 @@ def default_editar_medicamento():
     med = medicamento.objects.filter(excluido = False)
     lista = list()
     for item in med:
-        princ = ""
+        
         princ_list = list()
         principios = rel_medicamento_principio_ativo2.objects.filter(medicamento = item).order_by('princ_ativo')
     
         for i in principios:
-            princ = princ + '\n'+ i.princ_ativo.nome_principio_ativo2 
             princ_list.append(i.princ_ativo.nome_principio_ativo2)
-
-        princ = princ[1:]
-        lista.append({"med": item, "princ": princ, "princ_list": princ_list})
+        
+        lista.append({"med": item, "princ": None, "princ_list": princ_list})
     return lista
 
 
@@ -99,15 +97,11 @@ def editar_medicamento(request):
 
         lista = list()
         for item in med:
-            princ = ""
             princ_list = list()
             principios = rel_medicamento_principio_ativo2.objects.filter(medicamento = item).order_by('princ_ativo')
-        
             for i in principios:
-                princ = princ + '\n'+ i.princ_ativo.nome_principio_ativo2 
                 princ_list.append(i.princ_ativo.nome_principio_ativo2)
 
-            princ = princ[1:]
             lista.append({"med": item, "princ": med, "princ_list": princ_list})
 
         
