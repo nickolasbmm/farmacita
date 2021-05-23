@@ -230,6 +230,7 @@ Cadastro de Ordem de Venda
 
         function get_medicamento_info(nome_med, dosagem){
             info = false
+            console.log(lotes, nome_med, dosagem)
             lotes.forEach(elem =>{
                 
                 if (nome_med == elem.nome && dosagem == elem.dosagem){
@@ -363,15 +364,18 @@ Cadastro de Ordem de Venda
             var $inputs = $('#new_item_form :input');
             var values = {};
             $inputs.each(function() {
-                
+                console.log(this.name)
+
                 values[this.name] = $(this).val();
                 
             });
             
-            med = get_medicamento_info(values["nome"], $("#dosagem option:selected").text())
+            med = get_medicamento_info(values["nome_do_medicamento"], $("#dosagem option:selected").text())
+            console.log(med)
             if (med != false && $("#new_item_form").valid()){
                 qntd = values["quantidade"]
-
+                console.log(med)
+                console.log(qntd)
                 var table = $('#carrinho').DataTable();
 
                 already_exist = table.column(6).data().indexOf(med.id_lote_medicamento)
