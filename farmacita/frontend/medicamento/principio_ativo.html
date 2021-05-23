@@ -1,0 +1,94 @@
+{% extends 'template/padrao.html' %}
+
+{%block titulo %}
+Princípios ativos
+{% endblock %}
+
+{%block titulo-conteudo %}
+Princípios ativos
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<script src="{% static 'jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static '_js/script.js' %}"></script>
+    <style>
+        .fake-btn{
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+        }
+    </style>
+    
+<div>        
+    <div class="tabela">
+        {{p_ativos | safe}}
+    </div>
+ 
+</div>
+<script>
+    $("#p_ativos thead tr").append(`<td></td> <td></td>`)
+    $("#p_ativos tbody tr").each(function () {
+        p_ativo = $(this).find("td").text()
+        $( this ).append(
+            `
+            <td>
+                <form class= "centro" method = "post">
+                    {% csrf_token %}
+
+                    <input name = "newname" placeholder = "Novo nome" required>
+                    <input name = "oldname" value = "` + p_ativo + `" type = "hidden">
+                    <button  name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                </form>
+            </td>
+            
+            <td>
+                <form class= "centro" method = "post">
+                    {% csrf_token %}
+
+                    <style>
+                        .centro{
+                            text-align: center;            
+                        }
+                        .botao{
+                            margin-bottom:6px;
+                        }
+                    </style> 
+                    <input name = "name2delete" value = "` + p_ativo + `" type = "hidden">
+                    <button value = "` + p_ativo + `" name = 'delete' class="btn btn-danger botao lixeira" type = "submit"><i class="fas fa-trash-alt"></i></button>                                                                      
+                </form>                        
+            </td>
+            `
+        )
+    })
+    $(document).ready(function() {
+        $('#p_ativos thead').addClass("table-info")
+        var p_ativos = $('#p_ativos').dataTable({
+            "columnDefs": [
+                { 
+                    type: "html",
+                    target: 0,
+                },
+                {"className": "dt-center", "targets": "_all"}
+                    
+            ],
+            
+
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+            },
+            // "scrollY":        "200px",
+            // "scrollCollapse": true,
+            "paging": true
+        });
+    } );
+    
+
+</script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+{% endblock %}

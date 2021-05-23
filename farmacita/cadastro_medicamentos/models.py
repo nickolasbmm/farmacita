@@ -4,7 +4,7 @@ from django.db import models
 
 class principio_ativo2(models.Model):
     id_principio_ativo2 = models.AutoField(primary_key=True)
-    nome_principio_ativo2 = models.CharField(max_length=100)
+    nome_principio_ativo2 = models.CharField(max_length=100, unique = True)
     
     def __str__(self):
         return self.nome_principio_ativo2
@@ -20,7 +20,7 @@ class medicamento(models.Model):
         return self.nome_medicamento
 
 class rel_medicamento_principio_ativo2(models.Model):
-    medicamento = models.ForeignKey(medicamento,on_delete=models.PROTECT)
-    princ_ativo = models.ForeignKey(principio_ativo2,on_delete=models.PROTECT)
+    medicamento = models.ForeignKey(medicamento,on_delete=models.CASCADE)
+    princ_ativo = models.ForeignKey(principio_ativo2,on_delete=models.CASCADE)
 
 

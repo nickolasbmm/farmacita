@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import medicamento,  principio_ativo2, rel_medicamento_principio_ativo2
 from pessoas.models import funcionario
+import pandas as pd
 
 # Create your views here.
 
@@ -154,11 +155,50 @@ def cadastrar_principio_ativo(request):
     if check:
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+
     if request.method == "POST":
+        print("cadastrando")
         p = request.POST
+        print(p.keys())
         novonome = p.get("nome_principio_ativo")
-        novoprincipioativo = principio_ativo2(nome_principio_ativo=novonome)
+        novoprincipioativo = principio_ativo2(nome_principio_ativo2=novonome)
         novoprincipioativo.save()
 
     return HttpResponse(200)
+
+def edicao_principio_ativo(request):
+    check, retorno = checar_cargo(request)
+    if check:
+        return retorno
+    cargo = funcionario.objects.get(user=request.user).cargo
+
+    if request.method == "POST":
+        p = request.POST
+        if "oldname" in list(p.keys()) and "newname" in list(p.keys()):
+            oldname = p.get("oldname")
+            newname = p.get("newname")
+            print(oldname, newname)
+            p_ativo = principio_ativo2.objects.filter(nome_principio_ativo2=oldname)
+            p_ativo.update(nome_principio_ativo2 = newname)
+
+        if "name2delete" in list(p.keys()):
+            p2delete = p.get("name2delete")
+
+
+            principio_ativo2.objects.filter(nome_principio_ativo2=p2delete).delete()
+
+    p_ativos = principio_ativo2.objects.all()
+    p_ativos = [p.nome_principio_ativo2 for p in p_ativos]
+    p_ativos = pd.DataFrame(p_ativos, columns = ["Nome"])
+
+    return render(
+        request, 
+        'medicamento/principio_ativo.html', 
+        {
+            "p_ativos" : p_ativos.to_html(
+                table_id="p_ativos", classes="table table-hover", border = 0
+            )
+        }
+    )
+
 
