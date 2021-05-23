@@ -88,23 +88,25 @@ Cadastro de Medicamentos
         //     });
         // }
         cadastra_novo_principio_ativo = function(){
-            $('#principio_ativo_cadastrado').text('Princípio ativo ' + $("#active_substance_input").val() + ' cadastrado');
-            $('#principio_ativo_cadastrado').css('visibility','visible');
-            $.ajax({
-                url: 'cadastrar_principio_ativo',//<pagina_para_fazer_o_update_do_banco>
-                method: "POST",
-                data: {
-                    nome_principio_ativo : $("#active_substance_input").val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data)
-                }
-            });
+            if ($("#active_substance_input").val() != ''){
+                $('#principio_ativo_cadastrado').text('Princípio ativo ' + $("#active_substance_input").val() + ' cadastrado');
+                $('#principio_ativo_cadastrado').css('visibility','visible');
+                $.ajax({
+                    url: 'cadastrar_principio_ativo',//<pagina_para_fazer_o_update_do_banco>
+                    method: "POST",
+                    data: {
+                        nome_principio_ativo : $("#active_substance_input").val(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data)
+                    }
+                });
 
-            valid_active_substances.push($("#active_substance_input").val())
-            add_sugestoes()
+                valid_active_substances.push($("#active_substance_input").val())
+                add_sugestoes()
+            }
         }
 
         remove_parent = function (item){ 
