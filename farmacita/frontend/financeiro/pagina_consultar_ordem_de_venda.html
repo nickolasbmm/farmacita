@@ -88,7 +88,7 @@ Consulta de Ordem de Venda
                         {{i.valor_total_venda | floatformat}}</td>
                         <td>
                         <form class= "centro">
-                            <button value = {{i.id_ordem_de_venda}} name = 'vend' class="btn btn-outline-info custom-btn"  type = "submit" >Vender</button> 
+                            <button value = {{i.id_ordem_de_venda}} name = 'vend' class="btn btn-outline-info custom-btn" style="margin: 0;" type = "submit" >Vender</button> 
                         </form>
                     </td>
                     <td>
@@ -106,20 +106,17 @@ Consulta de Ordem de Venda
             {% endfor %}
             </tbody>
         </table>        
-    </div>
-    <div class="row">
-        <span class="col-sm-9"></span>
-        <div class="col-sm-2">
-            <form>
-                <button 
-                value = ""
-                name="vender_tudo"
-                onclick="att_button(this)"
-                class="btn btn-outline-info custom-btn" 
-                type = "submit" >
-                    Vender tudo
-                </button>
-            </form>
+        <div class="row">
+                <form>
+                    <button 
+                    value = ""
+                    name="vender_tudo"
+                    onclick="att_button(this)"
+                    class="btn btn-outline-info custom-btn" 
+                    type = "submit" >
+                        Vender tudo
+                    </button>
+                </form>
         </div>
     </div>
     {% endif %}
@@ -280,12 +277,11 @@ Consulta de Ordem de Venda
                         <div class="form-group">
                             
                             <div class="input-group">
-                                <label class="btn btn-outline-primary form-check-label">
+                                <label class="btn btn-outline-primary form-check-label" style="margin:0;margin-right: 3%;">
                                 <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais()"> Desconto
-                            </label>
-
+                                </label>
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                    <span class="input-group-text form-control" id="basic-addon1">%</span>
                                 </div>
                                 <input 
                                     id="perc_desc"
@@ -321,11 +317,12 @@ Consulta de Ordem de Venda
                                 class="form-control background-none custom-input"
                                 name="senha">
                         </div>
-
+                        <div style="display:flex;justify-content:center;align-items:center;">       
                         <button 
                             type="submit" 
                             class="btn  btn-block btn-outline-info custom-btn">
                             Salvar</button>
+                        </div>
                     </form>
                     {% endfor %}
                 </div>

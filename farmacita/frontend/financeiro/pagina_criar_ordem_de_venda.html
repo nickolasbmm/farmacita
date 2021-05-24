@@ -140,9 +140,12 @@ Cadastro de Ordem de Venda
 
             <div class="form-group">
                 <div class="input-group">
-                    <label class="btn btn-outline-primary form-check-label">
+                    <label class="btn btn-outline-primary form-check-label" style="margin:0;margin-right: 3%;">
                     <input type="checkbox" id="desconto" value="clicked" name = 'desconto' onchange="haddle(this);toggle_credenciais();atualiza_valor()"> Desconto
                 </label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
+                </div>
                     <input 
                         id="perc_desc"
                         type="number" 
@@ -153,9 +156,6 @@ Cadastro de Ordem de Venda
                         onchange="atualiza_valor()"
                         style="display: none;"
                     >
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1" style="display: none;">%</span>
-                    </div>
                 </div>
             </div>
 
@@ -205,10 +205,12 @@ Cadastro de Ordem de Venda
                 }
                 </script>
             </div>
+            <div style="display:flex;justify-content:center;align-items:center;">       
             <button 
                 type="submit" 
                 class="btn  btn-block btn-outline-info custom-btn">
                 Cadastrar</button>
+            </div>
         </form>
     </div>
 </div>

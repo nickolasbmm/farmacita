@@ -34,7 +34,12 @@ Log in
                             <label>Senha</label>
                             <input type="password" class="form-control background-none custom-input" id="password_login" name="senha">
                         </div>
-                        <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Login</button>
+                        <div style="display:flex;justify-content:center;align-items:center;">  
+                            <button type="submit" class="btn  btn-block btn-outline-info custom-btn">Login</button>
+                        </div>
+                        {% if falha %}
+                        <p style="text-align: center;color:crimson;">Usuário ou senha inválidos</p>
+                        {% endif %}
                         <!-- <button type="button" class="btn btn-block btn-link text-center">Não possui login?</button> -->
                     </form>
                 </div>

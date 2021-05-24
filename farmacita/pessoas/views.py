@@ -51,15 +51,15 @@ def authentication(request):
             login(request,user)
             return sucessful_login(request)
         else:
-            return failed_login(request)
+            return failed_login(request,falha=True)
     else:
-        return failed_login(request)
+        return failed_login(request,falha=False)
 
 def sucessful_login(request):
     return redirect('pagina_principal')
 
-def failed_login(request):
-    return render(request,'login_page.html')
+def failed_login(request,falha=False):
+    return render(request,'login_page.html',{'falha':falha})
 
 def cadastro_cliente(request): 
     check, retorno = checar_cargo(request)
@@ -178,7 +178,9 @@ def editar_usuario(request):
         if delete:
             print("olha aki")
             teste = funcionario.objects.filter(id = delete)
-            print(data)
+            fired_user = teste[0].user
+            fired_user.is_active = False
+            fired_user.save()
             teste.update(data_de_demissao = data)
         
         editando = request.GET.get('edit')

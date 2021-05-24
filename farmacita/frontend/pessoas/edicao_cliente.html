@@ -163,8 +163,10 @@ Clientes Cadastrados
                     name = 'data_nascimento'
                     onchange="checarIdade(value)"
                     >
-            </div>           
+            </div>    
+            <div style="display:flex;justify-content:center;align-items:center;">       
             <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
+            </div>
         </form>
         <script>
             document.getElementById("telefone").value = "{{i.telefone}}"
