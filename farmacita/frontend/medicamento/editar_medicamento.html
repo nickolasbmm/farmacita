@@ -319,13 +319,18 @@ Medicamentos Cadastrados
                 <datalist id="suggestions_brands">
                 </datalist>
             </div> -->
-            <button
-                type="submit" 
-                id="cadastrar_button" 
-                class="btn  btn-block btn-outline-info custom-btn"
-                onclick="cadastrar_medicamento()"
-                >
-                Editar</button>
+            
+            <div style="display:flex;justify-content:center;align-items:center;">       
+                    <button
+                    type="submit" 
+                    id="cadastrar_button" 
+                    class="btn  btn-block btn-outline-info custom-btn"
+                    onclick="cadastrar_medicamento()"
+                    >
+                    Editar dados</button>
+            </div>
+                
+            <button class="btn btn-outline-info custom-btn"  onclick="window.history.back();" style="margin: 0;" >Voltar</button> 
         </form>
      
         {% endfor %}
