@@ -135,8 +135,8 @@ Funcionários Cadastrados
                 }
         </script>
         {% for i in lista %}
-
-        <form class="formulario" method="POST" autocomplete="off">
+        <div class="row justify-content-md-center formulario" id="cad_func">
+        <form method="POST" autocomplete="off">
             {% csrf_token %}            
             <div class="form-group">
                 <label>Nome completo</label>
@@ -201,6 +201,7 @@ Funcionários Cadastrados
 
             <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
         </form>
+        </div>
         <script>
             document.getElementById("telefone").value = "{{i.telefone}}"
             document.getElementById('{{i.cargo}}').checked = true
