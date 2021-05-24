@@ -32,6 +32,7 @@ Funcionários Cadastrados
         </div> 
     </div>-->
     <div class="tabela">
+        <div style="display:flex;justify-content:center;align-items:center;">  
         <table id="usuarios" class="table table-hover">
             <thead class="table-info">
                 <tr>
@@ -42,8 +43,8 @@ Funcionários Cadastrados
                     <th scope="col">Cargo</th>
                     <th scope="col">Admissão</th>
                     <th scope="col">Demissão</th>
-                    <th></th>
-                    <th></th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
                 </tr>
             </thead>  
             <tbody>          
@@ -91,6 +92,7 @@ Funcionários Cadastrados
             </tbody>
             
         </table>
+        </div>
         
         {% if editar %}
         <script>

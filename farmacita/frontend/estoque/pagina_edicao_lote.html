@@ -35,6 +35,7 @@ Estoque de Medicamentos
 </div> -->
 
 <div class="tabela">
+    <div style="display:flex;justify-content:center;align-items:center;">      
     <table id="lotes" class="table table-hover">
         <thead class="table-info">
             <tr>
@@ -47,7 +48,7 @@ Estoque de Medicamentos
                 <th scope="col">Dosagem</th>
                 <th scope="col">Ind. Farmaceutica</th>
                 <th scope="col">Data de Validade</th>
-                <th></th>
+                <th>Excluir</th>
             </tr>
         </thead> 
         <tbody>
@@ -78,6 +79,7 @@ Estoque de Medicamentos
     </tbody>
 
     </table>
+    </div>
     
 </div>
         
@@ -109,6 +111,7 @@ $(document).ready(function() {
 
 } );
 </script>
+<style>th, td { white-space: nowrap; }</style>
 
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">

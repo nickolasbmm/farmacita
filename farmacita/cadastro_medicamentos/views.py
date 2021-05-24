@@ -196,7 +196,7 @@ def edicao_principio_ativo(request):
         'medicamento/principio_ativo.html', 
         {
             "p_ativos" : p_ativos.to_html(
-                table_id="p_ativos", classes="table table-hover", border = 0
+                table_id="p_ativos", classes="table table-hover", border = 0, index=False
             )
         }
     )

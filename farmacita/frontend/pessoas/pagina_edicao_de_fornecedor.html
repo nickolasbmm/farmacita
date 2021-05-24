@@ -32,6 +32,7 @@ Fornecedores Cadastrados
         </div>
     </div> -->
     <div class="tabela">
+        <div style="display:flex;justify-content:center;align-items:center;">
         <table id="fornecedores" class="table table-hover">
             <thead class="table-info">
                 <tr>
@@ -40,7 +41,7 @@ Fornecedores Cadastrados
                     <th scope="col">CNPJ</th>
                     <th scope="col">Telefone</th>
                     <th scope="col">Editar</th>
-                    <th></th>
+                    <th>Excluir</th>
                     <!-- <th></th> -->
                 </tr>
             </thead>   
@@ -80,6 +81,7 @@ Fornecedores Cadastrados
             </tbody>
             
         </table>
+        </div>
         
         {% if editar %}
         <script>

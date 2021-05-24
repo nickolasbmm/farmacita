@@ -231,7 +231,7 @@ Medicamentos Cadastrados
             });
         </script>      
         {% for i in lista %}
-
+        <div style="display:flex;justify-content:center;align-items:center;">
         <form class = "formulario" method="POST" autocomplete="off">
             {% csrf_token %}
             <div class="form-group">
@@ -332,6 +332,7 @@ Medicamentos Cadastrados
                 
             <button class="btn btn-outline-info custom-btn"  onclick="window.history.back();" style="margin: 0;" >Voltar</button> 
         </form>
+        </div>
      
         {% endfor %}
         

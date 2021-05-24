@@ -23,14 +23,14 @@ Princípios ativos
         }
     </style>
     
-<div>        
+<div style="display:flex;justify-content:center;align-items:center;">        
     <div class="tabela">
         {{p_ativos | safe}}
     </div>
- 
+
 </div>
 <script>
-    $("#p_ativos thead tr").append(`<td></td> <td></td>`)
+    $("#p_ativos thead tr").append(`<td><b>Editar</b></td> <td><b>Excluir</b></td>`)
     $("#p_ativos tbody tr").each(function () {
         p_ativo = $(this).find("td").text()
         $( this ).append(
