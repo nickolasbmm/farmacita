@@ -87,12 +87,13 @@ Cadastro de Ordem de Venda
                 <label for="quantidade" class="form-label">Quantidade</label>
                 <input type="number" min="1" class="form-control" id="quantidade" name="quantidade" >
             </div>
-            
+            <div style="display:flex;justify-content:center;align-items:center;">      
             <button 
                 class="btn  btn-block btn-outline-info custom-btn" 
                 type="button"
                 onclick="ver_similares()"
                 >Ver Similares</button>
+                </div>
             <div class="mb-3" id ="tab_similares" style="display: none;">
                 <table id="similares" class="display" style="width:100%">
                     <thead>
@@ -105,11 +106,13 @@ Cadastro de Ordem de Venda
                     </thead>
                 </table>
             </div>
+            <div style="display:flex;justify-content:center;align-items:center;">      
             <button 
                 class="btn  btn-block btn-outline-info custom-btn" 
                 type="button"
                 onclick="adicionar_ao_carrinho(); atualiza_valor()"
                 >Adicionar ao carrinho</button>
+                </div>
         </form>
     </div>
     <span class="col-1"></span>
