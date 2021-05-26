@@ -39,7 +39,7 @@ Princípios ativos
                 <form class= "centro" method = "post">
                     {% csrf_token %}
 
-                    <input name = "newname" placeholder = "Novo nome" required>
+                    <input name = "newname" placeholder = "Novo Nome" required>
                     <input name = "oldname" value = "` + p_ativo + `" type = "hidden">
                     <button  name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
                 </form>
