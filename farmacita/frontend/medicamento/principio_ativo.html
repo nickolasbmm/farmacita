@@ -29,6 +29,39 @@ Princípios ativos
     </div>
 
 </div>
+
+<div>
+    {% if editar %}
+        {% for i in lista %}
+        <div class="row justify-content-md-center formulario" id="cad_func">
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}            
+            <div class="form-group">
+                <label>Nome</label>
+                <input value = {{i.nome_principio_ativo2}} type="text" class="form-control background-none custom-input" id="newname", name = 'newname'>
+            </div>       
+            <div style="display:flex;justify-content:center;align-items:center;">       
+            <button type="submit" class="btn btn-block btn-outline-info custom-btn">Editar dados</button>
+            </div>
+            <button class="btn btn-outline-info custom-btn"  onclick="window.history.back();" >Voltar</button> 
+        </form>
+        </div>
+        <!-- <script>
+            document.getElementById("telefone").value = "{{i.telefone}}"
+            document.getElementById('{{i.cargo}}').checked = true
+        
+        </script> -->
+        {% endfor %}
+        {% endif %}  
+</div>
+
+<!-- <form class= "centro" method = "post">
+    {% csrf_token %}
+
+    <input name = "newname" placeholder = "Novo Nome" required>
+    <input name = "oldname" value = "` + p_ativo + `" type = "hidden">
+    <button  name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+</form> -->
 <script>
     $("#p_ativos thead tr").append(`<td><b>Editar</b></td> <td><b>Excluir</b></td>`)
     $("#p_ativos tbody tr").each(function () {
@@ -36,13 +69,9 @@ Princípios ativos
         $( this ).append(
             `
             <td>
-                <form class= "centro" method = "post">
-                    {% csrf_token %}
-
-                    <input name = "newname" placeholder = "Novo Nome" required>
-                    <input name = "oldname" value = "` + p_ativo + `" type = "hidden">
-                    <button  name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
-                </form>
+                <form class= "centro">
+                            <button value = "` + p_ativo + `" name = 'edit' class="btn btn-warning"  type = "submit" >Editar</button> 
+                        </form>
             </td>
             
             <td>

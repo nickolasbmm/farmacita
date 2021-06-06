@@ -171,14 +171,19 @@ def edicao_principio_ativo(request):
     if check:
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+    editar = False
+    lista = []
+
+    editando = request.GET.get('edit')
+    if editando:
+        editar = True
+        lista = principio_ativo2.objects.filter(nome_principio_ativo2=editando)
 
     if request.method == "POST":
         p = request.POST
-        if "oldname" in list(p.keys()) and "newname" in list(p.keys()):
-            oldname = p.get("oldname")
+        if "newname" in list(p.keys()):
             newname = p.get("newname")
-            print(oldname, newname)
-            p_ativo = principio_ativo2.objects.filter(nome_principio_ativo2=oldname)
+            p_ativo = principio_ativo2.objects.filter(nome_principio_ativo2=editando)
             p_ativo.update(nome_principio_ativo2 = newname)
 
         if "name2delete" in list(p.keys()):
@@ -197,7 +202,9 @@ def edicao_principio_ativo(request):
         {
             "p_ativos" : p_ativos.to_html(
                 table_id="p_ativos", classes="table table-hover", border = 0, index=False
-            )
+            ),
+            'editar':editar,
+            'lista':lista,
         }
     )
 
