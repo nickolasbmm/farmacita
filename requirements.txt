@@ -36,3 +36,5 @@ wrapt==1.12.1
 pandas
 xlwt
 django-import-export
+factory_boy
+bs4
