@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.32/darkreader.min.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/darkreader@latest/darkreader.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
     <script src="{% static 'bootstrap-4.5.3-dist/js/bootstrap.bundle.js' %}" type="text/javascript"></script>
     <script src="{% static '_js/script.js' %}" type="text/javascript"></script>
@@ -38,15 +38,37 @@
                 <p class="logo">Farmac<span class="logo-span">ITA</span></p>
             </div>
         </div>
-        <div class="usuario dropdown text-right">
-            <a class="dropdown-toggle text-secondary" href="#" role="button" id="dropdownusuario" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                {{user}}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownUsuario">
-                <a class="dropdown-item" href="/pessoas/deslogar">Logout</a>
+        <div class="row">
+            <div  class = "col">
+                <div class="usuario dropdown text-right float-right">
+
+                    <a class="dropdown-toggle text-secondary" href="#" role="button" id="dropdownusuario" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{user}}
+                    </a>
+                    
+                    <div class="dropdown-menu" aria-labelledby="dropdownUsuario">
+                        <a class="dropdown-item" href="/pessoas/deslogar">Logout</a>
+                    </div>
+                    
+                </div>
+                <div class="usuario dropdown text-right float-right">
+        
+                    <a class="dropdown-toggle text-secondary" href="#" role="button" id="dropdownusuario" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        configurações
+                    </a>
+                    
+                    <div class="dropdown-menu" aria-labelledby="dropdownUsuario">
+                        <a class="dropdown-item"
+                        onclick="toogle_dark_mode()" href="#">Modo escuro / claro</a>
+                    </div>
+                    
+                </div>
             </div>
         </div>
+        
+
     </div>         
     <nav class="list-group-item-info" id="menu">     
         <div class="dropdown">
@@ -110,7 +132,8 @@
                 <a class="dropdown-item " href="/financeiro/consultar_ordem_de_venda">Consultar Ordem de Venda</a>
                 <a class="dropdown-item " href="/financeiro/historico_vendas">Histórico de Vendas</a>
             </div>
-        </div>         
+        </div>   
+              
 
     </nav>
     <div id="content">
@@ -165,9 +188,30 @@
     </script>
     <script>
         // https://github.com/darkreader/darkreader 
+        
         $(document).ready(function(){
-            //DarkReader.enable();
+            let darkmode = localStorage.getItem('darkmode');
+            DarkReader.setFetchMethod(window.fetch)
+
+            if (darkmode == '1'){
+                DarkReader.enable();
+            }
+            else{
+                DarkReader.disable();
+            }
+            
         });
+        function toogle_dark_mode(){
+            DarkReader.setFetchMethod(window.fetch)
+            if (DarkReader.isEnabled()){
+                DarkReader.disable();
+                localStorage.setItem('darkmode','0');
+            }
+            else{
+                DarkReader.enable()
+                localStorage.setItem('darkmode','1');
+            }
+        }
     </script>
 
 </body>
