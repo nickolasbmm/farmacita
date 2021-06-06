@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+    <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.32/darkreader.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
     <script src="{% static 'bootstrap-4.5.3-dist/js/bootstrap.bundle.js' %}" type="text/javascript"></script>
     <script src="{% static '_js/script.js' %}" type="text/javascript"></script>
@@ -136,6 +137,7 @@
     <div id="footer">
         <p class="rodape-texto align-text-bottom">CES-28 Grupo HSO</p>
     </div>
+    
     <script>
 
         // Comentar esse bloco para debugar
@@ -158,8 +160,15 @@
             $('#dropdownclientes').css('display','none')
             $('#dropdownfuncionarios').css('display','none')
         }
-    </script>
 
+
+    </script>
+    <script>
+        // https://github.com/darkreader/darkreader 
+        $(document).ready(function(){
+            //DarkReader.enable();
+        });
+    </script>
 
 </body>
 
