@@ -81,12 +81,12 @@ def editar_medicamento(request):
 
     if busca:
         editar = False
-        lista = medicamento.objects.filter(nome_medicamento__icontains = busca)
+        lista = medicamento.objects.filter(excluido=False,nome_medicamento__icontains = busca)
 
     delete = request.GET.get('delete')
     
     if delete:            
-        teste = medicamento.objects.filter(id_medicamento = delete)
+        teste = medicamento.objects.filter(excluido=False,id_medicamento = delete)
         teste.update(excluido = True)
         lista = default_editar_medicamento
     
@@ -94,7 +94,7 @@ def editar_medicamento(request):
     if editando:
         editar = True
         
-        med = medicamento.objects.filter(id_medicamento = editando)
+        med = medicamento.objects.filter(excluido=False,id_medicamento = editando)
 
         lista = list()
         for item in med:

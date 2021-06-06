@@ -69,6 +69,7 @@ def cadastrar_ordem_de_venda(request):
         )
         ov.save()
         lote_medicamento.objects.filter(
+            excluido=False,
             id_lote_medicamento=row["id_lote_medicamento"]
             ).update(quantidade_de_caixas = F("quantidade_de_caixas") - row["quantidade"])
 
@@ -80,10 +81,10 @@ def criar_ordem_de_venda(request):
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
 
-    clientes_validos = cliente.objects.all()
+    clientes_validos = cliente.objects.filter(ativo=True)
     cpf_cliente_validos = [x.cpf for x in clientes_validos]
     
-    medicamentos = medicamento.objects.all().filter(excluido = False)
+    medicamentos = medicamento.objects.filter(excluido = False)
     med_validos = pd.DataFrame.from_records([{"id_medicamento_id":x.id_medicamento,"nome":x.nome_medicamento, "classificacao":x.classificacao} for x in medicamentos])
     lotes = pd.DataFrame.from_records(lote_medicamento.objects.filter(excluido = False).values())
     lotes = lotes.astype({"preco" : float, "quantidade_de_caixas" : int,"quantidade_por_caixa": str,  "data_de_validade" : str, "excluido": str})
@@ -132,7 +133,7 @@ def consultar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo
     editar = False
     cpf_cliente_validos = []
-    clientes_validos = cliente.objects.all()
+    clientes_validos = cliente.objects.filter(ativo=True)
     for x in clientes_validos:
         cpf_cliente_validos.append(x.cpf)
 
@@ -140,20 +141,20 @@ def consultar_ordem_de_venda(request):
 
     busca2 = request.GET.get("buscaCliente")
     id_cli = 0
-    lista_cli = cliente.objects.filter(cpf = busca2)
+    lista_cli = cliente.objects.filter(ativo=True,cpf = busca2)
     for x in lista_cli:
         id_cli = x.id_cliente
     print(id_cli)
     if busca2:
         editar = False
-        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
 
     vender = request.GET.get('vend')
     if vender: 
         editar = False           
-        teste = ordem_de_venda.objects.filter(id_ordem_de_venda = vender)
+        teste = ordem_de_venda.objects.filter(ativo=True,id_ordem_de_venda = vender)
         teste.update(venda = True)
         teste.update(ativo = False)
         lista = []
@@ -161,18 +162,15 @@ def consultar_ordem_de_venda(request):
         qtd = teste.get().quantidade
         busca2 = teste.get().id_cliente.cpf
         id_cli = teste.get().id_cliente.id_cliente
-        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
     
     vender_tudo = request.GET.get('vender_tudo')
-    print(vender_tudo)
     if vender_tudo:
-        print(vender_tudo)
         editar = False        
-        print([x.cpf for x in cliente.objects.all()])
-        cid = cliente.objects.filter(cpf = vender_tudo).first()
-        teste = ordem_de_venda.objects.filter(id_cliente = cid)
+        cid = cliente.objects.filter(ativo=True,cpf = vender_tudo).first()
+        teste = ordem_de_venda.objects.filter(ativo=True,id_cliente = cid)
         teste.update(venda = True)
         teste.update(ativo = False)
         #lista = []
@@ -187,7 +185,7 @@ def consultar_ordem_de_venda(request):
     delete = request.GET.get('delete')
     if delete:
         editar = False            
-        teste = ordem_de_venda.objects.filter(id_ordem_de_venda = delete)
+        teste = ordem_de_venda.objects.filter(ativo=True,id_ordem_de_venda = delete)
         teste.update(ativo = False)
         lista = []
         id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
@@ -197,7 +195,7 @@ def consultar_ordem_de_venda(request):
         editarlote.save()
         busca2 = teste.get().id_cliente.cpf
         id_cli = teste.get().id_cliente.id_cliente
-        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
         
@@ -206,11 +204,11 @@ def consultar_ordem_de_venda(request):
     editando = request.GET.get('edit')
     if editando:
         editar = True
-        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_ordem_de_venda = editar)
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(ativo=True,id_ordem_de_venda = editar)
         for x in lista_ordem_de_venda:
             lista.append(x)
         
-        lista_editar_ordem = ordem_de_venda.objects.filter(id_ordem_de_venda = editando)
+        lista_editar_ordem = ordem_de_venda.objects.filter(ativo=True,id_ordem_de_venda = editando)
         id_lote = lista_editar_ordem.get().id_lote_medicamento.id_lote_medicamento
         for x in lista_editar_ordem:
             lista_edit.append(x)
@@ -224,13 +222,13 @@ def consultar_ordem_de_venda(request):
     nome = busca
     if busca:
         #busca=''
-        for med in medicamento.objects.filter(nome_medicamento__icontains=busca):
-            lista.append({'lotes':lote_medicamento.objects.filter(id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
+        for med in medicamento.objects.filter(excluido=False,nome_medicamento__icontains=busca):
+            lista.append({'lotes':lote_medicamento.objects.filter(excluido=False,id_medicamento = med.id_medicamento).order_by('data_de_validade'),'nome_med':med.nome_medicamento})
 
     id_lote2 = request.GET.get('vender','') 
     nome2 = ''
     if id_lote2:
-        lista = lote_medicamento.objects.filter(id_lote_medicamento=id_lote2)
+        lista = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento=id_lote2)
         nome2 = lista.get().id_medicamento
         quant_est = lista.get().quantidade_de_caixas
         id_lote = id_lote2
@@ -239,7 +237,7 @@ def consultar_ordem_de_venda(request):
         p = request.POST
         qtd = p.get("quantidade")
         CPF = p.get("cpf")
-        editar_ordem_venda = ordem_de_venda.objects.filter(id_ordem_de_venda = editando)
+        editar_ordem_venda = ordem_de_venda.objects.filter(ativo=True,id_ordem_de_venda = editando)
         
         if p.get('desconto'):
             usuario = User.objects.get(username=p.get('login'))
@@ -272,7 +270,7 @@ def consultar_ordem_de_venda(request):
         editarlote.save()
         editar = False
         id_cli = editar_ordem_venda.get().id_cliente.id_cliente
-        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
+        lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
         for x in lista_ordem_de_venda:
             lista.append(x)
 
@@ -300,7 +298,7 @@ def vender(id_cliente):
     cargo = funcionario.objects.get(user=request.user).cargo
     ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cliente, ativo = True)
     for ordem in ordem_de_venda:
-        lote_medicamento = lote_medicamento.objects.filter(id_lote_medicamento = ordem.id_lote_medicamento)
+        lote_medicamento = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento = ordem.id_lote_medicamento)
         ordem.venda = True
         ordem.data_venda = datetime.now()
         ordem.ativo = False
@@ -324,7 +322,7 @@ def desistir_compra(request):
         p = request.POST
         cpf = p.get("cpf")
         id_lote_medicamento = p.get("id_lote_medicamento")
-        id_cliente = cliente.objects.filter(cpf = cpf).id_cliente
+        id_cliente = cliente.objects.filter(ativo=True,cpf = cpf).id_cliente
         ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cliente, id_lote_medicamento =id_lote_medicamento , ativo = True)
         ordem_de_venda.ativo = False
         ##nao sei se é necessário
@@ -342,7 +340,7 @@ def vender_medicamento(request):
     if request.method == "POST":
         p = request.POST
         cpf = p.get("cpf")
-        id_cliente = cliente.objects.filter(cpf = cpf).id_cliente
+        id_cliente = cliente.objects.filter(ativo=True,cpf = cpf).id_cliente
         vender(id_cliente)
     return render(request,'pagina_vender_medicamento.html',{'cargo':cargo})
 
@@ -357,7 +355,7 @@ def comprar_medicamento(request):
         cnpj = p.get("cnpj")
         cod_desconto = p.get("cod_desconto")
         novaordemvenda = cliente(
-            id_fornecedor = cliente.objects.filter(cnpj = cnpj).id_fornecedor, 
+            id_fornecedor = cliente.objects.filter(ativo=True,cnpj = cnpj).id_fornecedor, 
             id_medicamento = p.get("id_medicamento"),
             preco_lote = p.get("preco_lote"),
             quantidade_lotes =  p.get("quantidade_lotes")
@@ -371,14 +369,14 @@ def historico_vendas(request):
     if check:
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
-    lista = ordem_de_venda.objects.filter(venda=True)
+    lista = ordem_de_venda.objects.filter(ativo=True,venda=True)
     if request.method == "POST":
         p = request.POST
         cpf = p.get("cpf")
-        id_cliente = cliente.objects.filter(cpf__icontains = cpf)
-        lista = ordem_de_venda.objects.filter(venda=True,id_cliente__in=id_cliente)
+        id_cliente = cliente.objects.filter(ativo=True,cpf__icontains = cpf)
+        lista = ordem_de_venda.objects.filter(ativo=True,venda=True,id_cliente__in=id_cliente)
     else:
-        lista = ordem_de_venda.objects.filter(venda=True)
+        lista = ordem_de_venda.objects.filter(ativo=True,venda=True)
     
     return render(request, 'financeiro/pagina_historico_de_vendas.html', {"lista":lista,'cargo':cargo})
 
@@ -388,7 +386,7 @@ def gerar_relatorio(request):
     data_fin = datetime.now()
     data_ini = data_fin - timedelta(30)
 
-    vendas = ordem_de_venda.objects.filter(venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade', output_Field = FloatField()), valor = Sum('valor_total_venda', output_Field = FloatField())).annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())).order_by()
+    vendas = ordem_de_venda.objects.filter(ativo=True,venda=True,data_de_venda__range = [data_ini, data_fin]).select_related('id_lote_medicamento').select_related('id_medicamento').values('id_lote_medicamento__id_medicamento__nome_medicamento').annotate(quant = Sum('quantidade', output_Field = FloatField()), valor = Sum('valor_total_venda', output_Field = FloatField())).annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())).order_by()
     
 
     response = HttpResponse(content_type = 'application/vnd.ms-excel')

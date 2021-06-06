@@ -3,6 +3,7 @@ from .models import lote_medicamento
 from pessoas.models import fornecedor
 from cadastro_medicamentos.models import medicamento
 from pessoas.models import funcionario
+from pessoas.views import failed_login
 
 # Create your views here.
 
@@ -43,12 +44,12 @@ def entrada_estoque(request):
         sucesso = True
 
     nomes_medicamentos_validos = []
-    medicamentos_validos=medicamento.objects.all().filter(excluido = False)
+    medicamentos_validos=medicamento.objects.filter(excluido = False)
     for x in medicamentos_validos:
         nomes_medicamentos_validos.append(x.nome_medicamento)
     
     nomes_fornecedores_validos = []
-    fornecedores_validos = fornecedor.objects.all()
+    fornecedores_validos = fornecedor.objects.filter(ativo=True)
     for x in fornecedores_validos:
         nomes_fornecedores_validos.append(x.nome_fornecedor)
 
@@ -80,12 +81,12 @@ def editar_lote(request):
         
         busca = request.GET.get('buscalote')
         if busca:
-            lista = lote_medicamento.objects.filter(id_medicamento__in=medicamento.objects.filter(nome_medicamento__icontains = busca)).order_by('data_de_validade')
+            lista = lote_medicamento.objects.filter(excluido=False,id_medicamento__in=medicamento.objects.filter(excluido=False,nome_medicamento__icontains = busca)).order_by('data_de_validade')
 
         delete = request.GET.get('delete')
         
         if delete:            
-            teste = lote_medicamento.objects.filter(id_lote_medicamento = delete)
+            teste = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento = delete)
             teste.update(excluido= True)
             
         return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista,'cargo':cargo})

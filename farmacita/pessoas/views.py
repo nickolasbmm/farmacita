@@ -90,23 +90,23 @@ def editar_cliente(request):
     if request.user.is_authenticated:
         editar = False
 
-        lista = cliente.objects.all()
+        lista = cliente.objects.filter(ativo=True)
         
         busca = request.GET.get('buscacliente')
         if busca:
             editar = False
-            lista = cliente.objects.filter(nome_cliente__icontains = busca)
+            lista = cliente.objects.filter(ativo=True,nome_cliente__icontains = busca)
 
         delete = request.GET.get('delete')
         
         if delete:            
-            teste = cliente.objects.filter(id_cliente = delete)
+            teste = cliente.objects.filter(ativo=True,id_cliente = delete)
             teste.update(ativo = False)
         
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = cliente.objects.filter(id_cliente = editando)
+            lista = cliente.objects.filter(ativo=True,id_cliente = editando)
 
         compras = request.GET.get('compras')
         if compras:
@@ -114,7 +114,7 @@ def editar_cliente(request):
 
         if request.method == "POST":
             p = request.POST          
-            editarcliente = cliente.objects.filter(id_cliente=editando)
+            editarcliente = cliente.objects.filter(ativo=True,id_cliente=editando)
                                     
             nasc = p.get('data_nascimento')
             
@@ -166,18 +166,18 @@ def editar_usuario(request):
     if request.user.is_authenticated:
         editar = False
 
-        lista = funcionario.objects.all()
+        lista = funcionario.objects.filter(ativo=True)
         
         busca = request.GET.get('buscacliente')
         if busca:
             editar = False
-            lista = funcionario.objects.filter(nome_funcionario__icontains = busca)
+            lista = funcionario.objects.filter(ativo=True,nome_funcionario__icontains = busca)
 
         delete = request.GET.get('delete')
         data = request.GET.get('data_de_demissao')
         if delete:
             print("olha aki")
-            teste = funcionario.objects.filter(id = delete)
+            teste = funcionario.objects.filter(ativo=True,id = delete)
             fired_user = teste[0].user
             fired_user.is_active = False
             fired_user.save()
@@ -186,12 +186,12 @@ def editar_usuario(request):
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = funcionario.objects.filter(id = editando)
+            lista = funcionario.objects.filter(ativo=True,id = editando)
 
         if request.method == "POST":
             p = request.POST          
             user = request.user
-            editarfuncionario = funcionario.objects.filter(id=editando)
+            editarfuncionario = funcionario.objects.filter(ativo=True,id=editando)
             senha_nova = p.get('senha',None)
             senha_antiga = p.get('senha_antiga')
             if senha_nova != None:
@@ -254,21 +254,21 @@ def editar_fornecedor(request):
         busca = request.GET.get('buscafornecedor')
         if busca:
             editar = False
-            lista = fornecedor.objects.filter(nome_fornecedor__icontains = busca)
+            lista = fornecedor.objects.filter(ativo=True,nome_fornecedor__icontains = busca)
 
         delete = request.GET.get('delete')
         if delete:
-            teste = fornecedor.objects.filter(id_fornecedor = delete)
+            teste = fornecedor.objects.filter(ativo=True,id_fornecedor = delete)
             teste.update(ativo=False)
         
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = fornecedor.objects.filter(id_fornecedor = editando)
+            lista = fornecedor.objects.filter(ativo=True,id_fornecedor = editando)
 
         if request.method == "POST":
             p = request.POST          
-            editarfornecedor = fornecedor.objects.filter(id_fornecedor=editando)
+            editarfornecedor = fornecedor.objects.filter(ativo=True,id_fornecedor=editando)
 
             editarfornecedor.update(
                 nome_fornecedor= p.get('nome_fornecedor'),
@@ -286,7 +286,7 @@ def compras_cliente(request,id):
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     cliente_selecionado = cliente.objects.get(id_cliente=id)
-    lista = ordem_de_venda.objects.filter(venda=True,id_cliente=cliente_selecionado)
+    lista = ordem_de_venda.objects.filter(ativo=True,venda=True,id_cliente=cliente_selecionado)
     df = pd.DataFrame(list(lista.values()))
     df = df[['id_lote_medicamento_id','quantidade']]
     nomes = []
