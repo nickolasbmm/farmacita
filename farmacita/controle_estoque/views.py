@@ -76,7 +76,7 @@ def editar_lote(request):
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
     if request.user.is_authenticated:
-        lista = lote_medicamento.objects.all().order_by('data_de_validade')
+        lista = lote_medicamento.objects.filter(excluido=False).order_by('data_de_validade')
         
         busca = request.GET.get('buscalote')
         if busca:
