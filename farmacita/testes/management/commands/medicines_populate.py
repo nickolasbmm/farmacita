@@ -22,10 +22,12 @@ class Command(BaseCommand):
     
     @transaction.atomic
     def handle(self, *args, **options):
-        #for princs in df["ActiveIngredient"].tolist():
-        #    for princ in str(princs).split("; "):
-        #        principio_ativo2.objects.update_or_create(nome_principio_ativo2=princ)
+        for princs in df["ActiveIngredient"].tolist():
+            for princ in str(princs).split("; "):
+                principio_ativo2.objects.update_or_create(nome_principio_ativo2=princ)
         for i, row in df.iterrows():
+            if i > 100:
+                break
             med = row['DrugName']
             princs = row['ActiveIngredient']
             med_obj = medicamento(
