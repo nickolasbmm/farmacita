@@ -76,7 +76,11 @@ def editar_lote(request):
     if check:
         return retorno
     cargo = funcionario.objects.get(user=request.user).cargo
+    editar = False
+    nomes_medicamentos_validos = []
+    nomes_fornecedores_validos = []
     if request.user.is_authenticated:
+        
         lista = lote_medicamento.objects.filter(excluido=False).order_by('data_de_validade')
         
         busca = request.GET.get('buscalote')
@@ -88,7 +92,40 @@ def editar_lote(request):
         if delete:            
             teste = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento = delete)
             teste.update(excluido= True)
+
+        editando = request.GET.get('edit')
+        if editando:
+            editar = True
+            lista = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento = editando)
+            medicamentos_validos=medicamento.objects.filter(excluido = False)
+            for x in medicamentos_validos:
+                nomes_medicamentos_validos.append(x.nome_medicamento)
+            fornecedores_validos = fornecedor.objects.filter(ativo=True)
+            for x in fornecedores_validos:
+                nomes_fornecedores_validos.append(x.nome_fornecedor)
+
+        if request.method == "POST":
+            p = request.POST          
+            medicamento_usado = medicamento.objects.get(nome_medicamento=p.get('nome_medicamento'))
+            fornecedor_usado = fornecedor.objects.get(nome_fornecedor=p.get('nome_fornecedor'))
+            editarlote = lote_medicamento.objects.filter(excluido=False,id_lote_medicamento = editando)
+
+            validade = p.get('data_de_validade')
+
+            if(validade == ""):
+                validade = editarlote.first().data_de_validade
+
+            editarlote.update(
+                id_medicamento = medicamento_usado,
+                id_fornecedor =  fornecedor_usado,
+                preco = p.get('preco'),
+                quantidade_de_caixas = p.get('quantidade_de_caixas'),
+                quantidade_por_caixa = p.get('quantidade_por_caixa') + ' ' + p.get('unidade_quantidade_por_caixa'),
+                dosagem = p.get('dosagem') + ' ' + p.get('unidade_dosagem'),
+                data_de_validade = validade,
+                industria_farmaceutica = p.get('industria_farmaceutica'),
+            )
             
-        return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista,'cargo':cargo})
+        return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista,'cargo':cargo,'editar':editar,"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
     else:
         return failed_login(request)
