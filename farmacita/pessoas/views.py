@@ -126,9 +126,7 @@ def editar_cliente(request):
 
         pessoa_cpf = request.POST.get("relascliente")
         if pessoa_cpf:
-            print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp")
-            return gerar_relatorio2(request, pessoa_cpf)
-        print("***************************************** :", pessoa_cpf)
+            return gerar_relatorio_pessoa(request, pessoa_cpf)
 
         if request.method == "POST":
             p = request.POST          
@@ -318,13 +316,7 @@ def compras_cliente(request,id):
 
     return render(request, 'pessoas/compras_cliente.html', {"lista":df.to_dict('records'),'cargo':cargo,'cliente':cliente_selecionado})
 
-def gerar_relatorio2(request, pessoa_cpf):
-    '''
-    pessoa_cpf = None
-
-    if request.method == 'POST':
-        p = request.post
-        pessoa_cpf = p.get("relascliente")'''
+def gerar_relatorio_pessoa(request, pessoa_cpf):
      
     id_pessoa = cliente.objects.filter(ativo=True, cpf = pessoa_cpf).\
     values('nome_cliente', 'id_cliente')
