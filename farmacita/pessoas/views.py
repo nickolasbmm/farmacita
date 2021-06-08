@@ -10,6 +10,15 @@ from django.db.models import F
 import json
 import pandas as pd
 
+
+from django.http.response import HttpResponse
+from datetime import timedelta
+import xlwt
+from django.db.models import Sum, Count
+
+from django.db.models.functions import (ExtractDay, ExtractMonth, ExtractQuarter, ExtractWeek,ExtractIsoWeekDay, ExtractWeekDay, ExtractIsoYear, ExtractYear)
+
+
 # Create your views here.
 
 def checar_cargo(request):
@@ -299,6 +308,59 @@ def compras_cliente(request,id):
     
 
     return render(request, 'pessoas/compras_cliente.html', {"lista":df.to_dict('records'),'cargo':cargo,'cliente':cliente_selecionado})
+
+def gerar_relatorio(request, pessoa_cpf):
+     
+    id_pessoa  =cliente.filter(ativo=True, cpf = pessoa_cpf). \
+    values(nome = 'nome_cliente', id = 'id_cliente')
+
+    vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, id_cliente = id_pessoa['id']). \
+    select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
+    values('id_lote_medicamento__id_medicamento__nome_medicamento'). \
+    annotate(quant = Sum('quantidade', output_Field = FloatField()), \
+    nCompras = Count('quantidade', output_Field = FloatField()), \
+    descS = Sum(F('percentual_desconto')*F('quantidade'), output_Field = FloatField()), \
+    diaS = Sum(ExtractDay('data_de_venda')*F('quantidade'), output_Field = FloatField())). \
+    annotate( avg = ExpressionWrapper( F('quant')/F('nCompras'), output_field=FloatField())). \
+    annotate( desc = ExpressionWrapper( F('descS')/F('quant'), output_field=FloatField())). \
+    annotate( dia = ExpressionWrapper( F('diaS')/F('quant'), output_field=FloatField())). \
+    order_by('quant')
+
+    dt = datetime.now()
+     
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename = Relatório de vendas - ' + id_pessoa['nome'] + str(date(dt.year, dt.month, dt.day)) + '.xls'
+
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Vendas')
+    row_num = 0
+    
+    columns = ['id_lote_medicamento__id_medicamento__nome_medicamento', 'avg','dia', 'desc', 'quant' ]
+
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.bold = True
+    style.font = font
+    style_string = "font: bold on; borders: bottom dashed"
+    style = xlwt.easyxf(style_string)
+    
+    ws.write(row_num,0, "Medicamento", style=style)
+    ws.write(row_num,1, "Média por compra", style=style)
+    ws.write(row_num,2, "Dia médio", style=style)
+    ws.write(row_num,2, "Desconto médio", style=style)
+    ws.write(row_num,3, "Quantidade comprada", style=style)
+  
+
+    for row in vendas:
+        row_num +=1
+
+        for col_num in range(len(columns)):
+          
+            ws.write(row_num, col_num, row[columns[col_num]])
+
+    wb.save(response)
+    return response
+
 
 
     
