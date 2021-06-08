@@ -12,6 +12,6 @@ urlpatterns = [
     path('editar_usuario',views.editar_usuario, name = 'editar_usuario'),
     path('editar_fornecedor',views.editar_fornecedor, name = 'editar_fornecedor'),
     # path('compras_cliente',views.compras_cliente, name = 'compras_cliente'),
-    path('gerar_relatorio2',views.gerar_relatorio2, name = 'gerar_relatorio2'),
-    path('deslogar',views.deslogar,name='deslogar')
+    path('deslogar',views.deslogar,name='deslogar'),
+    path('gerar_relatorio_pessoas',views.gerar_relatorio_pessoas, name = 'gerar_relatorio_pessoas')
 ]
