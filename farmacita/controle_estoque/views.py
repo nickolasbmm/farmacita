@@ -5,6 +5,17 @@ from cadastro_medicamentos.models import medicamento
 from pessoas.models import funcionario
 from pessoas.views import failed_login
 
+from django.http.response import HttpResponse
+from datetime import timedelta
+import xlwt
+from django.db.models import Sum
+from django.db.models.functions import (ExtractDay, ExtractMonth, ExtractQuarter, ExtractWeek,ExtractIsoWeekDay, ExtractWeekDay, ExtractIsoYear, ExtractYear)
+from financeiro.models import ordem_de_venda
+from django.db.models.fields import DecimalField, FloatField, IntegerField
+from django.db.models import F, ExpressionWrapper
+from datetime import date
+from datetime import datetime
+
 # Create your views here.
 
 def checar_cargo(request):
@@ -129,3 +140,84 @@ def editar_lote(request):
         return render(request,'estoque/pagina_edicao_lote.html',{'lista':lista,'cargo':cargo,'editar':editar,"nomes_medicamentos_validos":nomes_medicamentos_validos,"nomes_fornecedores_validos":nomes_fornecedores_validos})
     else:
         return failed_login(request)
+    
+    
+    def gerar_relatorio_estoque(request):
+     
+    entrada  = lote_medicamento.objects. \
+    select_related('id_medicamento').\
+    values('id_medicamento__nome_medicamento'). \
+    annotate(quant = Sum('quantidade_de_caixas', output_Field = FloatField())). \
+    order_by('id_medicamento__nome_medicamento') \
+   
+    
+    saida = ordem_de_venda.objects.filter(ativo=True,venda=True). \
+    select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
+    values('id_lote_medicamento__id_medicamento__nome_medicamento'). \
+    annotate(quant = Sum('quantidade', output_Field = FloatField())). \
+    order_by('id_lote_medicamento__id_medicamento__nome_medicamento')
+
+    data_fin = datetime.now()
+    data_ini = data_fin -  timedelta(days=30)
+
+    comparativo = ordem_de_venda.objects.filter(ativo=True,venda=True,  data_de_venda__range = [data_ini, data_fin]). \
+    select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
+    values('id_lote_medicamento__id_medicamento__nome_medicamento'). \
+    annotate(quant30 = Sum('quantidade', output_Field = FloatField()),
+    valor = Sum('valor_total_venda', output_Field = FloatField())). \
+    annotate(avg30 = ExpressionWrapper( F('valor')/F('quant30'), output_field=FloatField())). \
+    order_by('id_lote_medicamento__id_medicamento__nome_medicamento')
+
+   
+
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+
+    dt = datetime.now()
+
+    response['Content-Disposition'] = 'attachment; filename = Relatório para compras - ' +  str(date(dt.year, dt.month, dt.day)) + '.xls'
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Compras')
+    row_num = 0
+
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.bold = True
+    style.font = font
+    style_string = "font: bold on; borders: bottom dashed"
+    style = xlwt.easyxf(style_string)
+    '''font_style = xlwt.XFStyle()
+    font_style.font.bold = False
+    '''
+    columns = ['id_medicamento__nome_medicamento', 'quant', 'quant30', 'avg30']
+    med = 'id_lote_medicamento__id_medicamento__nome_medicamento'
+
+    ws.write(row_num,0, "Medicamento", style=style)
+    ws.write(row_num,1, "Quantidade em estoque", style=style)
+    ws.write(row_num,2, "Saída últimos 30 dias", style=style)
+    ws.write(row_num,3, "Preço médio de venda últimos 30 dias", style=style)
+ 
+    saida_row = 0
+    comparativo_row = 0
+
+    for row in entrada:
+        row_num +=1
+
+        ws.write(row_num, 0, row[columns[0]])
+
+        if(row[columns[0]] == saida[saida_row][med]):
+            
+            ws.write(row_num, 1,  row[columns[1]] - saida[saida_row][columns[1]] )
+            saida_row +=1
+            if(row[columns[0]] == comparativo[comparativo_row][med]):
+                ws.write(row_num, 2, comparativo[comparativo_row][columns[2]])
+                ws.write(row_num, 3, comparativo[comparativo_row][columns[3]])
+                comparativo_row +=1
+            else:
+                ws.write(row_num, 2, 0)
+            
+        else:
+            ws.write(row_num, 1,  row[columns[1]])
+            ws.write(row_num, 2, (0))
+                
+    wb.save(response)
+    return response
