@@ -310,6 +310,12 @@ def compras_cliente(request,id):
     return render(request, 'pessoas/compras_cliente.html', {"lista":df.to_dict('records'),'cargo':cargo,'cliente':cliente_selecionado})
 
 def gerar_relatorio(request, pessoa_cpf):
+    
+    pessoa_cpf = None
+
+    if request.method == 'POST':
+        p = request.post
+        pessoa_cpf = p.get("relascliente")
      
     id_pessoa  =cliente.filter(ativo=True, cpf = pessoa_cpf). \
     values(nome = 'nome_cliente', id = 'id_cliente')
