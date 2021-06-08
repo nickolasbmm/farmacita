@@ -17,7 +17,10 @@ import xlwt
 from django.db.models import Sum, Count
 
 from django.db.models.functions import (ExtractDay, ExtractMonth, ExtractQuarter, ExtractWeek,ExtractIsoWeekDay, ExtractWeekDay, ExtractIsoYear, ExtractYear)
-
+from django.db.models.fields import DecimalField, FloatField, IntegerField
+from django.db.models import F, ExpressionWrapper
+from datetime import datetime
+from datetime import date
 
 # Create your views here.
 
@@ -317,10 +320,12 @@ def gerar_relatorio(request, pessoa_cpf):
         p = request.post
         pessoa_cpf = p.get("relascliente")
      
-    id_pessoa  =cliente.objects.filter(ativo=True, cpf = pessoa_cpf). \
-    values(nome = 'nome_cliente', id = 'id_cliente')
+    id_pessoa = cliente.objects.filter(ativo=True, cpf = pessoa_cpf).\
+    values('nome_cliente', 'id_cliente')
 
-    vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, id_cliente = id_pessoa['id']). \
+    id = id_pessoa[0]['id_cliente']
+
+    vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, id_cliente = id). \
     select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
     values('id_lote_medicamento__id_medicamento__nome_medicamento'). \
     annotate(quant = Sum('quantidade', output_Field = FloatField()), \
@@ -335,10 +340,10 @@ def gerar_relatorio(request, pessoa_cpf):
     dt = datetime.now()
      
     response = HttpResponse(content_type = 'application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename = Relatório de vendas - ' + id_pessoa['nome'] + str(date(dt.year, dt.month, dt.day)) + '.xls'
+    response['Content-Disposition'] = 'attachment; filename = Relatório de vendas - ' + id_pessoa[0]['nome_cliente'] + str(date(dt.year, dt.month, dt.day)) + '.xls'
 
     wb = xlwt.Workbook(encoding = 'utf-8')
-    ws = wb.add_sheet('Vendas')
+    ws = wb.add_sheet('Pessoas')
     row_num = 0
     
     columns = ['id_lote_medicamento__id_medicamento__nome_medicamento', 'avg','dia', 'desc', 'quant' ]
@@ -353,8 +358,8 @@ def gerar_relatorio(request, pessoa_cpf):
     ws.write(row_num,0, "Medicamento", style=style)
     ws.write(row_num,1, "Média por compra", style=style)
     ws.write(row_num,2, "Dia médio", style=style)
-    ws.write(row_num,2, "Desconto médio", style=style)
-    ws.write(row_num,3, "Quantidade comprada", style=style)
+    ws.write(row_num,3, "Desconto médio", style=style)
+    ws.write(row_num,4, "Quantidade comprada", style=style)
   
 
     for row in vendas:
