@@ -10,5 +10,6 @@ urlpatterns = [
     path('comprar_medicamento',views.comprar_medicamento, name = 'comprar_medicamento'),
     path('historico_vendas',views.historico_vendas, name = 'historico_vendas'),
     path('cadastrar_ordem_de_venda', views.cadastrar_ordem_de_venda, name='cadastrar_ordem_de_venda'),
-    path('gerar_relatorio', views.gerar_relatorio, name='gerar_relatorio')
+    path('gerar_relatorio', views.gerar_relatorio, name='gerar_relatorio'),
+    path('gerar_relatorio_vendas', views.gerar_relatorio_vendas, name='gerar_relatorio_vendas')
 ]
