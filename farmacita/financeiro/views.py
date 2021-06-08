@@ -18,6 +18,9 @@ from django.http.response import HttpResponse
 from datetime import timedelta
 import xlwt
 from django.db.models import Sum
+
+from django.db.models.functions import (ExtractDay, ExtractMonth, ExtractQuarter, ExtractWeek,ExtractIsoWeekDay, ExtractWeekDay, ExtractIsoYear, ExtractYear)
+
 # Create your views here.
 
 def checar_cargo(request):
@@ -416,3 +419,87 @@ def gerar_relatorio(request):
     
     wb.save(response)
     return response
+
+def gerar_relatorio_vendas(request):
+ 
+    data_fin = datetime.now()
+    data_ini = data_fin
+    data_ini = data_ini.replace(day=1)
+    delta = data_fin - data_ini
+    #data_ini = data_fin - timedelta(30)
+    #data_de_venda__range = [data_ini, data_fin] dentro de filter
+    #idadeS = Sum(( F('id_cliente__data_nascimento')-datetime.now()).years*'quantidade'), output_Field = FloatField())). \
+    # annotate( idade = ExpressionWrapper( F('idadeS')/F('quant'), output_field=FloatField())).
+    # annotate(diaS = Sum((datetime.today()-F('data_de_venda'))*F('quantidade'),output_Field = FloatField())). \
+    data_fin_ant = data_ini - timedelta(days=1)
+    data_ini_ant = data_ini.replace(month = data_ini.month-1)
+    delta_ant = data_fin_ant - data_ini_ant
+
+    comparativo  = ordem_de_venda.objects.filter(ativo=True,venda=True, data_de_venda__range = [data_ini_ant, data_fin_ant]). \
+    select_related('id_lote_medicamento').select_related('id_medicamento').\
+    values('id_lote_medicamento__id_medicamento__nome_medicamento', \
+    quant_ant = Sum('quantidade')).order_by('id_lote_medicamento__id_medicamento__nome_medicamento')
+
+    vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, data_de_venda__range = [data_ini, data_fin]). \
+    select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
+    values('id_lote_medicamento__id_medicamento__nome_medicamento', \
+    idadeS = Sum((ExtractYear(datetime.now()) - ExtractYear('id_cliente__data_nascimento'))*F('quantidade'), output_Field = FloatField())). \
+    annotate(quant = Sum('quantidade', output_Field = FloatField()), \
+    valor = Sum('valor_total_venda', output_Field = FloatField()), 
+    descS = Sum(F('percentual_desconto')*F('quantidade'), output_Field = FloatField()),
+    diaS = Sum(ExtractDay('data_de_venda')*F('quantidade'), output_Field = FloatField())). \
+    annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())). \
+    annotate( desc = ExpressionWrapper( F('descS')/F('quant'), output_field=FloatField())). \
+    annotate( dia = ExpressionWrapper( F('diaS')/F('quant'), output_field=FloatField())). \
+    annotate( idade = ExpressionWrapper( F('idadeS')/F('quant'), output_field=FloatField())).order_by('id_lote_medicamento__id_medicamento__nome_medicamento')
+
+    ultimo_dia = data_ini.replace(month = data_ini.month+1) - timedelta(days=1)
+
+    if(datetime.now().day == ultimo_dia.day):
+        tipo = "Final"
+    else:
+        tipo = "Parcial"
+    
+    mes = dict([("January" , "Janeiro"), ("February" , "Fevereiro"), ("March" , "Março"), ("April" , "Abril"), ("May" , "Maio"), ("June" , "Junho"), ("July" , "Julho"), ("August" , "Agosto"), ("September" , "Setembro"), ("October" , "Outubro"), ("November" , "Novembro"), ("December" , "Dezembro")])
+
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename = Relatório de vendas - ' + mes[str(datetime.now().strftime("%B"))] + ' - ' + tipo + '.xls'
+    wb = xlwt.Workbook(encoding = 'utf-8')
+    ws = wb.add_sheet('Vendas')
+    row_num = 0
+
+    columns = ['id_lote_medicamento__id_medicamento__nome_medicamento', 'quant', 'valor', 'avg', 'desc', 'dia', 'idade']
+
+    
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.bold = True
+    style.font = font
+    style_string = "font: bold on; borders: bottom dashed"
+    style = xlwt.easyxf(style_string)
+    
+    ws.write(row_num,0, "Medicamento", style=style)
+    ws.write(row_num,1, "Quantidade", style=style)
+    ws.write(row_num,2, "Valor", style=style)
+    ws.write(row_num,3, "Preço médio",  style=style)
+    ws.write(row_num,4, "Desconto médio", style=style)
+    ws.write(row_num,5, "Dia média", style=style)
+    ws.write(row_num,6, "Idade média", style=style)
+    ws.write(row_num,7, "Comparativo", style=style)
+
+    for row in vendas:
+        row_num +=1
+
+        for col_num in range(len(columns)):
+          
+            ws.write(row_num, col_num, row[columns[col_num]])
+
+        ws.write(row_num, 7, row[columns[1]]/delta.days - comparativo[row_num-1]['quant_ant']/delta_ant.days)
+
+    wb.save(response)
+    return response
+
+
+
+
+
