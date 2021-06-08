@@ -13,5 +13,5 @@ urlpatterns = [
     path('editar_fornecedor',views.editar_fornecedor, name = 'editar_fornecedor'),
     # path('compras_cliente',views.compras_cliente, name = 'compras_cliente'),
     path('deslogar',views.deslogar,name='deslogar'),
-    path('gerar_relatorio_pessoas',views.gerar_relatorio_pessoas, name = 'gerar_relatorio_pessoas')
+    path('gerar_relatorio_pessoa',views.gerar_relatorio_pessoa, name = 'gerar_relatorio_pessoa')
 ]
