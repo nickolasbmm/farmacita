@@ -317,7 +317,7 @@ def gerar_relatorio(request, pessoa_cpf):
         p = request.post
         pessoa_cpf = p.get("relascliente")
      
-    id_pessoa  =cliente.filter(ativo=True, cpf = pessoa_cpf). \
+    id_pessoa  =cliente.objects.filter(ativo=True, cpf = pessoa_cpf). \
     values(nome = 'nome_cliente', id = 'id_cliente')
 
     vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, id_cliente = id_pessoa['id']). \
