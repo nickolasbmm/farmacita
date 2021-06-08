@@ -328,12 +328,14 @@ def gerar_relatorio_pessoa(request, pessoa_cpf):
     values('id_lote_medicamento__id_medicamento__nome_medicamento'). \
     annotate(quant = Sum('quantidade', output_Field = FloatField()), \
     nCompras = Count('quantidade', output_Field = FloatField()), \
-    descS = Sum(F('percentual_desconto')*F('quantidade'), output_Field = FloatField()), \
+    aux = ExpressionWrapper(F('percentual_desconto')*F('quantidade'), output_field=FloatField()), \
     diaS = Sum(ExtractDay('data_de_venda')*F('quantidade'), output_Field = FloatField())). \
+    annotate(descS = Sum('aux')). \
     annotate( avg = ExpressionWrapper( F('quant')/F('nCompras'), output_field=FloatField())). \
     annotate( desc = ExpressionWrapper( F('descS')/F('quant'), output_field=FloatField())). \
     annotate( dia = ExpressionWrapper( F('diaS')/F('quant'), output_field=FloatField())). \
     order_by('quant')
+
 
     dt = datetime.now()
      
