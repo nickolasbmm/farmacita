@@ -40,13 +40,13 @@ def cadastrar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo    
     datatable = json.loads(request.POST["datatable"])
     df = pd.DataFrame.from_dict(datatable)
-    print(df.columns)
+    #print(df.columns)
     df.columns = [
         "nome", "quantidade", "dosagem", 
         "preco",
         "subtotal", "botao", "id_lote_medicamento"]
     df = df.astype({"preco" : float, "subtotal" : float, "quantidade" : int})
-    print(df)
+    #print(df)
 
     cpf = request.POST["cpf"]
     id_cliente = cliente.objects.get(cpf = cpf)
@@ -57,7 +57,7 @@ def cadastrar_ordem_de_venda(request):
         percentual_desconto = float(request.POST["perc_desconto"])
 
     for i, row in df.iterrows():
-        print("aqui a row:", row)
+        #print("aqui a row:", row)
         ov = ordem_de_venda(
             id_cliente = id_cliente,
             id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento = row["id_lote_medicamento"]),
@@ -110,11 +110,11 @@ def criar_ordem_de_venda(request):
             princ = princ + ";" + i.princ_ativo.nome_principio_ativo2 
         princ = princ[1:]
         lista_principio_ativos.append({"med":id, "princ": princ})
-    print(lista_principio_ativos)
+    #print(lista_principio_ativos)
 
 
     lotes = lotes.sort_values("data_de_validade", ascending = False).groupby('id_medicamento_id').tail()
-    print(lotes)
+    #print(lotes)
     
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {
                                                             "med_validos" : lotes["nome"].unique().tolist(), 
@@ -147,7 +147,7 @@ def consultar_ordem_de_venda(request):
     lista_cli = cliente.objects.filter(ativo=True,cpf = busca2)
     for x in lista_cli:
         id_cli = x.id_cliente
-    print(id_cli)
+    #print(id_cli)
     if busca2:
         editar = False
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
@@ -277,14 +277,14 @@ def consultar_ordem_de_venda(request):
         for x in lista_ordem_de_venda:
             lista.append(x)
 
-
+    '''
     print({"busca": busca,
                                                                                 "busca2":busca2,
                                                                                 "lista":lista,
                                                                                 "cpf_cliente_validos":cpf_cliente_validos,
                                                                                 "editar":editar,
                                                                                 "lista_edit":lista_edit,
-                                                                                'cargo':cargo})
+                                                                                'cargo':cargo})'''
     return render(request, 'financeiro/pagina_consultar_ordem_de_venda.html', {"busca": busca,
                                                                                 "busca2":busca2,
                                                                                 "lista":lista,
