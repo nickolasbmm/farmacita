@@ -122,6 +122,13 @@ label{
     margin: 0 auto;
 }
 
+.tabela2{
+    /*width: var(--table-width);*/
+    padding: 20px;
+    margin: 0 auto auto 20px;
+    
+}
+
 
 body{   
     display: grid;
