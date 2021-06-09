@@ -56,7 +56,7 @@
         
                     <a class="dropdown-toggle text-secondary" href="#" role="button" id="dropdownusuario" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        configurações
+                        Configurações
                     </a>
                     
                     <div class="dropdown-menu" aria-labelledby="dropdownUsuario">
@@ -194,9 +194,15 @@
             DarkReader.setFetchMethod(window.fetch)
 
             if (darkmode == '1'){
+                document.getElementById('header').style.backgroundColor="rgb(17, 47, 42)";
+                document.getElementById('menu').style.backgroundColor="rgb(45, 66, 63)";
+                $('.list-group-item-info').css('background-color',"rgb(45, 66, 63)");             
                 DarkReader.enable();
             }
             else{
+                document.getElementById('header').style.backgroundColor="#045A4C";
+                document.getElementById('menu').style.backgroundColor="#00AA8E";
+                $('.list-group-item-info').css('background-color',"#00AA8E");              
                 DarkReader.disable();
             }
             
@@ -204,10 +210,16 @@
         function toogle_dark_mode(){
             DarkReader.setFetchMethod(window.fetch)
             if (DarkReader.isEnabled()){
+                document.getElementById('header').style.backgroundColor="#045A4C";
+                document.getElementById('menu').style.backgroundColor="#00AA8E";
+                $('.list-group-item-info').css('background-color',"#00AA8E");                                          
                 DarkReader.disable();
                 localStorage.setItem('darkmode','0');
             }
             else{
+                document.getElementById('header').style.backgroundColor="rgb(17, 47, 42)";
+                document.getElementById('menu').style.backgroundColor="rgb(45, 66, 63)";
+                $('.list-group-item-info').css('background-color',"rgb(45, 66, 63)");                              
                 DarkReader.enable()
                 localStorage.setItem('darkmode','1');
             }
