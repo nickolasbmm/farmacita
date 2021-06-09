@@ -185,18 +185,18 @@ def editar_usuario(request):
     if request.user.is_authenticated:
         editar = False
 
-        lista = funcionario.objects.filter(ativo=True)
+        lista = funcionario.objects.filter(data_de_demissao__isnull=True)
         
         busca = request.GET.get('buscacliente')
         if busca:
             editar = False
-            lista = funcionario.objects.filter(ativo=True,nome_funcionario__icontains = busca)
+            lista = funcionario.objects.filter(data_de_demissao__isnull=True,nome_funcionario__icontains = busca)
 
         delete = request.GET.get('delete')
         data = request.GET.get('data_de_demissao')
         if delete:
             print("olha aki")
-            teste = funcionario.objects.filter(ativo=True,id = delete)
+            teste = funcionario.objects.filter(data_de_demissao__isnull=True,id = delete)
             fired_user = teste[0].user
             fired_user.is_active = False
             fired_user.save()
@@ -205,12 +205,12 @@ def editar_usuario(request):
         editando = request.GET.get('edit')
         if editando:
             editar = True
-            lista = funcionario.objects.filter(ativo=True,id = editando)
+            lista = funcionario.objects.filter(data_de_demissao__isnull=True,id = editando)
 
         if request.method == "POST":
             p = request.POST          
             user = request.user
-            editarfuncionario = funcionario.objects.filter(ativo=True,id=editando)
+            editarfuncionario = funcionario.objects.filter(data_de_demissao__isnull=True,id=editando)
             senha_nova = p.get('senha',None)
             senha_antiga = p.get('senha_antiga')
             if senha_nova != None:
