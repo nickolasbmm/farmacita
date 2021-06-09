@@ -38,6 +38,8 @@ Cadastro de Medicamentos
 
         valid_active_substances = {{ droga | safe }}
 
+        med_cadastrados = {{ med_cadastrados | safe }}
+
         valid_brands = []
 
         // valid_brands = [
@@ -148,6 +150,17 @@ Cadastro de Medicamentos
             }
         }
 
+        medicamento_ja_esta_registrado_check = function(){
+            if(med_cadastrados.includes($("#nome_med").val())){
+                $("#cadastrar_button").prop("disabled", true)
+                $("#span_med_existe").show()
+            }
+            else{
+                $("#span_med_existe").hide()
+                $("#cadastrar_button").prop("disabled", false)
+            }
+        }
+
         marca_ja_registrada_check = function(){
             if(valid_brands.includes($("#brand_input").val())){
                 console.log('disabled')
@@ -203,7 +216,17 @@ Cadastro de Medicamentos
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Nome do medicamento</label>
-                        <input type="text" class="form-control background-none custom-input" id="nome_usuario" name="name">
+                        <input 
+                            type="text" 
+                            class="form-control background-none custom-input" 
+                            id="nome_med" 
+                            name="name"
+                            onkeyup="medicamento_ja_esta_registrado_check()"
+                            onselect="medicamento_ja_esta_registrado_check()"
+                            onchange="medicamento_ja_esta_registrado_check()"
+                            onblur="medicamento_ja_esta_registrado_check()">
+
+                        <span id ="span_med_existe" style="color: red; display: none;">Medicamento já existe!</span>
                     </div>
                     <div class="form-group">
                         <label>Classificação</label>

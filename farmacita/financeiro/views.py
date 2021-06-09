@@ -449,7 +449,7 @@ def gerar_relatorio_vendas(request):
     valor = Sum('valor_total_venda', output_Field = FloatField()), 
     aux = ExpressionWrapper(F('percentual_desconto')*F('quantidade'), output_field=FloatField()), \
     diaS = Sum(ExtractDay('data_de_venda')*F('quantidade'), output_Field = FloatField())). \
-    annotate(descS = Sum('aux')). \ 
+    annotate(descS = Sum('aux')).\
     annotate( avg = ExpressionWrapper( F('valor')/F('quant'), output_field=FloatField())). \
     annotate( desc = ExpressionWrapper( F('descS')/F('quant'), output_field=FloatField())). \
     annotate( dia = ExpressionWrapper( F('diaS')/F('quant'), output_field=FloatField())). \

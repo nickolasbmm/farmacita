@@ -102,6 +102,9 @@ def editar_cliente(request):
     if request.user.is_authenticated:
         editar = False
 
+        clientes_validos = cliente.objects.filter(ativo=True)
+        cpf_cliente_validos = [x.cpf for x in clientes_validos]
+        
         lista = cliente.objects.filter(ativo=True)
         
         busca = request.GET.get('buscacliente')
@@ -145,7 +148,7 @@ def editar_cliente(request):
             )
             sucesso=True      
 
-        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo})
+        return render(request,'pessoas/edicao_cliente.html',{'lista':lista,'editar':editar,'sucesso':sucesso,'cargo':cargo, "cpf_cliente_validos":cpf_cliente_validos})
     else:
         return failed_login(request)
 

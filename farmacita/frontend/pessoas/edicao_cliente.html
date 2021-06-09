@@ -22,8 +22,16 @@ Clientes Cadastrados
                 <form method="POST" autocomplete="off">
                     {% csrf_token %}
                     <div class="input-group-prepend">                    
-                        <input type="text" class="form-control" placeholder="Cpf" name="relascliente" id="relascliente" onkeydown="javascript: fMasc( this, mCPF )">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Relatório</button>
+                        <input 
+                            type="text"
+                            class="form-control" 
+                            placeholder="Cpf" 
+                            name="relascliente" 
+                            id="relascliente" 
+                            onkeydown="javascript: fMasc( this, mCPF )"
+                            list="suggestions_client">
+                        <datalist id="suggestions_client"></datalist>
+                    <button class="btn custom-btn btn-primary" type="submit" id="button-addon1">Relatório</button>
                     
                     </div>              
                 </form>
@@ -200,6 +208,21 @@ Clientes Cadastrados
 </div>
 
 <script>
+    lista_cpf_cliente = {{cpf_cliente_validos | safe}}
+
+    function adiciona_sugestoes_de_cpfs(){
+        $("#suggestions_client").empty()
+        lista_cpf_cliente.forEach(cpf_valido => {
+            $("#suggestions_client").append('<option value="{valor}"">'.formatUnicorn({valor : cpf_valido}))
+        });
+    }
+
+    
+        
+    $(document).ready(function () {
+        adiciona_sugestoes_de_cpfs()
+    });
+
     $(document).ready(function() {
         var clientes = $('#clientes').dataTable({
             "columnDefs": [

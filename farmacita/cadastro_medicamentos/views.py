@@ -23,6 +23,10 @@ def cadastro_medicamentos(request):
     sucesso=False
     principiosativos = principio_ativo2.objects.all()
     droga_list = list()
+
+    medicamentos_cadastrados = medicamento.objects.filter(excluido=False)
+    nomes_medicamentos_cadastrados = [x.nome_medicamento for x in medicamentos_cadastrados]
+
     for i in principiosativos:
         droga_list.append(i.nome_principio_ativo2)
     if request.method == "POST":
@@ -48,7 +52,7 @@ def cadastro_medicamentos(request):
         sucesso=True
 
 
-    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo })
+    return render(request,'medicamento/pagina_cadastro_medicamento.html',{"droga":droga_list,"sucesso":sucesso,'cargo':cargo, 'med_cadastrados': nomes_medicamentos_cadastrados})
 
 def default_editar_medicamento():
     med = medicamento.objects.filter(excluido = False)

@@ -142,7 +142,7 @@ def editar_lote(request):
         return failed_login(request)
     
     
-    def gerar_relatorio_estoque(request):
+def gerar_relatorio_estoque(request):
      
     entrada  = lote_medicamento.objects. \
     select_related('id_medicamento').\
