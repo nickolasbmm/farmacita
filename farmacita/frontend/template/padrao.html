@@ -186,9 +186,20 @@
 
 
     </script>
+
+    <style>
+        .font_color_black{
+            color:black !important;
+        }
+    </style>
     <script>
         // https://github.com/darkreader/darkreader 
         
+        function fixDarkMode(){
+            $("button", $.fn.dataTable.tables()).attr('style','color:black !important')
+            $("[name=delete]", $.fn.dataTable.tables()).attr('style','color:white !important')
+        }
+
         $(document).ready(function(){
             let darkmode = localStorage.getItem('darkmode');
             DarkReader.setFetchMethod(window.fetch)
@@ -198,12 +209,14 @@
                 document.getElementById('menu').style.backgroundColor="rgb(45, 66, 63)";
                 $('.list-group-item-info').css('background-color',"rgb(45, 66, 63)");             
                 DarkReader.enable();
+                fixDarkMode()
             }
             else{
                 document.getElementById('header').style.backgroundColor="#045A4C";
                 document.getElementById('menu').style.backgroundColor="#00AA8E";
                 $('.list-group-item-info').css('background-color',"#00AA8E");              
                 DarkReader.disable();
+
             }
             
         });
@@ -214,6 +227,7 @@
                 document.getElementById('menu').style.backgroundColor="#00AA8E";
                 $('.list-group-item-info').css('background-color',"#00AA8E");                                          
                 DarkReader.disable();
+
                 localStorage.setItem('darkmode','0');
             }
             else{
@@ -221,6 +235,8 @@
                 document.getElementById('menu').style.backgroundColor="rgb(45, 66, 63)";
                 $('.list-group-item-info').css('background-color',"rgb(45, 66, 63)");                              
                 DarkReader.enable()
+                fixDarkMode()
+
                 localStorage.setItem('darkmode','1');
             }
         }
