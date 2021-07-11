@@ -424,7 +424,8 @@ def gerar_relatorio_vendas(request):
  
     data_fin = datetime.now()
     data_ini = data_fin
-    data_ini = data_ini.replace(day=1)
+    #data_ini = data_ini.replace(day=1)
+    data_ini = data_fin - timedelta(days=90)
     delta = data_fin - data_ini
     #data_ini = data_fin - timedelta(30)
     #data_de_venda__range = [data_ini, data_fin] dentro de filter
@@ -432,7 +433,8 @@ def gerar_relatorio_vendas(request):
     # annotate( idade = ExpressionWrapper( F('idadeS')/F('quant'), output_field=FloatField())).
     # annotate(diaS = Sum((datetime.today()-F('data_de_venda'))*F('quantidade'),output_Field = FloatField())). \
     data_fin_ant = data_ini - timedelta(days=1)
-    data_ini_ant = data_ini.replace(month = data_ini.month-1)
+    #data_ini_ant = data_ini.replace(month = data_ini.month-1)
+    data_ini_ant = data_fin_ant - timedelta(days=90)
     delta_ant = data_fin_ant - data_ini_ant
 
     comparativo  = ordem_de_venda.objects.filter(ativo=True,venda=True, data_de_venda__range = [data_ini_ant, data_fin_ant]). \
