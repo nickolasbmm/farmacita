@@ -40,13 +40,13 @@ def cadastrar_ordem_de_venda(request):
     cargo = funcionario.objects.get(user=request.user).cargo    
     datatable = json.loads(request.POST["datatable"])
     df = pd.DataFrame.from_dict(datatable)
-    #print(df.columns)
+    
     df.columns = [
         "nome", "quantidade", "dosagem", 
         "preco",
         "subtotal", "botao", "id_lote_medicamento"]
     df = df.astype({"preco" : float, "subtotal" : float, "quantidade" : int})
-    #print(df)
+    
 
     cpf = request.POST["cpf"]
     id_cliente = cliente.objects.get(cpf = cpf)
@@ -57,7 +57,7 @@ def cadastrar_ordem_de_venda(request):
         percentual_desconto = float(request.POST["perc_desconto"])
 
     for i, row in df.iterrows():
-        #print("aqui a row:", row)
+        
         ov = ordem_de_venda(
             id_cliente = id_cliente,
             id_lote_medicamento = lote_medicamento.objects.get(id_lote_medicamento = row["id_lote_medicamento"]),
@@ -94,7 +94,7 @@ def criar_ordem_de_venda(request):
 
     lotes = lotes.loc[(lotes["quantidade_de_caixas"] > 0) & (lotes["data_de_validade"] > str(date.today()))]
 
-    #lotes = lotes.loc[(lotes["quantidade_de_caixas"] > 0)]
+    
     lotes = lotes.merge(
         med_validos,
         how = "left",
@@ -110,11 +110,11 @@ def criar_ordem_de_venda(request):
             princ = princ + ";" + i.princ_ativo.nome_principio_ativo2 
         princ = princ[1:]
         lista_principio_ativos.append({"med":id, "princ": princ})
-    #print(lista_principio_ativos)
+    
 
 
     lotes = lotes.sort_values("data_de_validade", ascending = False).groupby('id_medicamento_id').tail()
-    #print(lotes)
+    
     
     return render(request,'financeiro/pagina_criar_ordem_de_venda.html', {
                                                             "med_validos" : lotes["nome"].unique().tolist(), 
@@ -147,7 +147,7 @@ def consultar_ordem_de_venda(request):
     lista_cli = cliente.objects.filter(ativo=True,cpf = busca2)
     for x in lista_cli:
         id_cli = x.id_cliente
-    #print(id_cli)
+    
     if busca2:
         editar = False
         lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli,ativo = True)
@@ -176,14 +176,7 @@ def consultar_ordem_de_venda(request):
         teste = ordem_de_venda.objects.filter(ativo=True,id_cliente = cid)
         teste.update(venda = True)
         teste.update(ativo = False)
-        #lista = []
-        #id_lote = teste.get().id_lote_medicamento.id_lote_medicamento
-        #qtd = teste.get().quantidade
-        #busca2 = teste.get().id_cliente.cpf
-        #id_cli = teste.get().id_cliente.id_cliente
-        #lista_ordem_de_venda = ordem_de_venda.objects.filter(id_cliente = id_cli).filter(ativo = True)
-        #for x in lista_ordem_de_venda:
-        #    lista.append(x)
+        
 
     delete = request.GET.get('delete')
     if delete:
@@ -424,16 +417,9 @@ def gerar_relatorio_vendas(request):
  
     data_fin = datetime.now()
     data_ini = data_fin
-    #data_ini = data_ini.replace(day=1)
     data_ini = data_fin - timedelta(days=90)
     delta = data_fin - data_ini
-    #data_ini = data_fin - timedelta(30)
-    #data_de_venda__range = [data_ini, data_fin] dentro de filter
-    #idadeS = Sum(( F('id_cliente__data_nascimento')-datetime.now()).years*'quantidade'), output_Field = FloatField())). \
-    # annotate( idade = ExpressionWrapper( F('idadeS')/F('quant'), output_field=FloatField())).
-    # annotate(diaS = Sum((datetime.today()-F('data_de_venda'))*F('quantidade'),output_Field = FloatField())). \
     data_fin_ant = data_ini - timedelta(days=1)
-    #data_ini_ant = data_ini.replace(month = data_ini.month-1)
     data_ini_ant = data_fin_ant - timedelta(days=90)
     delta_ant = data_fin_ant - data_ini_ant
 

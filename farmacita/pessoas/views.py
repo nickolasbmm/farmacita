@@ -374,8 +374,3 @@ def gerar_relatorio_pessoa(request, pessoa_cpf):
 
     wb.save(response)
     return response
-
-
-
-    
-

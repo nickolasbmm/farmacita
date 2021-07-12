@@ -36,7 +36,6 @@ def cadastro_medicamentos(request):
         item = medicamento(
             nome_medicamento = p.get("name"),
             classificacao = p.get("classificacao"), 
-            #principio_ativo =p.get("principio_ativo")
             )
         
         item.save()
@@ -47,8 +46,6 @@ def cadastro_medicamentos(request):
                 princ.append(i)
         print(princ)
         item.principio_ativo.set(princ)
-        
-        #item.principio_ativo.add(p.get("principio_ativo"))  
         sucesso=True
 
 
