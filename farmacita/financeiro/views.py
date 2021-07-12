@@ -490,7 +490,7 @@ def gerar_relatorio_vendas(request):
     ws.write(row_num,4, "Desconto médio", style=style)
     ws.write(row_num,5, "Dia média", style=style)
     ws.write(row_num,6, "Idade média", style=style)
-    ws.write(row_num,7, "Comparativo", style=style)
+    # ws.write(row_num,7, "Comparativo", style=style)
 
     for row in vendas:
         row_num +=1
@@ -499,7 +499,7 @@ def gerar_relatorio_vendas(request):
           
             ws.write(row_num, col_num, row[columns[col_num]])
 
-        ws.write(row_num, 7, row[columns[1]]/delta.days - comparativo[row_num-1]['quant_ant']/delta_ant.days)
+        # ws.write(row_num, 7, row[columns[1]]/delta.days - comparativo[row_num-1]['quant_ant']/delta_ant.days)
 
     wb.save(response)
     return response
