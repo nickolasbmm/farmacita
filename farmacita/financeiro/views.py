@@ -74,7 +74,7 @@ def cadastrar_ordem_de_venda(request):
         lote_medicamento.objects.filter(
             excluido=False,
             id_lote_medicamento=row["id_lote_medicamento"]
-            ).update(quantidade_de_caixas = F("quantidade_de_caixas") - row["quantidade"])
+            ).update(quantidade_de_caixas = ExpressionWrapper(F("quantidade_de_caixas"),output_field=FloatField()) - row["quantidade"])
 
     return redirect("criar_ordem_de_venda")
 
