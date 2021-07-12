@@ -446,10 +446,10 @@ def gerar_relatorio_vendas(request):
     vendas = ordem_de_venda.objects.filter(ativo=True,venda=True, data_de_venda__range = [data_ini, data_fin]). \
     select_related('id_lote_medicamento', 'id_cliente').select_related('id_medicamento').\
     values('id_lote_medicamento__id_medicamento__nome_medicamento', \
-    aux1 = (ExtractYear(datetime.now()) - ExtractYear('id_cliente__data_nascimento'))*F('quantidade')). \
+    aux1 = (datetime.now().year - ExtractYear('id_cliente__data_nascimento'))*F('quantidade')). \
     annotate(quant = Sum('quantidade', output_Field = FloatField()), \
     valor = Sum('valor_total_venda', output_Field = FloatField()), 
-    aux2 = ExpressionWrapper(F('percentual_desconto')*F('quantidade'), output_field=FloatField()), \ 
+    aux2 = ExpressionWrapper(F('percentual_desconto')*F('quantidade'), output_field=FloatField()), 
     diaS = Sum(ExtractDay('data_de_venda')*F('quantidade'), output_Field = FloatField())). \
     annotate(descS = Sum('aux2')).\
     annotate(idadeS = Sum('aux1')).\
@@ -503,7 +503,6 @@ def gerar_relatorio_vendas(request):
 
     wb.save(response)
     return response
-
 
 
 
